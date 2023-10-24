@@ -1,0 +1,10 @@
+/* Styles for navigation links of footer */
+.custom-ul {
+    flex-grow: 1;
+    margin-right: 30px;
+  }
+  
+  .custom-ul:last-of-type {
+    margin-right: 0;
+  }
+  

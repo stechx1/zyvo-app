@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+/* Works on Firefox */
+.scrollbar {
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  /* Incase you want to show scrollbar
+  background: #e5e5e5;
+  opacity:0.5;
+  border-radius: 4px; */
+  display: none;
+}
