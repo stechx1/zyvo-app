@@ -1,1 +1,1 @@
-export * from "./dummyData";
+export * from "./dummyData/residentialList"

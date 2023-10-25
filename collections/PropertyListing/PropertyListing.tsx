@@ -1,7 +1,7 @@
+"use client"
 import React, { useState } from "react";
-import { PropertyCard } from "../../components/PropertyCard/PropertyCard";
-import { Pagination } from "../../components/Pagination/Pagination";
-import { PropertyLisitngProps } from "@/types/collections/propertyListing";
+import { PropertyLisitngProps } from "@types";
+import { Pagination, PropertyCard } from "@components";
 
 export const PropertyList: React.FC<PropertyLisitngProps> = ({ propertyListing }) => {
   // Define states for totalPages and currentPage

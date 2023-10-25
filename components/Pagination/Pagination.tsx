@@ -1,6 +1,6 @@
-import { PaginationProps } from "@/types/components/pagination";
 import React from "react";
 import Image from "next/image";
+import { PaginationProps } from "@types";
 
 export const Pagination: React.FC<PaginationProps> = ({
   totalPages,

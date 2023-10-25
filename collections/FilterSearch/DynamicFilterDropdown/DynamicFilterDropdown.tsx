@@ -1,7 +1,8 @@
-import { DynamicFilterDropdownProps } from "@/types/components/dropdown";
+"use client"
 import React, { useState, useRef, useEffect } from "react";
 import { PriceFilter } from "../PriceFilter/PriceFilter";
 import { PlaceFilter } from "../PlaceFilter/PlaceFilter";
+import { DynamicFilterDropdownProps } from "@types";
 
 export const DynamicFilterDropdown: React.FC<DynamicFilterDropdownProps> = ({
   label,

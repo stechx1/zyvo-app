@@ -1,4 +1,4 @@
-import { NavColumnProps } from "@/types";
+import { NavColumnProps } from "@types";
 import Link from "next/link";
 
 export const NavColumn: React.FC<NavColumnProps> = ({ title, links }) => (

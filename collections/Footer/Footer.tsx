@@ -1,4 +1,3 @@
-"use client"
 import React from "react";
 import Link from "next/link";
 import { ContactForm } from "./ContactForm/ContactForm";
@@ -66,7 +65,7 @@ export const Footer = () => {
             className="cursor-pointer"
           />
         </div>
-        <p className=" flex space-x-2">
+        <div className=" flex space-x-2">
           <Link
             href="/"
             className="text-white text-md hover:underline transition duration-300"
@@ -80,7 +79,7 @@ export const Footer = () => {
           >
             Terms of Service
           </Link>
-        </p>
+        </div>
       </div>
     </footer>
   );

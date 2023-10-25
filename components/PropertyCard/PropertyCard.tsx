@@ -1,7 +1,7 @@
-import { PropertyCardProps } from "@/types/components/card";
 import React from "react";
 import Image from "next/image";
-import { getEllipsesText } from "@/lib/utils";
+import { PropertyCardProps } from "@types";
+import { getEllipsesText } from "lib/utils";
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
   const {

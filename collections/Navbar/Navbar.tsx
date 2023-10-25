@@ -1,11 +1,10 @@
-"use client"
 
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeIcon } from "../../components/BadgeIcon/BadgeIcon";
 import { ProfileDropdown } from "./ProfileDropdown/ProfileDropdown";
 import { FilterSearch } from "../FilterSearch/FilterSearch";
+import { BadgeIcon } from "@components";
 
 export const Navbar = () => {
   return (
