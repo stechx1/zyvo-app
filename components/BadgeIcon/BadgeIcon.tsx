@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { BadgeIconProps } from "@types";
+import { BadgeIconProps } from "@/types";
 
 export const BadgeIcon: React.FC<BadgeIconProps> = ({
   src,
