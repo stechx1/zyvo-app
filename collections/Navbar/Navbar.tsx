@@ -1,10 +1,9 @@
-
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ProfileDropdown } from "./ProfileDropdown/ProfileDropdown";
 import { FilterSearch } from "../FilterSearch/FilterSearch";
-import { BadgeIcon } from "@components";
+import { BadgeIcon } from "@/components/BadgeIcon/BadgeIcon";
 
 export const Navbar = () => {
   return (

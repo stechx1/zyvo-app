@@ -21,12 +21,13 @@ const config: Config = {
         secondary: {
           "gray-700": "#3A4B4C",
           "neutral-200": "#E5E5E5",
-          "neutral-400" : "#A4A4A4",
+          "neutral-400": "#A4A4A4",
           "gray-100": "#F3F4F6",
         },
         custom: {
           "amber-500": "#FCA800",
         },
+        "green-light": "#4AEAB1",
       },
     },
   },
