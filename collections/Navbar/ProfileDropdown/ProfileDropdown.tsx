@@ -1,8 +1,12 @@
-"use client"
+"use client";
+import firebase_app from "@/config";
+import { getAuth } from "firebase/auth";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
 export const ProfileDropdown = () => {
+  const auth = getAuth(firebase_app);
+
   const userProfileDropdownLinks = [
     "Wishlist",
     "Language",
@@ -49,7 +53,10 @@ export const ProfileDropdown = () => {
 
           <ul>
             {userProfileDropdownLinks.map((menuItem, index) => (
-              <li className="px-4 py-[8px] hover:bg-secondary-gray-100 place rounded-xl" key={index}>
+              <li
+                className="px-4 py-[8px] hover:bg-secondary-gray-100 place rounded-xl"
+                key={index}
+              >
                 <Link href="/" className="text-black text-md font-normal">
                   {menuItem}
                 </Link>
@@ -59,7 +66,11 @@ export const ProfileDropdown = () => {
             <div className="h-[0.5px] my-3 opacity-[0.20] bg-secondary-gray-700"></div>
 
             <li className="px-4 py-[8px] hover:bg-secondary-gray-100  place rounded-xl">
-              <Link href="/" className="text-black text-md font-normal">
+              <Link
+                href="/"
+                onClick={() => auth.signOut()}
+                className="text-black text-md font-normal"
+              >
                 Logout
               </Link>
             </li>
