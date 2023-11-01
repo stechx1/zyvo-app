@@ -1,10 +1,11 @@
 "use client";
 import firebase_app from "@/config";
 import { getAuth } from "firebase/auth";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
-export const ProfileDropdown = () => {
+export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
   const auth = getAuth(firebase_app);
 
   const userProfileDropdownLinks = [
@@ -41,8 +42,12 @@ export const ProfileDropdown = () => {
 
   return (
     <div className="relative group cursor-pointer" ref={dropdownRef}>
-      <div
-        className="w-[43px] h-[43px] rounded-full border border-gray-400 bg-gray-400"
+      <Image
+        src={photoURL}
+        alt="profile-pic"
+        width={43}
+        height={43}
+        className="rounded-full border border-gray-400 bg-gray-400"
         onClick={toggleDropdown}
       />
       {isDropdownOpen && (

@@ -17,8 +17,6 @@ module.exports = {
     },
     extend: {
       colors: {
-        "custom-primary": "#4AEAB1",
-        "custom-transparent": "#fff",
         border: "C4C4C4",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -31,6 +29,7 @@ module.exports = {
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          "green": "#4AEAB1",
           "gray-700": "#3A4B4C",
           "neutral-200": "#E5E5E5",
           "neutral-400": "#A4A4A4",

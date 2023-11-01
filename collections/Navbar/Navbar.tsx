@@ -44,21 +44,17 @@ export const Navbar = () => {
               height={26}
               badgeCount={4}
             />
-            <ProfileDropdown />
+            <ProfileDropdown photoURL={user.photoURL ?? ""} />
           </div>
         ) : (
           <div className="hidden items-center space-x-6 md:flex">
-            <Button
-              text="About Us"
-              onClick={() => {}}
-              type="custom-transparent"
-            />
+            <Button text="About Us" onClick={() => {}} type="white" />
             <Button
               text="Register"
               onClick={() => {
                 router.push("/signup");
               }}
-              type="custom-primary"
+              type="green"
               rounded
             />
           </div>

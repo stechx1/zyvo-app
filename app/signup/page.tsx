@@ -80,6 +80,10 @@ function Page() {
           firstName: state.firstName,
           lastName: state.lastName,
           email: "",
+          emailVerified: false,
+          photoURL: "",
+          phoneNumber: "",
+          phoneNumberVerified: false,
         };
         const splitedDisplayName = user.displayName?.split(" ") ?? [""];
         if (splitedDisplayName?.length > 1) {
@@ -143,7 +147,7 @@ function Page() {
           <Button
             text="Create Account"
             onClick={handleForm}
-            type="custom-primary"
+            type="green"
             rounded
             full
             disabled={isLoading}
@@ -190,7 +194,7 @@ function Page() {
 
           <Button
             text="Login Here"
-            type="custom-transparent"
+            type="white"
             rounded
             full
             bordered

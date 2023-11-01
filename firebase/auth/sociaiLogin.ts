@@ -16,6 +16,10 @@ export async function googleSignin() {
           firstName: "",
           lastName: "",
           email: "",
+          emailVerified: false,
+          photoURL: "",
+          phoneNumber: "",
+          phoneNumberVerified: false,
         };
         const splitedDisplayName = user.displayName?.split(" ") ?? [""];
         if (splitedDisplayName?.length > 1) {
@@ -23,6 +27,10 @@ export async function googleSignin() {
         }
         profileData.firstName = splitedDisplayName[0];
         profileData.email = user.email ?? "";
+        profileData.emailVerified = user.emailVerified ?? "";
+        profileData.photoURL = user.photoURL ?? "";
+        profileData.phoneNumber = user.phoneNumber ?? "";
+        profileData.phoneNumberVerified = !!user.phoneNumber;
 
         setProfile(user?.uid, profileData);
       })

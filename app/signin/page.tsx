@@ -98,7 +98,7 @@ function Page() {
           <Button
             text="Login"
             onClick={handleForm}
-            type="custom-primary"
+            type="green"
             rounded
             full
             disabled={isLoading}
@@ -152,11 +152,11 @@ function Page() {
             </div>
           </div>
           <hr className="my-5" />
-          <div className="text-center mt-3 mb-2"> Don't have an account?</div>
+          <div className="text-center mt-3 mb-2"> Don&apos;t have an account?</div>
 
           <Button
             text="Register Now"
-            type="custom-transparent"
+            type="white"
             rounded
             full
             bordered

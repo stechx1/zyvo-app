@@ -6,7 +6,11 @@ export type profileData = {
   firstName?: string;
   lastName?: string;
   email?: string;
+  emailVerified?: boolean;
   phone?: string;
+  photoURL?: string;
+  phoneNumber?: string;
+  phoneNumberVerified?: boolean;
 };
 export function setProfile(id: string, data: profileData) {
   setDoc(doc(db, "users", id), data)
