@@ -26,37 +26,48 @@ export const Footer = () => {
     { href: "/", label: "Explore Now" },
   ];
   return (
-    <footer className="bg-secondary-gray-700 text-white pt-[130px] pb-[30px]">
-      <div className="container mx-auto flex justify-between flex-wrap">
-        {/* Column 1 */}
-        <div className="">
+    <footer className="bg-secondary-gray-700 text-white pt-[130px] pb-[30px] lg:px-8">
+      <div className="container mx-auto gap-4 lg:flex">
+        {/* Column 1 - Join Newsletter */}
+        <div className="xxs:w-full xxs:p-8 lg:w-[28%] lg:mr-20 lg:p-0">
           <h2 className="text-lg font-semibold mb-8">Join Newsletter</h2>
           <ContactForm />
         </div>
 
-        {/* Column 2, 3, 4 */}
-        <NavColumn title="Company" links={companyLinks} />
-        <NavColumn title="Account" links={accountLinks} />
-        <NavColumn title="Resources" links={resourcesLinks} />
+        {/* Column 2, 3, 4 - Company, Account, Resources */}
+        <div className="xxs:grid xxs:grid-cols-2 xxs:p-8 xxs:gap-14 sm:flex sm:justify-between sm:gap-16 lg:p-0 ">
+          <div className="lg:w-[25%]">
+            <NavColumn title="Company" links={companyLinks} />
+          </div>
+          <div className="lg:w-[25%]">
+            <NavColumn title="Account" links={accountLinks} />
+          </div>
+          <div className="lg:w-[25%]">
+            <NavColumn title="Resources" links={resourcesLinks} />
+          </div>
 
-        {/* Column 5 */}
-        <div>
-          <h2 className="text-lg font-semibold mb-8">Follow Us</h2>
-          <SocialMediaLinks />
+          {/* Column 5 - Follow Us */}
+          <div className="lg:w-[25%]">
+            <h2 className="text-lg font-semibold mb-8">Follow Us</h2>
+            <SocialMediaLinks />
+          </div>
         </div>
       </div>
-      <div className="my-28 flex place-content-center">
+
+      {/* Payment Cards */}
+      <div className="lg:my-24 xxs:mt-8 xxs:mb-24 flex place-content-center">
         <Image
-          src={"/images/payment-cards.png"}
-          alt={"payment-cards"}
+          src="/images/payment-cards.png"
+          alt="payment-cards"
           width={300}
           height={40}
           className="cursor-pointer"
         />
       </div>
-      <div className="container mx-auto flex justify-between items-center mt-4">
-        <p>&copy; Copyright 2023</p>
-        <div className="mb-2">
+
+      {/* Bottom Section */}
+      <div className="container mx-auto flex xxs:p-8 xxs:flex-col xxs:gap-4 sm:flex-row justify-between items-center mt-4">
+        <div className="mb-2 xxs:flex sm:hidden">
           <Image
             src="/images/white-zyvo-logo.png"
             alt="Zyvo Logo"
@@ -65,7 +76,17 @@ export const Footer = () => {
             className="cursor-pointer"
           />
         </div>
-        <div className=" flex space-x-2">
+        <p>&copy; Copyright 2023</p>
+        <div className="mb-2 xxs:hidden sm:flex">
+          <Image
+            src="/images/white-zyvo-logo.png"
+            alt="Zyvo Logo"
+            width={32}
+            height={42}
+            className="cursor-pointer"
+          />
+        </div>
+        <div className="flex space-x-2">
           <Link
             href="/"
             className="text-white text-md hover:underline transition duration-300"

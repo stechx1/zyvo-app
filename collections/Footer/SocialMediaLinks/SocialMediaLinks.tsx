@@ -34,7 +34,7 @@ export const SocialMediaLinks = () => {
             alt={item.name}
             width={40}
             height={40}
-            className="cursor-pointer"
+            className="cursor-pointer lg:w-[100px]"
           />
         </Link>
       ))}
