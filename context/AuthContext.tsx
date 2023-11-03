@@ -1,8 +1,11 @@
-"use client"
-import React, { useEffect,createContext, useContext } from "react";
+"use client";
+import React, { useEffect, createContext, useContext } from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "@/config";
+import { PreLoader } from "@/components/PreLoader";
 import { User } from "firebase/auth/cordova";
+import { Navbar } from "@/collections/Navbar/Navbar";
+import { Footer } from "@/collections/Footer/Footer";
 
 const auth = getAuth(firebase_app);
 const defaultValue: { user: User | null } = { user: null };
@@ -25,15 +28,19 @@ export const AuthContextProvider = ({
       } else {
         setUser(null);
       }
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     });
 
     return () => unsubscribe();
   }, []);
-
+  if (loading) return <PreLoader />;
   return (
     <AuthContext.Provider value={{ user }}>
-      {loading ? <div>Loading...</div> : children}
+      <Navbar />
+      {children}
+      <Footer />
     </AuthContext.Provider>
   );
 };

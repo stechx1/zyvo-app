@@ -1,18 +1,27 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "../styles/globals.css"
+import { Poppins, Roboto } from "next/font/google";
+import "../styles/globals.css";
 import { AuthContextProvider } from "@/context/AuthContext";
-import { Navbar } from "@/collections/Navbar/Navbar";
-import { Footer } from "@/collections/Footer/Footer";
+import { Toaster } from "react-hot-toast";
 
+const poppins = Poppins({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-poppins",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
 
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto",
+  weight: ["100", "300", "400", "500", "700", "900"],
+});
 
 export const metadata: Metadata = {
-  title: "Zyvo",
+  title: "ZYVO | Hourly spaces",
   description: "",
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -20,12 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <AuthContextProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </AuthContextProvider>
+      <body className={`${roboto.className} ${poppins.className} `}>
+        <Toaster />
+        <AuthContextProvider>{children}</AuthContextProvider>
       </body>
     </html>
   );

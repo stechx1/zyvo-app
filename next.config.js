@@ -1,6 +1,17 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/a/**",
+      },
+    ],
+  },
+};
 const withImages = require("next-images");
 
 module.exports = withImages();
-module.exports = nextConfig
+module.exports = nextConfig;
