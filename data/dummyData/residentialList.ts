@@ -75,7 +75,7 @@ export const residentialListing = [
       price: 160,
       reviews: '2.5k',
       rating: 4.6,
-      milesAway: '5 miles away',
+      milesAway: '5',
     },
     {
       id: 7,
@@ -271,7 +271,7 @@ export const residentialListing = [
         price: 160,
         reviews: '2.5k',
         rating: 4.6,
-        milesAway: '5 miles away',
+        milesAway: '5',
       },
       {
         id: 22,

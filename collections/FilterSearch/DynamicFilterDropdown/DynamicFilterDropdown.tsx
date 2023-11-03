@@ -55,7 +55,7 @@ export const DynamicFilterDropdown: React.FC<DynamicFilterDropdownProps> = ({
       <span className="text-md cursor-pointer">{label}</span>
       {isDropdownOpen && (
         <div
-          className="absolute bg-white rounded-xl shadow-lg mt-[8px] w-52"
+          className="absolute bg-white rounded-xl shadow-lg mt-[8px] w-52 left-[-42px] sm:left-0"
           onClick={stopPropagation}
         >
           {content}
