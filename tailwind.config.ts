@@ -24,6 +24,9 @@ module.exports = {
       xl: "1280px",
     },
     extend: {
+      fontFamily: {
+        Poppins: "Poppins",
+      },
       colors: {
         border: "C4C4C4",
         input: "hsl(var(--input))",
@@ -37,7 +40,7 @@ module.exports = {
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
-          green: "#4AEAB1",
+          "green": "#4AEAB1",
           "gray-700": "#3A4B4C",
           "neutral-200": "#E5E5E5",
           "neutral-400": "#A4A4A4",
