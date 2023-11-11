@@ -4,40 +4,40 @@ import React from "react";
 
 export default function index() {
   return (
-    <div className="px-4 py-8 text-sm">
+    <div className="px-4 py-8 ">
       <div className="container flex justify-between space-x-4">
         {/*========================================= conversations ===================================== */}
         <div className="sm:w-[40%] lg:w-[25%] h-[80vh] space-y-2">
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-1">
-              <div className="text-base">All Conversations</div>
+            <div className="flex items-center space-x-2">
+              <div className="text-lg">All Conversations</div>
               <Image
                 src={"/icons/down.svg"}
                 alt="down"
-                width={10}
-                height={10}
+                width={13}
+                height={13}
               />
             </div>
-            <div>
+            <div className="me-1">
               <Image
                 src={"/icons/search.svg"}
                 alt="search"
-                width={15}
-                height={15}
+                width={18}
+                height={18}
               />
             </div>
           </div>
-          <div className="h-[75vh] overflow-auto">
+          <div className="h-[75vh] overflow-auto space-y-3">
             {[1, 2, 3, 4, 5, 6, 7].map((a) => {
               return (
-                <div className="flex justify-between items-center border p-3 rounded-lg space-x-2 ">
-                  <div>
+                <div className="flex justify-between items-center border hover:border-gray-600 p-4 rounded-xl space-x-4 me-1">
+                  <div className="rounded-full border-2 border-gray-200 p-1">
                     <Image
                       src={"/pic.svg"}
                       alt="profile-pic"
-                      width={40}
-                      height={40}
-                      className="rounded-full border border-gray-400 bg-gray-400"
+                      width={45}
+                      height={45}
+                      className="rounded-full"
                     />
                   </div>
                   <div className=" flex-col">
