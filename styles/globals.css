@@ -99,3 +99,7 @@
   border-radius: 14px;
   background: rgb(190, 190, 190);
 }
+@font-face {
+  font-family: "Poppins";
+  src: url(../public/fonts/Poppins-Regular.ttf);
+}
