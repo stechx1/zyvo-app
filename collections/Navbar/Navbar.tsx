@@ -14,7 +14,7 @@ export const Navbar = () => {
 
   return (
     <nav className="bg-white p-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
-      <div className="flex justify-between items-center container mx-auto">
+      <div className="flex justify-between items-center container">
         <div className="hidden md:flex items-center md:space-x-6">
           <Link href="/">
             <Image
@@ -72,7 +72,7 @@ export const Navbar = () => {
                 router.push("/signup");
               }}
               type="green"
-              rounded
+              roundedfull
             />
           </div>
         )}
