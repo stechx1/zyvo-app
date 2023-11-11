@@ -1,3 +1,4 @@
 export * from "./footer"
 export * from "./propertyListing"
-export * from "./profileTag"
+export * from "./profile"
+export * from "./account"

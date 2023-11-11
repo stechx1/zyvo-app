@@ -18,7 +18,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
   return (
     <div className="rounded-xl relative overflow-hidden mb-6">
       <div
-        className="bg-cover bg-center relative h-[180px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
+        className="bg-cover bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
         style={{
           backgroundImage: `url(${imageUrl})`,
           paddingBottom: "75%",
@@ -75,7 +75,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
             {rating}
           </p>
           <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2">{`(${reviews})`}</p>
-          <p className="flex items-center  text-[11px] sm:text-[16px] text-secondary-neutral-400">
+          <p className="flex items-center  text-[10px] sm:text-[16px] text-secondary-neutral-400">
             <Image
               src={"/icons/gray-location-icon.svg"}
               alt="location-icon"

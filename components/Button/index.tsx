@@ -4,7 +4,7 @@ type Props = {
   text: string;
   rounded?: boolean;
   onClick?: () => void;
-  type: "green" | "white";
+  type: "green" | "white" | "gray";
   full?: boolean;
   bordered?: boolean;
   disabled?: boolean;
@@ -26,6 +26,8 @@ export default function Button({
           ? "bg-secondary-green"
           : type === "white"
           ? "bg-white"
+          : type === "gray"
+          ? "bg-secondary-gray-700 text-white"
           : ""
       } text-gray-950 py-2 px-4 ${rounded ? "rounded-full" : ""}
       ${full ? "w-full" : ""}
