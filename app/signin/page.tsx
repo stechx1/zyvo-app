@@ -99,7 +99,7 @@ function Page() {
             text="Login"
             onClick={handleForm}
             type="green"
-            rounded
+            roundedfull
             full
             disabled={isLoading}
           />
@@ -157,7 +157,7 @@ function Page() {
           <Button
             text="Register Now"
             type="white"
-            rounded
+            roundedfull
             full
             bordered
             onClick={() => {

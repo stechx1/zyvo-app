@@ -73,8 +73,33 @@
   body {
     @apply bg-background text-foreground;
   }
-  @font-face {
-    font-family: "Poppins";
-    src: url(../public/fonts/Poppins-Regular.ttf);
-  }
+}
+/*================================== Scroll bars ===========================================*/
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: rgb(240, 240, 240);
+}
+::-webkit-scrollbar:hover {
+  background: rgb(240, 240, 240);
+  width: 14px;
+  height: 14px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track:hover {
+  border-radius: 14px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgb(216, 216, 216);
+}
+::-webkit-scrollbar-thumb:hover {
+  border-radius: 14px;
+  background: rgb(190, 190, 190);
+}
+@font-face {
+  font-family: "Poppins";
+  src: url(../public/fonts/Poppins-Regular.ttf);
 }

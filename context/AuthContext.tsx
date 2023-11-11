@@ -6,6 +6,7 @@ import { PreLoader } from "@/components/PreLoader";
 import { User } from "firebase/auth/cordova";
 import { Navbar } from "@/collections/Navbar/Navbar";
 import { Footer } from "@/collections/Footer/Footer";
+import { usePathname } from "next/navigation";
 
 const auth = getAuth(firebase_app);
 const defaultValue: { user: User | null } = { user: null };
@@ -20,10 +21,12 @@ export const AuthContextProvider = ({
 }) => {
   const [user, setUser] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
+        //get user from db
         setUser(user);
       } else {
         setUser(null);
@@ -36,11 +39,12 @@ export const AuthContextProvider = ({
     return () => unsubscribe();
   }, []);
   if (loading) return <PreLoader />;
+
   return (
     <AuthContext.Provider value={{ user }}>
       <Navbar />
       {children}
-      <Footer />
+      {pathname !== "/messages" && <Footer />}
     </AuthContext.Provider>
   );
 };
