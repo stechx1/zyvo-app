@@ -131,7 +131,7 @@ export const LeftAccountSection = () => {
       />
 
       <div className="w-fit flex gap-1">
-        <Button text="Save Changes" type="green" rounded />
+        <Button text="Save Changes" type="green" roundedfull />
       </div>
     </div>
   );

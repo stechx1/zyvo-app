@@ -1,7 +1,10 @@
+import { useAuthContext } from "@/context/AuthContext";
 import { ProfileContactSection } from "./ProfileContactSection";
 import Image from "next/image";
 
 export const RightProfileSection = () => {
+  const { user } = useAuthContext();
+
   const profileInfo = [
     {
       title: "Email Address",
@@ -30,9 +33,9 @@ export const RightProfileSection = () => {
     <div className="w-[30%] flex flex-col gap-10">
       <div className="h-[380px] w-full rounded-3xl border border-secondary-neutral-200 p-6 items-center justify-center flex-col flex">
         <div className="relative">
-          <div className="w-[188px] h-[188px] border-8 border-secondary-gray-700 bg-white opacity-10 rounded-full flex items-center justify-center">
+          <div className="w-[188px] h-[188px] border-8 border-secondary-neutral-200 bg-white rounded-full flex items-center justify-center">
             <Image
-              src="/icons/profile-icon.png"
+              src={user?.photoURL ?? "/icons/profile-icon.png"}
               alt="Profile Image"
               className="w-[156px] h-[156px] rounded-full"
               width={156}

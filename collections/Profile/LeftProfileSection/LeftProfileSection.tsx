@@ -109,7 +109,7 @@ export const LeftProfileSection = () => {
           //     router.push("/signup");
           //   }}
           type="green"
-          rounded
+          roundedfull
         />
         <Button text="Skip for now" onClick={() => {}} type="white" />
       </div>
