@@ -47,6 +47,7 @@ export const Navbar = () => {
                 badgeCount={1}
               />
               <BadgeIcon
+                onClick={() => router.push("/messages")}
                 src="/icons/chat-icon.svg"
                 alt="Chat Icon"
                 width={28}
