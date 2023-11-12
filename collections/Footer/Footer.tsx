@@ -26,8 +26,8 @@ export const Footer = () => {
     { href: "/", label: "Explore Now" },
   ];
   return (
-    <footer className="bg-secondary-gray-700 text-white pt-[130px] pb-[30px] lg:px-8">
-      <div className="container mx-auto gap-4 lg:flex">
+    <footer className="px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 bg-secondary-gray-700 text-white pt-[130px] pb-[30px]">
+      <div className="gap-4 lg:flex">
         {/* Column 1 - Join Newsletter */}
         <div className="xxs:w-full xxs:p-8 lg:w-[28%] lg:mr-20 lg:p-0">
           <h2 className="text-lg font-semibold mb-8">Join Newsletter</h2>
@@ -66,7 +66,7 @@ export const Footer = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="container mx-auto flex xxs:p-8 xxs:flex-col xxs:gap-4 sm:flex-row justify-between items-center mt-4">
+      <div className=" flex xxs:p-8 xxs:flex-col xxs:gap-4 sm:flex-row justify-between items-center mt-4">
         <div className="mb-2 xxs:flex sm:hidden">
           <Image
             src="/images/white-zyvo-logo.png"

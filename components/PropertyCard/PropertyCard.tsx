@@ -42,17 +42,17 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
             className="rounded-full"
           />
           <div className="flex flex-col">
-            <p className="text-md">Host By {getEllipsesText(host, 10)}</p>
+            <p className="text-md line-clamp-1">Host By {host}</p>
             <p className="text-sm">{location}</p>
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-1 px-0 md:px-3">
         <div className="justify-between flex">
-          <p className="sm:text-lg lg:text-md text-[14px] font-medium md:font-normal">
-            {getEllipsesText(title, 15)}
+          <p className="sm:text-lg lg:text-md text-[14px] font-medium md:font-normal  line-clamp-1">
+            {title}
           </p>
-          <p className="items-center hidden md:flex text-[16px]">
+          <p className="items-center hidden md:flex text-[16px] whitespace-nowrap">
             <Image
               src={"/icons/dark-gray-clock-icon.svg"}
               alt="clock-icon"

@@ -5,7 +5,7 @@ import { RightProfileSection } from "@/collections/Profile/RightProfileSection/R
 
 const ProfilePage = () => {
   return (
-    <div className="flex container mx-auto my-24 px-14 md:px-10 lg:gap-20 gap-10">
+    <div className="flex lg:gap-20 gap-10">
       <LeftProfileSection />
       <RightProfileSection />
     </div>

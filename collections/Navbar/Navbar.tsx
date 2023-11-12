@@ -13,8 +13,8 @@ export const Navbar = () => {
   const { user } = useAuthContext();
 
   return (
-    <nav className="bg-white p-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
-      <div className="flex justify-between items-center container">
+    <nav className="px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
+      <div className="flex justify-between items-center">
         <div className="hidden md:flex items-center md:space-x-6">
           <Link href="/">
             <Image
@@ -61,7 +61,7 @@ export const Navbar = () => {
                 height={26}
                 badgeCount={4}
               />
-              <ProfileDropdown photoURL={user.photoURL ?? ""} />
+              <ProfileDropdown photoURL={user.photoURL ?? "/icons/profile-icon.png"} />
             </div>
           </>
         ) : (

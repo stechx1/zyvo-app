@@ -26,8 +26,8 @@ export const PropertyList: React.FC<PropertyLisitngProps> = ({ propertyListing }
   const itemsToDisplay = propertyListing.slice(startIndex, endIndex);
 
   return (
-    <div className="container mx-auto">
-      <div className="container mx-auto grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-0 md:p-5 gap-3 md:gap-6 my-24">
+    <div >
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
         {itemsToDisplay.map((property, index) => (
           <PropertyCard key={index} propertyItem={property} />
         ))}
