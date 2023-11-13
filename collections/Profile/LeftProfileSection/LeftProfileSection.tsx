@@ -1,48 +1,47 @@
 import { Description } from "@/components/Description";
-import { ProfileTag } from "@/types";
 import { useState } from "react";
 import { ProfileInfoTag } from "./ProfileInfoTag";
 import Button from "@/components/Button";
+import { Tag } from "@/types";
 
 export const LeftProfileSection = () => {
-  const myLocations: ProfileTag[] = [
+  const myLocations: Tag[] = [
     { id: 1, label: "New York, US" },
     { id: 2, label: "Brooklyn, US" },
     { id: 3, label: "Manhattan, US" },
   ];
 
-  const myProfessions: ProfileTag[] = [
+  const myProfessions: Tag[] = [
     { id: 1, label: "Software Developer" },
     { id: 2, label: "Lawyer" },
     { id: 3, label: "Teacher" },
   ];
 
-  const myLanguages: ProfileTag[] = [
+  const myLanguages: Tag[] = [
     { id: 1, label: "English" },
     { id: 2, label: "Spanish" },
     { id: 3, label: "German" },
   ];
 
-  const myHobbies: ProfileTag[] = [
+  const myHobbies: Tag[] = [
     { id: 1, label: "Sports" },
     { id: 2, label: "Painting" },
   ];
-  const myPets: ProfileTag[] = [
+  const myPets: Tag[] = [
     { id: 1, label: "Cat" },
     { id: 2, label: "Dog" },
   ];
 
-  const [locations, setLocations] = useState<ProfileTag[]>(myLocations);
-  const [workProfessions, setWorkProfessions] =
-    useState<ProfileTag[]>(myProfessions);
-  const [languages, setLanguages] = useState<ProfileTag[]>(myLanguages);
-  const [hobbies, setHobbies] = useState<ProfileTag[]>(myHobbies);
-  const [pets, setPets] = useState<ProfileTag[]>(myPets);
+  const [locations, setLocations] = useState<Tag[]>(myLocations);
+  const [workProfessions, setWorkProfessions] = useState<Tag[]>(myProfessions);
+  const [languages, setLanguages] = useState<Tag[]>(myLanguages);
+  const [hobbies, setHobbies] = useState<Tag[]>(myHobbies);
+  const [pets, setPets] = useState<Tag[]>(myPets);
 
   const removeTag = (
     id: number,
-    list: ProfileTag[],
-    setList: (value: React.SetStateAction<ProfileTag[]>) => void
+    list: Tag[],
+    setList: (value: React.SetStateAction<Tag[]>) => void
   ) => {
     const updatedTags = list.filter((tag) => tag.id !== id);
     console.log(updatedTags);

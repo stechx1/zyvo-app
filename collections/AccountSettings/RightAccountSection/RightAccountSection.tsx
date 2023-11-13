@@ -39,7 +39,9 @@ export const RightAccountSection = () => {
             <Image
               src={user?.photoURL ?? "/icons/profile-icon.png"}
               alt="Profile Image"
-              className="w-[156px] h-[156px] rounded-full"
+              className={`w-[156px] h-[156px] rounded-full ${
+                !user?.photoURL && "opacity-10"
+              }`}
               width={156}
               height={156}
             />

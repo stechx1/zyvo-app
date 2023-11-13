@@ -1,11 +1,9 @@
-export type ProfileTag = {
-  id: number;
-  label: string;
-};
+import { Tag } from "../components";
+
 
 export interface ProfileTagProps {
   title: string;
-  tags: ProfileTag[];
+  tags: Tag[];
   onRemoveTag: (id: number) => void;
   icon: string;
   iconAlt: string;

@@ -33,7 +33,7 @@ export default function index() {
                 <div className="flex justify-between items-center border hover:border-gray-600 p-4 rounded-xl space-x-4 me-1">
                   <div className="rounded-full border-2 border-gray-200 p-1">
                     <Image
-                      src={"/pic.svg"}
+                      src={"/icons/profile-icon.png"}
                       alt="profile-pic"
                       width={45}
                       height={45}
@@ -67,7 +67,7 @@ export default function index() {
             <div className="flex space-x-2 items-center">
               <div className="rounded-full border-2 border-gray-200 p-1">
                 <Image
-                  src={"/pic.svg"}
+                  src={"/icons/profile-icon.png"}
                   alt="profile-pic"
                   width={35}
                   height={35}
@@ -109,7 +109,7 @@ export default function index() {
                         <div className="flex space-x-2 items-center">
                           <div className="rounded-full border border-gray-200">
                             <Image
-                              src={"/pic.svg"}
+                              src={"/icons/profile-icon.png"}
                               alt="profile-pic"
                               width={35}
                               height={35}
@@ -163,7 +163,7 @@ export default function index() {
               <div>
                 <div className="rounded-full border-2 border-gray-200 p-1">
                   <Image
-                    src={"/pic.svg"}
+                    src={"/icons/profile-icon.png"}
                     alt="profile-pic"
                     width={35}
                     height={35}

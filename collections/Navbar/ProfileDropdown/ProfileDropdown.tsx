@@ -43,11 +43,13 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
   return (
     <div className="relative group cursor-pointer" ref={dropdownRef}>
       <Image
-        src={photoURL}
+        src={photoURL ? photoURL : "/icons/profile-icon.png"}
         alt="profile-pic"
         width={43}
         height={43}
-        className="rounded-full border border-gray-400 bg-gray-400"
+        className={`rounded-full border border-gray-400 bg-gray-400 ${
+          !photoURL && "opacity-50"
+        }`}
         onClick={toggleDropdown}
       />
       {isDropdownOpen && (

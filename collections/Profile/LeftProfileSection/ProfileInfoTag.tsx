@@ -1,3 +1,4 @@
+import { IconTag } from "@/components/IconTag";
 import { ProfileTagProps } from "@/types";
 import Image from "next/image";
 
@@ -15,23 +16,15 @@ export const ProfileInfoTag: React.FC<ProfileTagProps> = ({
       </div>
       <div className="flex gap-3 flex-wrap">
         {tags.map((tag) => (
-          <div
-            className="border border-neutral-200 rounded-full py-3 px-5 gap-2 w-fit flex items-center"
-            key={tag.id}
-          >
-            <Image src={icon} alt={iconAlt} width={22} height={22} />
-
-            <div className="text-black text-lg font-normal">{tag.label}</div>
-
-            <Image
-              src="/icons/close-icon-grey-background.svg"
-              alt="close-icon"
-              width={25}
-              height={25}
-              className="cursor-pointer"
-              onClick={() => onRemoveTag(tag.id)}
-            />
-          </div>
+          <IconTag
+            icon={icon}
+            iconAlt={iconAlt}
+            closable={true}
+            onRemoveTag={onRemoveTag}
+            roundedBorder={"full"}
+            label={tag.label}
+            tagId={tag.id}
+          />
         ))}
         <div className="border border-neutral-200 rounded-full py-3 px-5 gap-3 w-fit flex items-center">
           <div className="text-black text-lg font-normal">Add New</div>
