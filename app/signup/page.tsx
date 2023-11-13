@@ -100,15 +100,15 @@ function Page() {
     });
   };
   return (
-    <div className="min-h-screen bg-zinc-800 py-6 flex flex-col justify-center sm:py-12">
-      <div className="max-w-[30rem] min-w-[25rem] mx-auto">
+    <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12">
+      <div className="sm:w-[30rem] w-[25rem] mx-auto rounded-xl shadow-2xl">
         <div className="bg-white rounded-3xl px-8 py-10">
           <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
             <h2 className="leading-relaxed text-center">Register</h2>
           </div>
 
           <div className="py-6 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-            <div className="flex space-x-2">
+            <div className="flex justify-between space-x-2">
               <Input
                 name="firstName"
                 type="text"

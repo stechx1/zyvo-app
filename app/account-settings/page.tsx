@@ -5,7 +5,7 @@ import { RightAccountSection } from "@/collections/AccountSettings/RightAccountS
 
 const AccountSettingPage = () => {
   return (
-    <div className="flex container mx-auto my-24 px-14 md:px-10 lg:gap-20 gap-10">
+    <div className="flex lg:gap-20 gap-10">
       <LeftAccountSection />
       <RightAccountSection />
     </div>

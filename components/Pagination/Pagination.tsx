@@ -13,7 +13,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   );
 
   return (
-    <div className="flex items-center space-x-4 place-content-center mb-28">
+    <div className="flex items-center space-x-4 place-content-center">
       <button
         onClick={() => {
           if (currentPage > 1) {
