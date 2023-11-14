@@ -62,7 +62,8 @@ function Page() {
     signIn(state.email, state.password).then(({ result, error }) => {
       setIsLoading(false);
       if (error) {
-        return console.log(error);
+        toast.error(error.code);
+        return;
       }
       toast.success("Loged in Successfully!");
       return router.push("/");
@@ -101,7 +102,7 @@ function Page() {
             type="green"
             roundedfull
             full
-            disabled={isLoading}
+            isLoading={isLoading}
           />
           <div className="flex items-center justify-between my-3">
             <div className="flex items-center">

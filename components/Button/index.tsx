@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import React from "react";
 
 type Props = {
@@ -9,6 +10,7 @@ type Props = {
   full?: boolean;
   bordered?: boolean;
   disabled?: boolean;
+  isLoading?: boolean;
   className?: string;
 };
 
@@ -21,6 +23,7 @@ export default function Button({
   full,
   bordered,
   disabled = false,
+  isLoading = false,
   className,
 }: Props) {
   return (
@@ -40,10 +43,17 @@ export default function Button({
       ${bordered ? "border" : ""}
       ${className}
       `}
-      disabled={disabled}
+      disabled={disabled || isLoading}
       onClick={onClick}
     >
-      {text}
+      {isLoading ? (
+        <div className="flex items-center justify-center">
+          Please wait...
+          <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+        </div>
+      ) : (
+        text
+      )}
     </button>
   );
 }

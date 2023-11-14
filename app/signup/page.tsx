@@ -72,7 +72,8 @@ function Page() {
     if (!isFormValid()) return;
     signUp(state.email, state.password).then(({ result, error }) => {
       if (error) {
-        return console.log(error);
+        toast.error(error.code);
+        return;
       }
       const user = result?.user;
       if (user) {
@@ -150,7 +151,7 @@ function Page() {
             type="green"
             roundedfull
             full
-            disabled={isLoading}
+            isLoading={isLoading}
           />
 
           <hr className="my-5" />
