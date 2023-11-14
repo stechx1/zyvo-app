@@ -13,7 +13,7 @@ export const Navbar = () => {
   const { user } = useAuthContext();
 
   return (
-    <nav className="px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
+    <nav className="px-8 sm:px-14 md:px-20 lg:px-20 xl:px-32 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
       <div className="flex justify-between items-center">
         <div className="hidden md:flex items-center md:space-x-6">
           <Link href="/">
@@ -22,7 +22,7 @@ export const Navbar = () => {
               alt="Logo"
               width={140}
               height={55}
-              className="sm:w-[95px] lg:w-[140px]"
+              className="md:w-[110px] lg:w-[140px]"
             />
           </Link>
         </div>

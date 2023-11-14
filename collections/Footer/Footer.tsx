@@ -26,7 +26,7 @@ export const Footer = () => {
     { href: "/", label: "Explore Now" },
   ];
   return (
-    <footer className="px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 bg-secondary-gray-700 text-white pt-[130px] pb-[30px]">
+    <footer className="px-8 sm:px-14 md:px-20 lg:px-20 xl:px-32 bg-secondary-gray-700 text-white pt-[130px] pb-[30px]">
       <div className="gap-4 lg:flex">
         {/* Column 1 - Join Newsletter */}
         <div className="xxs:w-full xxs:p-8 lg:w-[28%] lg:mr-20 lg:p-0">

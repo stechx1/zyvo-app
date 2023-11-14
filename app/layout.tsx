@@ -32,7 +32,9 @@ export default function RootLayout({
       <body className={`${roboto.className} ${poppins.className} `}>
         <Toaster />
         <AuthContextProvider>
-          <div className="px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 py-8">{children}</div>
+          <div className="px-8 sm:px-14 md:px-20 lg:px-20 xl:px-32 py-8">
+            {children}
+          </div>
         </AuthContextProvider>
       </body>
     </html>
