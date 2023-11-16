@@ -25,6 +25,24 @@ function Page() {
     if (user) router.push("/");
   }, [user]);
 
+  useEffect(() => {
+    const data = localStorage.getItem("zyvo-data");
+    if (data) {
+      const decodedData = atob(data);
+      const parsedData = JSON.parse(decodedData);
+      if (parsedData.email)
+        setState((state) => {
+          return { ...state, email: parsedData.email };
+        });
+      if (parsedData.password)
+        setState((state) => {
+          return { ...state, password: parsedData.password };
+        });
+      if (parsedData.isKeepLoggedIn)
+        setIsKeepLoggedIn(parsedData.isKeepLoggedIn);
+    }
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState((state) => {
       return {
@@ -58,6 +76,20 @@ function Page() {
   };
   const handleForm = () => {
     if (!isFormValid()) return;
+    if (iskeepLoggedIn) {
+      localStorage.setItem(
+        "zyvo-data",
+        btoa(
+          JSON.stringify({
+            email: state.email,
+            password: state.password,
+            isKeepLoggedIn: true,
+          })
+        )
+      );
+    } else {
+      localStorage.setItem("zyvo-data", "");
+    }
     setIsLoading(true);
     signIn(state.email, state.password).then(({ result, error }) => {
       setIsLoading(false);
@@ -154,7 +186,6 @@ function Page() {
           </div>
           <hr className="my-5" />
           <div className="text-center mt-3 mb-2">
-            {" "}
             Don&apos;t have an account?
           </div>
 
