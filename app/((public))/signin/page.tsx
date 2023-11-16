@@ -71,8 +71,8 @@ function Page() {
   };
 
   return (
-    <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12">
-      <div className="sm:w-[30rem] w-[25rem] mx-auto rounded-xl shadow-2xl">
+    <div className='bg-[url("/images/banner-bg.png")] bg-cover bg-center py-8 flex flex-col justify-center items-center'>
+      <div className="sm:w-[30rem] w-[25rem] mx-auto rounded-xl shadow-2xl my-10">
         <div className="bg-white rounded-3xl px-8 py-10">
           <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
             <h2 className="leading-relaxed text-center">Login</h2>

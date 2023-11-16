@@ -11,7 +11,7 @@ const AboutPage = () => {
 
   return (
     <>
-      <div className='bg-[url("/banner-bg.png")] bg-cover bg-center flex flex-col justify-center items-center '>
+      <div className='bg-[url("/images/banner-bg.png")] bg-cover bg-center flex flex-col justify-center items-center '>
         <AboutSection />
       </div>
       <div
