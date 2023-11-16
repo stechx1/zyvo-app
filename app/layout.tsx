@@ -3,6 +3,7 @@ import { Poppins, Roboto } from "next/font/google";
 import "../styles/globals.css";
 import { AuthContextProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
+import { AOSInit } from "@/AOSInit";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} ${poppins.className} `}>
+        <AOSInit />
         <Toaster />
         <AuthContextProvider>
           <div className="px-8 sm:px-14 md:px-20 lg:px-20 xl:px-32 py-8">

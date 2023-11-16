@@ -26,10 +26,10 @@ export const Navbar = () => {
             />
           </Link>
         </div>
-        <FilterSearch />
 
         {user ? (
           <>
+            <FilterSearch />
             <div className="border border-gray-200 rounded-full p-[10px] xxs:flex md:hidden">
               <Image
                 src={"/icons/filter-icon.svg"}
@@ -61,12 +61,20 @@ export const Navbar = () => {
                 height={26}
                 badgeCount={4}
               />
-              <ProfileDropdown photoURL={user.photoURL ?? "/icons/profile-icon.png"} />
+              <ProfileDropdown
+                photoURL={user.photoURL ?? "/icons/profile-icon.png"}
+              />
             </div>
           </>
         ) : (
           <div className="hidden items-center space-x-6 md:flex">
-            <Button text="About Us" onClick={() => {}} type="white" />
+            <Button
+              text="About Us"
+              onClick={() => {
+                router.push("/about");
+              }}
+              type="white"
+            />
             <Button
               text="Register"
               onClick={() => {
