@@ -142,6 +142,7 @@ function Page() {
                 type="radio"
                 className="h-5 w-5 accent-gray-500/50"
                 checked={iskeepLoggedIn}
+                onChange={()=>{}}
                 onClick={(e) => setIsKeepLoggedIn((state) => !state)}
               />
               <label className="ml-2 text-gray-600">Keep me logged</label>
