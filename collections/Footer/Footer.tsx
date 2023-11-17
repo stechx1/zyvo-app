@@ -88,14 +88,14 @@ export const Footer = () => {
         </div>
         <div className="flex space-x-2">
           <Link
-            href="/"
+            href="/privacy"
             className="text-white text-md hover:underline transition duration-300"
           >
             Privacy Policy
           </Link>
           <p>|</p>
           <Link
-            href="/"
+            href="/terms-of-service"
             className="text-white text-md hover:underline transition duration-300"
           >
             Terms of Service
