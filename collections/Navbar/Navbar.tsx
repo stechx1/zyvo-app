@@ -10,7 +10,7 @@ import { useAuthContext } from "@/context/AuthContext";
 
 export const Navbar = () => {
   const router = useRouter();
-  const { user } = useAuthContext();
+  const { user } = useAuthContext();  
 
   return (
     <nav className="px-8 sm:px-14 md:px-20 lg:px-20 xl:px-32 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">

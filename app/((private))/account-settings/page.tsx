@@ -4,6 +4,7 @@ import { LeftAccountSection } from "@/collections/AccountSettings/LeftAccountSec
 import { RightAccountSection } from "@/collections/AccountSettings/RightAccountSection/RightAccountSection";
 
 const AccountSettingPage = () => {
+
   return (
     <div className="flex lg:gap-20 gap-10">
       <LeftAccountSection />

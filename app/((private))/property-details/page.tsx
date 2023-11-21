@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import { Description } from "@/components/Description";
-import { IconTag } from "@/components/IconTag";
 import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
 
@@ -199,15 +197,20 @@ const PropertyDetailsPage = () => {
         {/* =================================Left Section=================================== */}
 
         <div className="w-[70%]">
-          <Description
-            title="About the Space"
-            content="Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text
-          ever since the 1500s, when an unknown printer took a galley of
-          type and scrambled it to make a type specimen book. It has
-          survived not only..."
-            showBorder={false}
-          />
+          <div className="flex flex-col gap-3">
+            <div className="text-black text-2xl font-normal font-Poppins">
+              About the Space
+            </div>
+            <div className={` rounded-3xl `}>
+              <div className="text-black text-lg font-normal">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy
+                text ever since the 1500s, when an unknown printer took a galley
+                of type and scrambled it to make a type specimen book. It has
+                survived not only...
+              </div>
+            </div>
+          </div>
           <p className="text-primary-emerald-300 text-lg mt-4 hover:underline cursor-pointer w-fit">
             Read more...
           </p>
@@ -220,14 +223,24 @@ const PropertyDetailsPage = () => {
             </p>
             <div className="flex flex-wrap gap-6">
               {bookingSpecifications.map((tag) => (
-                <IconTag
-                  icon={tag.icon}
-                  iconAlt={tag.iconAlt}
-                  closable={false}
-                  label={tag.label}
-                  tagId={tag.id}
-                  roundedBorder="xl"
-                />
+                <div
+                  className={`border rounded-xl py-3 px-5 gap-3 w-fit flex items-center`}
+                  key={tag.id}
+                >
+                  <Image
+                    src={tag.icon}
+                    alt={tag.iconAlt}
+                    width={20}
+                    height={20}
+                    className={
+                      tag.icon === "/icons/bed-icon.svg" ? "opacity-20" : ""
+                    }
+                  />
+
+                  <div className="text-black text-lg font-normal">
+                    {tag.label}
+                  </div>
+                </div>
               ))}
             </div>
           </div>

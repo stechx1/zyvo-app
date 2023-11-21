@@ -1,8 +1,9 @@
-import { Description } from "@/components/Description";
-import { InputSectionProps, ProfileTag } from "@/types";
-import { useState } from "react";
+import { InputSectionProps } from "@/types";
+import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import { useAuthContext } from "@/context/AuthContext";
+import { profileData } from "@/types/profile";
 
 const InputSection: React.FC<InputSectionProps> = ({
   title,
@@ -28,39 +29,48 @@ const InputSection: React.FC<InputSectionProps> = ({
 );
 
 export const LeftAccountSection = () => {
-  const [accountSettings, setAccountSettings] = useState({
-    email: "Katelyncris@email.com",
-    phone: "*******5949",
-    password: "12345678",
-    address: {
-      country: "Canada",
-      state: "British Columbia (BC)",
-      city: "Vancouver",
-      street: "123 Main Street",
-    },
-    paymentMethod: "Visa ****** **** 4567",
-  });
+  const { user } = useAuthContext();
 
+  const [accountSettings, setAccountSettings] = useState<profileData | null>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    emailVerified: false,
+    photoURL: "",
+    phoneNumber: "",
+    phoneNumberVerified: false,
+    isSocialLogin: true,
+  });
+  useEffect(() => {
+    setAccountSettings(user);
+  }, [user]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setAccountSettings((prevSettings) => ({
-      ...prevSettings,
-      [name]: value,
-    }));
+    setAccountSettings((prev) => {
+      if (prev) return { ...prev, [name]: value };
+      else return null;
+    });
   };
 
   return (
     <div className="w-[70%] flex flex-col gap-12 ">
-      <Description
-        title="Account Settings"
-        content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took."
-        showBorder={false}
-      />
+      <div className="flex flex-col gap-3">
+        <div className="text-black text-2xl font-normal font-Poppins">
+          Account Settings
+        </div>
+        <div className={` rounded-3xl `}>
+          <div className="text-black text-lg font-normal">
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took.
+          </div>
+        </div>
+      </div>
       <InputSection
         title="Email"
         inputName="email"
         type="text"
-        value={accountSettings.email}
+        value={accountSettings?.email ?? ""}
         placeholder="Email..."
         onChange={handleChange}
       />
@@ -69,52 +79,53 @@ export const LeftAccountSection = () => {
         title="Phone Number"
         inputName="phone"
         type="text"
-        value={accountSettings.phone}
+        value={accountSettings?.phone ?? ""}
         placeholder="Phone Number..."
         onChange={handleChange}
       />
-
-      <InputSection
-        title="Password"
-        inputName="password"
-        type="password"
-        value={accountSettings.password}
-        placeholder="Password..."
-        onChange={handleChange}
-      />
+      {!accountSettings?.isSocialLogin && (
+        <InputSection
+          title="Password"
+          inputName="password"
+          type="password"
+          value={accountSettings?.password ?? ""}
+          placeholder="Password..."
+          onChange={handleChange}
+        />
+      )}
 
       <div className="flex flex-col gap-3 w-[100%]">
-         <p className="font-Poppins text-lg font-normal">Address</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4"> 
+        <p className="font-Poppins text-lg font-normal">Address</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
           <Input
             name="country"
             type="text"
             onChange={handleChange}
-            value={accountSettings.address.country}
+            value={accountSettings?.country ?? ""}
             placeholder="Country..."
           />
-           
+
           <Input
             name="state"
             type="text"
             onChange={handleChange}
-            value={accountSettings.address.state}
+            value={accountSettings?.state ?? ""}
             placeholder="State..."
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4"> 
+        <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
           <Input
             name="city"
             type="text"
             onChange={handleChange}
-            value={accountSettings.address.city}
+            value={accountSettings?.city ?? ""}
             placeholder="City..."
           />
           <Input
             name="street"
             type="text"
             onChange={handleChange}
-            value={accountSettings.address.street}
+            value={accountSettings?.street ?? ""}
             placeholder="Street..."
           />
         </div>
@@ -125,7 +136,7 @@ export const LeftAccountSection = () => {
         title="Payment Method"
         inputName="paymentMethod"
         type="text"
-        value={accountSettings.paymentMethod}
+        value={accountSettings?.paymentMethod ?? ""}
         placeholder="Payment Method..."
         onChange={handleChange}
       />

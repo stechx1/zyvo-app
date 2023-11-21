@@ -1,12 +1,13 @@
 import firebase_app from "@/config";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { profileData, setProfile } from "./profile";
+import { profileData } from "@/types/profile";
+import addData from "../firestore/addData";
+import toast from "react-hot-toast";
 
 const auth = getAuth(firebase_app);
+type errorType = { message: string; code: string };
 
 export async function googleSignin() {
-  let result = null,
-    error = null;
   try {
     let provider = new GoogleAuthProvider();
 
@@ -20,6 +21,7 @@ export async function googleSignin() {
           photoURL: "",
           phoneNumber: "",
           phoneNumberVerified: false,
+          isSocialLogin: true,
         };
         const splitedDisplayName = user.displayName?.split(" ") ?? [""];
         if (splitedDisplayName?.length > 1) {
@@ -32,14 +34,14 @@ export async function googleSignin() {
         profileData.phoneNumber = user.phoneNumber ?? "";
         profileData.phoneNumberVerified = !!user.phoneNumber;
 
-        setProfile(user?.uid, profileData);
+        addData("users", user?.uid, profileData);
       })
       .catch(function (error) {
         console.log(error);
       });
   } catch (e) {
-    error = e;
+    if (typeof e === "object") {
+      toast.error((e as errorType).message);
+    }
   }
-
-  return { result, error };
 }

@@ -97,8 +97,9 @@ function Page() {
         toast.error(error.code);
         return;
       }
-      toast.success("Loged in Successfully!");
-      return router.push("/");
+      setTimeout(() => {
+        toast.success("Loged in Successfully!");
+      }, 1000);
     });
   };
 
@@ -142,7 +143,7 @@ function Page() {
                 type="radio"
                 className="h-5 w-5 accent-gray-500/50"
                 checked={iskeepLoggedIn}
-                onChange={()=>{}}
+                onChange={() => {}}
                 onClick={(e) => setIsKeepLoggedIn((state) => !state)}
               />
               <label className="ml-2 text-gray-600">Keep me logged</label>

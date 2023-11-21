@@ -7,8 +7,9 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useAuthContext } from "@/context/AuthContext";
 import { googleSignin } from "@/firebase/auth/sociaiLogin";
-import { profileData, setProfile } from "@/firebase/auth/profile";
+import { profileData } from "@/types/profile";
 import toast from "react-hot-toast";
+import addData from "@/firebase/firestore/addData";
 
 function Page() {
   const { user } = useAuthContext();
@@ -28,6 +29,7 @@ function Page() {
   useEffect(() => {
     if (user) router.push("/");
   }, [user]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState((state) => {
       return {
@@ -70,9 +72,11 @@ function Page() {
   };
   const handleForm = () => {
     if (!isFormValid()) return;
+    setIsLoading(true);
     signUp(state.email, state.password).then(({ result, error }) => {
       if (error) {
         toast.error(error.code);
+        setIsLoading(false);
         return;
       }
       const user = result?.user;
@@ -85,18 +89,19 @@ function Page() {
           photoURL: "",
           phoneNumber: "",
           phoneNumberVerified: false,
+          isSocialLogin: false,
         };
-        const splitedDisplayName = user.displayName?.split(" ") ?? [""];
-        if (splitedDisplayName?.length > 1) {
-          profileData.lastName = splitedDisplayName.slice(1).join(" ");
-        }
-        profileData.firstName = splitedDisplayName[0];
         profileData.email = user.email ?? "";
-        try {
-          setProfile(user?.uid, profileData);
-          toast.success("Registered Successfully!");
-          return router.push("/");
-        } catch (error) {}
+        addData("users", user?.uid, profileData)
+          .then((result) => {
+            toast.success("Registered Successfully!");
+            setIsLoading(false);
+            return router.push("/profile");
+          })
+          .catch((error) => {
+            toast.error(error);
+            setIsLoading(false);
+          });
       }
     });
   };

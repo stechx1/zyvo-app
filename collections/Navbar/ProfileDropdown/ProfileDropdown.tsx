@@ -9,10 +9,10 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
   const auth = getAuth(firebase_app);
 
   const userProfileDropdownLinks = [
-    "Wishlist",
-    "Language",
-    "Help Center",
-    "Settings",
+    { name: "Wishlist", route: "/" },
+    { name: "Language", route: "/" },
+    { name: "Help Center", route: "/" },
+    { name: "Settings", route: "account-settings" },
   ];
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -64,8 +64,12 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
                 className="px-4 py-[8px] hover:bg-secondary-gray-100 place rounded-xl"
                 key={index}
               >
-                <Link href="/" className="text-black text-md font-normal">
-                  {menuItem}
+                <Link
+                  onClick={toggleDropdown}
+                  href={menuItem.route}
+                  className="text-black text-md font-normal"
+                >
+                  {menuItem.name}
                 </Link>
               </li>
             ))}
