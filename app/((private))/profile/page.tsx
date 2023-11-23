@@ -133,7 +133,7 @@ const ProfilePage = () => {
             hobbies: state.find((data) => data.name === "hobbies")?.values,
             pets: state.find((data) => data.name === "pets")?.values,
           });
-          // router.push("/");
+          router.push("/");
         })
         .catch((error) => {
           console.log(error);
@@ -229,7 +229,7 @@ const ProfilePage = () => {
           />
           <div className="gap-1 flex flex-col items-center">
             <div className="text-black text-[28px] font-medium font-Poppins mt-[20px]">
-              Katelyn
+              {user?.firstName + " " + user?.lastName}
             </div>
             <div className="text-black text-[20px] font-light font-Poppins">
               Guest
