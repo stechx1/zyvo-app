@@ -46,6 +46,7 @@ const AccountSettingPage = () => {
   const [selectedFile, setSelectedFile] = useState<File>();
   const [imgPreview, setImgPreview] = useState<string>();
   const [accountSettings, setAccountSettings] = useState<profileData>({
+    userId: "",
     firstName: "",
     lastName: "",
     email: "",

@@ -82,6 +82,7 @@ function Page() {
       const user = result?.user;
       if (user) {
         const profileData: profileData = {
+          userId: user.uid,
           firstName: state.firstName,
           lastName: state.lastName,
           email: "",

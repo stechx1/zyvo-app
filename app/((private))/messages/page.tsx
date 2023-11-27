@@ -1,18 +1,96 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
 import { useAuthContext } from "@/context/AuthContext";
+import {
+  getMessagessSnapshot,
+  getConversationsSnapshot,
+  sendMessage,
+} from "@/firebase/messages";
+import { conversation, message } from "@/types/messages";
+import { profileData } from "@/types/profile";
+import { format, formatDistance } from "date-fns";
 
 export default function Messages() {
   const { user } = useAuthContext();
   const router = useRouter();
+  const [isConversationsLoading, setIsConversationsLoading] = useState(false);
+  const [isMessagesLoading, setIsMessagesLoading] = useState(false);
+  const [conversations, setConversations] = useState<conversation[]>([]);
+  const [messages, setMessages] = useState<message[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [selectedConversation, setSelectedConversation] =
+    useState<conversation | null>(null);
 
   useEffect(() => {
-    if (user == null) router.push("/signin");
+    if (user == null) {
+      router.push("/signin");
+      return;
+    }
+    const unsubscribe = getConversationsSnapshot(
+      user.userId,
+      (convos) => {
+        setConversations(convos);
+        setSelectedConversation(convos[0]);
+        setIsConversationsLoading(false);
+      },
+      (e) => {
+        console.log(e);
+        setIsConversationsLoading(false);
+      }
+    );
+    return () => {
+      unsubscribe();
+    };
   }, [user]);
 
+  useEffect(() => {
+    if (selectedConversation == null) {
+      return;
+    }
+    const unsubscribe = getMessagessSnapshot(
+      selectedConversation.conversationId,
+      (msgs) => {
+        setMessages(msgs);
+        setIsMessagesLoading(false);
+      },
+      (e) => {
+        console.log(e);
+        setIsMessagesLoading(false);
+      }
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, [selectedConversation]);
+
+  const getOtherUser = (users: profileData[]) => {
+    const filteredUsers = users.filter((u) => u.userId !== user?.userId);
+    if (filteredUsers.length > 0) return filteredUsers[0];
+  };
+
+  const getFullName = (user?: profileData) => {
+    if (user) {
+      return user.firstName + " " + user.lastName;
+    }
+    return "";
+  };
+  const getTimeDifference = (date: Date) => {
+    return formatDistance(date, new Date(), { addSuffix: true });
+  };
+
+  const submitMessage = () => {
+    if (selectedConversation && user && newMessage)
+      sendMessage(
+        selectedConversation?.conversationId,
+        user?.userId,
+        newMessage
+      ).then(({ result, error }) => {
+        if (result) setNewMessage("");
+      });
+  };
   return (
     <div className="flex justify-between space-x-4">
       {/*========================================= conversations ===================================== */}
@@ -32,24 +110,34 @@ export default function Messages() {
           </div>
         </div>
         <div className="h-[75vh] overflow-auto space-y-3">
-          {[1, 2, 3, 4, 5, 6, 7].map((a) => {
+          {conversations.map((conversation) => {
             return (
-              <div className="flex justify-between items-center border hover:border-gray-600 p-4 rounded-xl space-x-4 me-1">
+              <div
+                key={conversation.conversationId}
+                className={`flex justify-between items-center border  p-4 rounded-xl space-x-4 me-1 hover:border-gray-600 ${
+                  selectedConversation?.conversationId ===
+                  conversation.conversationId
+                    ? "border-gray-500"
+                    : ""
+                }`}
+              >
                 <div className="flex items-center space-x-2">
                   <div className="rounded-full border-2 border-gray-200 p-1 min-w-[50px]">
                     <Image
-                      src={"/icons/profile-icon.png"}
+                      className="rounded-full"
+                      src={getOtherUser(conversation.users)?.photoURL ?? ""}
                       alt="profile-pic"
                       width={40}
                       height={40}
                     />
                   </div>
                   <div className=" flex-col">
-                    <div>Host By Mia</div>
-                    <div className="text-gray-400">3 minutes ago</div>
+                    <div>{getFullName(getOtherUser(conversation.users))}</div>
+                    <div className="text-gray-400 whitespace-nowrap">
+                      {getTimeDifference(conversation.lastMessage.createdAt)}
+                    </div>
                     <div className="line-clamp-1">
-                      Hellow, can we Hellow, can we Hellow, can we Hellow, can
-                      we
+                      {conversation.lastMessage.message}
                     </div>
                   </div>
                 </div>
@@ -68,96 +156,110 @@ export default function Messages() {
       </div>
       {/* ========================================== messages =========================================*/}
       <div className="sm:w-[60%] lg:w-[50%] h-[80vh] flex flex-col border rounded-lg">
-        <div className="flex flex-col h-[100%]">
-          <div className="flex justify-between items-center px-4 py-3 border-b">
-            <div className="flex space-x-2 items-center">
-              <div className="rounded-full border-2 border-gray-200 p-1">
-                <Image
-                  src={"/icons/profile-icon.png"}
-                  alt="profile-pic"
-                  width={35}
-                  height={35}
-                  className="rounded-full"
-                />
-              </div>
-              <div>
-                <div>Host by Mia</div>
-                <div className="text-green-500">online</div>
-              </div>
-            </div>
-            <div className="flex justify-between items-center space-x-2">
-              <div className=" w-[35px] h-[35px] flex items-center justify-center rounded-full border border-gray-300 ">
-                <Image
-                  src={"/icons/star.svg"}
-                  alt="star"
-                  width={20}
-                  height={20}
-                />
-              </div>
-              <div className=" w-[35px] h-[35px] flex items-center justify-center rounded-full border border-gray-300 ">
-                <Image
-                  src={"/icons/dots-vertical.svg"}
-                  alt="dots"
-                  width={20}
-                  height={20}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex-1 overflow-auto">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((value) => {
-              return (
-                <div className="px-4 py-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="flex space-x-2 items-center">
-                        <div className="rounded-full border border-gray-200">
-                          <Image
-                            src={"/icons/profile-icon.png"}
-                            alt="profile-pic"
-                            width={35}
-                            height={35}
-                            className="rounded-full"
-                          />
-                        </div>
-                        <div>
-                          <div>Host by Mia</div>
-                        </div>
-                      </div>
-                      <div>Hi welcome to our house!</div>
-                    </div>
-                    <div className="mb-auto mt-1">Jul 20, 2023, 11:32 AM</div>
-                  </div>
+        {selectedConversation && (
+          <div className="flex flex-col h-[100%]">
+            <div className="flex justify-between items-center px-4 py-3 border-b">
+              <div className="flex space-x-2 items-center">
+                <div className="rounded-full border-2 border-gray-200 p-1">
+                  <Image
+                    src={
+                      getOtherUser(selectedConversation.users)?.photoURL ?? ""
+                    }
+                    alt="profile-pic"
+                    width={35}
+                    height={35}
+                    className="rounded-full"
+                  />
                 </div>
-              );
-            })}
-          </div>
-          <div className="flex items-center space-x-2 px-4 py-3">
-            <div className="w-[100%] relative">
-              <input
-                className={`px-4 py-2 border focus:border-gray-400 rounded-full focus:outline-none text-gray-600 w-full sm:text-sm bg-gray-100 `}
-                type={"text"}
-                placeholder={"Type a message..."}
-              />
-              <div className="absolute right-3 top-[30%]">
+                <div>
+                  <div>
+                    {getFullName(getOtherUser(selectedConversation.users))}
+                  </div>
+                  <div className="text-green-500">online</div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center space-x-2">
+                <div className=" w-[35px] h-[35px] flex items-center justify-center rounded-full border border-gray-300 ">
+                  <Image
+                    src={"/icons/star.svg"}
+                    alt="star"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+                <div className=" w-[35px] h-[35px] flex items-center justify-center rounded-full border border-gray-300 ">
+                  <Image
+                    src={"/icons/dots-vertical.svg"}
+                    alt="dots"
+                    width={20}
+                    height={20}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto">
+              {messages.map((message) => {
+                return (
+                  <div key={message.messageId} className="px-4 py-3">
+                    <div className="flex rever items-center justify-between">
+                      <div>
+                        <div className="flex space-x-2 items-center">
+                          <div className="rounded-full border border-gray-200">
+                            <Image
+                              src={message.sender?.photoURL ?? ""}
+                              alt="profile-pic"
+                              width={35}
+                              height={35}
+                              className="rounded-full"
+                            />
+                          </div>
+                          <div>
+                            <div>{getFullName(message.sender)}</div>
+                          </div>
+                        </div>
+                        <div>{message.message}</div>
+                      </div>
+                      <div className="mb-auto mt-1">
+                        {format(message.createdAt, "MMM dd, yyyy, hh:mm a")}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex items-center space-x-2 px-4 py-3">
+              <div className="w-[100%] relative">
+                <input
+                  className={`px-4 py-2 border focus:border-gray-400 rounded-full focus:outline-none text-gray-600 w-full sm:text-sm bg-gray-100 `}
+                  type={"text"}
+                  placeholder={"Type a message..."}
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                />
+                <div className="absolute right-3 top-[30%]">
+                  <Image
+                    src={"/icons/file.svg"}
+                    alt="file"
+                    width={15}
+                    height={15}
+                  />
+                </div>
+              </div>
+              <div
+                className=" w-[35px] h-[35px] flex items-center justify-center rounded-full  bg-secondary-green "
+                onClick={submitMessage}
+                role="button"
+              >
                 <Image
-                  src={"/icons/file.svg"}
-                  alt="file"
+                  src={"/icons/send.svg"}
+                  alt="send"
                   width={15}
                   height={15}
                 />
               </div>
             </div>
-            <div className=" w-[35px] h-[35px] flex items-center justify-center rounded-full  bg-secondary-green ">
-              <Image
-                src={"/icons/send.svg"}
-                alt="send"
-                width={15}
-                height={15}
-              />
-            </div>
           </div>
-        </div>
+        )}
       </div>
       {/* =========================================== side ============================================= */}
       <div className="hidden lg:block lg:w-[25%] space-y-4">

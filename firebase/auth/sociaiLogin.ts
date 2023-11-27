@@ -14,6 +14,7 @@ export async function googleSignin() {
     signInWithPopup(auth, provider)
       .then(function ({ user }) {
         const profileData: profileData = {
+          userId: user?.uid,
           firstName: "",
           lastName: "",
           email: "",

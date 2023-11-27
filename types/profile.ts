@@ -1,4 +1,5 @@
 export type profileData = {
+  userId: string;
   firstName?: string;
   lastName?: string;
   email?: string;
