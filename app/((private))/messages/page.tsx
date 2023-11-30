@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
@@ -12,10 +12,12 @@ import {
 import { conversation, message } from "@/types/messages";
 import { profileData } from "@/types/profile";
 import { format, formatDistance } from "date-fns";
+import toast from "react-hot-toast";
 
 export default function Messages() {
   const { user } = useAuthContext();
   const router = useRouter();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isConversationsLoading, setIsConversationsLoading] = useState(false);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [conversations, setConversations] = useState<conversation[]>([]);
@@ -66,6 +68,10 @@ export default function Messages() {
     };
   }, [selectedConversation]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const getOtherUser = (users: profileData[]) => {
     const filteredUsers = users.filter((u) => u.userId !== user?.userId);
     if (filteredUsers.length > 0) return filteredUsers[0];
@@ -77,19 +83,33 @@ export default function Messages() {
     }
     return "";
   };
-  const getTimeDifference = (date: Date) => {
+  const getTimeDifference = (date?: Date) => {
+    if (!date) return "";
     return formatDistance(date, new Date(), { addSuffix: true });
   };
 
   const submitMessage = () => {
-    if (selectedConversation && user && newMessage)
+    if (selectedConversation && user && newMessage.trim()) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          message: newMessage,
+          messageId: Math.random().toString(),
+          sender: user,
+        },
+      ]);
+      setNewMessage("");
       sendMessage(
         selectedConversation?.conversationId,
         user?.userId,
         newMessage
       ).then(({ result, error }) => {
-        if (result) setNewMessage("");
+        if (error) {
+          toast.error("error sending message!");
+          setMessages((prev) => prev.splice(-1));
+        }
       });
+    }
   };
   return (
     <div className="flex justify-between space-x-4">
@@ -134,7 +154,7 @@ export default function Messages() {
                   <div className=" flex-col">
                     <div>{getFullName(getOtherUser(conversation.users))}</div>
                     <div className="text-gray-400 whitespace-nowrap">
-                      {getTimeDifference(conversation.lastMessage.createdAt)}
+                      {getTimeDifference(conversation.lastMessage?.createdAt)}
                     </div>
                     <div className="line-clamp-1">
                       {conversation.lastMessage.message}
@@ -220,12 +240,15 @@ export default function Messages() {
                         <div>{message.message}</div>
                       </div>
                       <div className="mb-auto mt-1">
-                        {format(message.createdAt, "MMM dd, yyyy, hh:mm a")}
+                        {message.createdAt
+                          ? format(message.createdAt, "MMM dd, yyyy, hh:mm a")
+                          : "sending..."}
                       </div>
                     </div>
                   </div>
                 );
               })}
+              <div ref={messagesEndRef}></div>
             </div>
             <div className="flex items-center space-x-2 px-4 py-3">
               <div className="w-[100%] relative">

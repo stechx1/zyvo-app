@@ -2,7 +2,7 @@ import { profileData } from "./profile";
 
 export interface message {
   messageId: string;
-  createdAt: Date;
+  createdAt?: Date;
   sender: profileData;
   message: string;
 }

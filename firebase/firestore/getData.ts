@@ -9,6 +9,7 @@ export default async function getData(colllection: string, id: string) {
   try {
     result = (await getDoc(doc(db, colllection, id))).data();
   } catch (e) {
+    console.log(e);
     error = e;
   }
 
