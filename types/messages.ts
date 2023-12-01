@@ -5,6 +5,8 @@ export interface message {
   createdAt?: Date;
   sender: profileData;
   message: string;
+  imageURL?: string;
+  fileURL?: string;
 }
 export interface conversation {
   conversationId: string;
