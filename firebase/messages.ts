@@ -4,19 +4,18 @@ import {
   collection,
   doc,
   getDoc,
-  getDocs,
   getFirestore,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
   where,
 } from "firebase/firestore";
 import firebase_app from "@/config";
 import { conversation, message } from "@/types/messages";
 import { profileData } from "@/types/profile";
 import { Unsubscribe } from "firebase/auth";
-import addData from "./firestore/addData";
 
 const db = getFirestore(firebase_app);
 type errorType = { message: string; code: string };
@@ -107,6 +106,8 @@ export function getMessagessSnapshot(
               createdAt: message?.createdAt?.toDate(),
               sender: messageSender,
               message: message?.message,
+              imageURL: message?.imageURL,
+              fileURL: message.fileURL,
             },
           ];
         }
@@ -122,18 +123,36 @@ export function getMessagessSnapshot(
 export async function sendMessage(
   conversationId: string,
   userId: string,
-  message: string
+  message: string,
+  imageURL?: string,
+  fileURL?: string
 ) {
   let result = null;
   let error = null;
-
+  const fileURLS: any = {
+    fileURL,
+    imageURL,
+  };
+  Object.keys(fileURLS).forEach((key) =>
+    fileURLS[key] === undefined ? delete fileURLS[key] : {}
+  );
   try {
     result = await addDoc(collection(db, "messages"), {
       sender: doc(db, "users", userId),
       conversationId,
       message,
+      ...fileURLS,
       createdAt: serverTimestamp(),
     });
+    result = await setDoc(
+      doc(db, "conversations", conversationId),
+      {
+        lastMessage: result,
+      },
+      {
+        merge: true,
+      }
+    );
   } catch (e) {
     if (typeof e === "object") error = e as errorType;
   }
