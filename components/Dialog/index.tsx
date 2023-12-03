@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react";
 import {
   Dialog,
   DialogClose,
@@ -7,34 +8,34 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
+interface CustomDialogProps {
+  button: ReactNode;
+  title?: string;
+  description?: string;
+  body: ReactNode;
+}
 
-export function CustomDialog() {
+export function CustomDialog({
+  button,
+  title,
+  description,
+  body,
+}: CustomDialogProps) {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <button>
-        Share
-        </button>
-            
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogTrigger asChild>{button}</DialogTrigger>
+      <DialogContent className="p-0">
         <DialogHeader>
-          <DialogTitle>Share link</DialogTitle>
-          <DialogDescription>
-            Anyone who has this link will be able to view this.
-          </DialogDescription>
+          {title && <DialogTitle>{title}</DialogTitle>}
+          {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        <div className="flex items-center space-x-2">
-       
-        </div>
+        <div className="flex items-center space-x-2">{body}</div>
         <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-              Close
-          </DialogClose>
+          <DialogClose asChild>Close</DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

@@ -3,13 +3,6 @@ import Button from "@/components/Button";
 import React, { useState } from "react";
 import Image from "next/image";
 import CustomDetailTag from "@/components/CustomDetailTag";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import CustomSelect from "@/components/SelectDropDown";
 
 export default function Bookings() {
@@ -130,6 +123,20 @@ export default function Bookings() {
   return (
     <div className="flex justify-between space-x-4">
       <div className="w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-[80vh] space-y-2`">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <div className="text-lg">All Bookings</div>
+            <Image src={"/icons/down.svg"} alt="down" width={13} height={13} />
+          </div>
+          <div className="me-1">
+            <Image
+              src={"/icons/search.svg"}
+              alt="search"
+              width={18}
+              height={18}
+            />
+          </div>
+        </div>
         {bookings.map((res) => {
           return (
             <div

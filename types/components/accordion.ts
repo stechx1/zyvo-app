@@ -1,7 +1,7 @@
 export interface AccordionItem {
   value: string;
   title: string;
-  icon: string;
+  icon?: string;
   content: string;
 }
 
