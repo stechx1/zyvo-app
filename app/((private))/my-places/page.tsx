@@ -138,7 +138,7 @@ export default function MyPlaces() {
             {Array.from({ length: 4 }, (_, index) => (
               <>
                 {index == 0
-                  ? propertyTypeOptions("/icons/home-icon.svg", "House")
+                  ? propertyTypeOptions("/icons/home-filled-icon.svg", "House")
                   : index == 1
                   ? propertyTypeOptions("/icons/building-icon.svg", "Apartment")
                   : index == 2
@@ -160,7 +160,7 @@ export default function MyPlaces() {
                 {Array.from({ length: 8 }, (_, index) => (
                   <>
                     {index == 0
-                      ? propertyTypeOptions("/icons/home-icon.svg", "Barn")
+                      ? propertyTypeOptions("/icons/home-filled-icon.svg", "Barn")
                       : index == 1
                       ? propertyTypeOptions("/icons/building-icon.svg", "Boat")
                       : index == 2
