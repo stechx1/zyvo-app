@@ -8,6 +8,7 @@ import {
   getMessagessSnapshot,
   getConversationsSnapshot,
   sendMessage,
+  resetUnreadCount,
 } from "@/firebase/messages";
 import { conversation, message } from "@/types/messages";
 import { profileData } from "@/types/profile";
@@ -15,6 +16,7 @@ import { format, formatDistance } from "date-fns";
 import toast from "react-hot-toast";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import firebase_app from "@/config";
+import Badge from "@/components/Badge";
 const storage = getStorage(firebase_app);
 
 export default function Messages() {
@@ -28,8 +30,6 @@ export default function Messages() {
   const [newMessage, setNewMessage] = useState("");
   const [selectedConversation, setSelectedConversation] =
     useState<conversation | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File>();
-  const [imgPreview, setImgPreview] = useState<string>();
 
   useEffect(() => {
     if (user == null) {
@@ -41,7 +41,6 @@ export default function Messages() {
       user.userId,
       (convos) => {
         setConversations(convos);
-        setSelectedConversation(convos[0]);
         setIsConversationsLoading(false);
       },
       (e) => {
@@ -58,11 +57,15 @@ export default function Messages() {
     if (selectedConversation == null) {
       return;
     }
+    console.log("yes");
+
     setIsMessagesLoading(true);
     const unsubscribe = getMessagessSnapshot(
       selectedConversation.conversationId,
       (msgs) => {
         setMessages(msgs);
+        console.log("msgs");
+
         setIsMessagesLoading(false);
       },
       (e) => {
@@ -70,6 +73,12 @@ export default function Messages() {
         setIsMessagesLoading(false);
       }
     );
+    if (
+      selectedConversation.unreadCount > 0 &&
+      selectedConversation.lastMessage.sender.userId !== user?.userId
+    ) {
+      resetUnreadCount(selectedConversation.conversationId);
+    }
     return () => {
       unsubscribe();
     };
@@ -124,10 +133,9 @@ export default function Messages() {
       e.target.files.length === 0 ||
       !selectedConversation ||
       !user
-    ) {
-      setSelectedFile(undefined);
+    )
       return;
-    }
+
     const file = e.target.files[0];
     const fileType = file["type"].startsWith("image/") ? "IMAGE" : "FILE";
     const objectUrl = URL.createObjectURL(e.target.files[0]);
@@ -197,12 +205,13 @@ export default function Messages() {
               return (
                 <div
                   key={conversation.conversationId}
-                  className={`flex justify-between items-center border  p-4 rounded-xl space-x-4 me-1 hover:border-gray-600 ${
+                  className={`h-[100px] flex justify-between items-center border p-3 rounded-xl me-1 hover:border-gray-600 ${
                     selectedConversation?.conversationId ===
                     conversation.conversationId
                       ? "border-gray-500"
                       : ""
                   }`}
+                  onClick={() => setSelectedConversation(conversation)}
                 >
                   <div className="flex items-center space-x-2">
                     <div className="rounded-full border-2 border-gray-200 p-1 min-w-[50px]">
@@ -220,17 +229,30 @@ export default function Messages() {
                         {getTimeDifference(conversation.lastMessage?.createdAt)}
                       </div>
                       <div className="line-clamp-1">
-                        {conversation.lastMessage.message}
+                        {conversation.lastMessage.message
+                          ? conversation.lastMessage.message
+                          : conversation.lastMessage.imageURL
+                          ? "1 Image attached.."
+                          : conversation.lastMessage.fileURL
+                          ? "1 File attached.."
+                          : "-"}
                       </div>
                     </div>
                   </div>
-                  <div className="mb-auto min-w-[4px]">
-                    <Image
-                      src={"/icons/dots.svg"}
-                      alt="dots"
-                      width={4}
-                      height={4}
-                    />
+                  <div className="flex flex-col justify-between items-end  min-w-[25px] h-full">
+                    <div>
+                      <Image
+                        src={"/icons/dots.svg"}
+                        alt="dots"
+                        width={4}
+                        height={4}
+                      />
+                    </div>
+                    {conversation.lastMessage.sender.userId !== user?.userId &&
+                      selectedConversation?.conversationId !==
+                        conversation.conversationId && (
+                        <Badge text={conversation.unreadCount} />
+                      )}
                   </div>
                 </div>
               );
@@ -295,7 +317,7 @@ export default function Messages() {
                 messages.map((message) => {
                   return (
                     <div key={message.messageId} className="px-4 py-3">
-                      <div className="flex rever items-center justify-between">
+                      <div className="flex items-center justify-between">
                         <div>
                           <div className="flex space-x-2 items-center">
                             <div className="rounded-full border border-gray-200">
@@ -311,46 +333,45 @@ export default function Messages() {
                               <div>{getFullName(message.sender)}</div>
                             </div>
                           </div>
-                          <div>{message.message}</div>
-                          <div>
-                            {message?.imageURL ? (
-                              <Image
-                                title="Click to download"
-                                role="button"
-                                src={message.imageURL ?? ""}
-                                alt="image"
-                                width={200}
-                                height={200}
-                                onClick={() =>
-                                  message.imageURL &&
-                                  handleDownload(message.imageURL)
-                                }
-                                className="border m-2"
-                              />
-                            ) : message.fileURL ? (
-                              <Image
-                                title="Click to download"
-                                role="button"
-                                src={"/icons/file.png"}
-                                alt="file-icon"
-                                width={100}
-                                height={100}
-                                onClick={() =>
-                                  message.fileURL &&
-                                  handleDownload(message.fileURL)
-                                }
-                                className="m-2"
-                              />
-                            ) : (
-                              ""
-                            )}
-                          </div>
                         </div>
                         <div className="mb-auto mt-1">
                           {message.createdAt
                             ? format(message.createdAt, "MMM dd, yyyy, hh:mm a")
                             : "sending..."}
                         </div>
+                      </div>
+                      <div>{message.message}</div>
+                      <div>
+                        {message?.imageURL ? (
+                          <Image
+                            title="Click to download"
+                            role="button"
+                            src={message.imageURL ?? ""}
+                            alt="image"
+                            width={200}
+                            height={200}
+                            onClick={() =>
+                              message.imageURL &&
+                              handleDownload(message.imageURL)
+                            }
+                            className="border m-2"
+                          />
+                        ) : message.fileURL ? (
+                          <Image
+                            title="Click to download"
+                            role="button"
+                            src={"/icons/file.png"}
+                            alt="file-icon"
+                            width={100}
+                            height={100}
+                            onClick={() =>
+                              message.fileURL && handleDownload(message.fileURL)
+                            }
+                            className="m-2"
+                          />
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                   );
@@ -365,7 +386,12 @@ export default function Messages() {
             <div className="flex items-center space-x-2 px-4 py-3">
               <div className="w-[100%] relative">
                 <input
-                  className={`px-4 py-2 border focus:border-gray-400 rounded-full focus:outline-none text-gray-600 w-full sm:text-sm bg-gray-100 `}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      submitMessage();
+                    }
+                  }}
+                  className={`ps-4 pe-8 py-2 border focus:border-gray-400 rounded-full focus:outline-none text-gray-600 w-full sm:text-sm bg-gray-100 `}
                   type={"text"}
                   placeholder={"Type a message..."}
                   value={newMessage}
@@ -383,7 +409,7 @@ export default function Messages() {
                 </div>
                 <input
                   type="file"
-                  accept="image/*"
+                  // accept="image/*"
                   id="files"
                   onChange={onSelectFile}
                   className="hidden"
@@ -410,59 +436,78 @@ export default function Messages() {
         )}
       </div>
       {/* =========================================== side ============================================= */}
-      <div className="hidden lg:block lg:w-[25%] space-y-4">
-        <div className="border rounded-lg p-4 text-center space-y-2">
-          <div>Hosted By</div>
-          <div className="flex items-center justify-center space-x-2">
-            <div>
-              <div className="rounded-full border-2 border-gray-200 p-1">
+      <div
+        className={`hidden lg:block lg:w-[25%] space-y-4 ${
+          !selectedConversation && "invisible"
+        }`}
+      >
+        {selectedConversation && (
+          <div>
+            <div className="border rounded-lg p-4 text-center space-y-2">
+              <div>Hosted By</div>
+              <div className="flex items-center justify-center space-x-2">
+                <div>
+                  <div className="rounded-full border-2 border-gray-200 p-1">
+                    <Image
+                      src={
+                        getOtherUser(selectedConversation.users)?.photoURL ?? ""
+                      }
+                      alt="profile-pic"
+                      width={35}
+                      height={35}
+                      className="rounded-full"
+                    />
+                  </div>
+                </div>
+                <div className="text-lg">
+                  {getFullName(getOtherUser(selectedConversation.users)) ?? ""}
+                </div>
+                <div>
+                  <Image
+                    src={"/icons/green-tick.svg"}
+                    alt="tick"
+                    width={15}
+                    height={15}
+                  />
+                </div>
+              </div>
+              <hr />
+              <Button
+                type="white"
+                text="Host Properties"
+                bordered
+                rounded
+                full
+                className="border-gray-700"
+              />
+              <div className="flex items-center justify-center space-x-2">
                 <Image
-                  src={"/icons/profile-icon.png"}
-                  alt="profile-pic"
-                  width={35}
-                  height={35}
-                  className="rounded-full"
+                  src={"/icons/time.svg"}
+                  alt="time"
+                  width={15}
+                  height={15}
                 />
+                <div>Typically responds within 1 hr</div>
               </div>
             </div>
-            <div className="text-lg">Mia J.</div>
-            <div>
-              <Image
-                src={"/icons/green-tick.svg"}
-                alt="tick"
-                width={15}
-                height={15}
-              />
+            <div className="border rounded-lg p-4 space-y-4">
+              <div className="flex justify-between items-center">
+                <div>From</div>
+                <div className="font-bold">
+                  {getOtherUser(selectedConversation.users)?.country ?? "-"}
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <div>Member Since</div>
+                <div>1992</div>
+              </div>
+              <div className="flex justify-between items-center">
+                <div>English</div>
+                <div>Native</div>
+              </div>
             </div>
           </div>
-          <hr />
-          <Button
-            type="white"
-            text="Host Properties"
-            bordered
-            rounded
-            full
-            className="border-gray-700"
-          />
-          <div className="flex items-center justify-center space-x-2">
-            <Image src={"/icons/time.svg"} alt="time" width={15} height={15} />
-            <div>Typically responds within 1 hr</div>
-          </div>
-        </div>
-        <div className="border rounded-lg p-4 space-y-4">
-          <div className="flex justify-between items-center">
-            <div>From</div>
-            <div className="font-bold">United States</div>
-          </div>
-          <div className="flex justify-between items-center">
-            <div>Member Since</div>
-            <div>1992</div>
-          </div>
-          <div className="flex justify-between items-center">
-            <div>English</div>
-            <div>Native</div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

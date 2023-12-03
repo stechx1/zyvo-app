@@ -10,7 +10,7 @@ export interface message {
 }
 export interface conversation {
   conversationId: string;
-  counts: number[];
   lastMessage: message;
   users: profileData[];
+  unreadCount: number;
 }

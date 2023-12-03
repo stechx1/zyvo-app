@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getFirestore,
+  increment,
   onSnapshot,
   orderBy,
   query,
@@ -55,12 +56,14 @@ export function getConversationsSnapshot(
             ...result,
             {
               conversationId,
-              counts: conversation.counts,
+              unreadCount: conversation.unreadCount,
               lastMessage: {
                 messageId: lastMessageRef?.id,
                 createdAt: lastMessageRef?.data()?.createdAt.toDate(),
                 sender: lastMessageSender,
                 message: lastMessageRef?.data()?.message,
+                imageURL:lastMessageRef.data()?.imageURL, 
+                fileURL:lastMessageRef.data()?.fileURL, 
               },
               users,
             },
@@ -148,6 +151,26 @@ export async function sendMessage(
       doc(db, "conversations", conversationId),
       {
         lastMessage: result,
+        unreadCount: increment(1),
+      },
+      {
+        merge: true,
+      }
+    );
+  } catch (e) {
+    if (typeof e === "object") error = e as errorType;
+  }
+
+  return { result, error };
+}
+export async function resetUnreadCount(conversationId: string) {
+  let result = null;
+  let error = null;
+  try {
+    await setDoc(
+      doc(db, "conversations", conversationId),
+      {
+        unreadCount: 0,
       },
       {
         merge: true,

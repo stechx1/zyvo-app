@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { BadgeIconProps } from "@/types";
+import Badge from "../Badge";
 
 export const BadgeIcon: React.FC<BadgeIconProps> = ({
   src,
@@ -17,8 +18,8 @@ export const BadgeIcon: React.FC<BadgeIconProps> = ({
       <div className="relative">
         <Image src={src} alt={alt} width={width} height={height} />
         {showBadge && (
-          <div className="absolute top-0 right-0 text-black rounded-full px-2 py-1 text-xs font-semibold grid place-items-center translate-x-[0.5rem] translate-y-[-0.75rem] bg-secondary-green">
-            {badgeCount}
+          <div className="absolute bottom-4 left-4">
+            <Badge text={badgeCount} />
           </div>
         )}
       </div>

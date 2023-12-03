@@ -1,12 +1,16 @@
 "use client";
 import firebase_app from "@/config";
+import { AuthContext } from "@/context/AuthContext";
 import { getAuth } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
   const auth = getAuth(firebase_app);
+  const { mode, setMode } = useContext(AuthContext);
+  const router = useRouter();
 
   const userProfileDropdownLinks = [
     { name: "Wishlist", route: "/" },
@@ -54,8 +58,15 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
       />
       {isDropdownOpen && (
         <div className="absolute py-4 px-4 right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
-          <button className="py-2 mb-3 w-full border border-secondary-gray-700 rounded-xl bg-white text-secondary-gray-700 hover:bg-secondary-gray-100 hover:text-secondary-gray-700 focus:outline-none">
-            Switch to Host
+          <button
+            className="py-2 mb-3 w-full border border-secondary-gray-700 rounded-xl bg-white text-secondary-gray-700 hover:bg-secondary-gray-100 hover:text-secondary-gray-700 focus:outline-none"
+            onClick={() => {
+              setMode(mode === "GUEST" ? "HOST" : "GUEST");
+              router.push("/");
+              toggleDropdown();
+            }}
+          >
+            Switch to <span className="capitalize">{mode.toLowerCase()}</span>
           </button>
 
           <ul>
