@@ -10,6 +10,7 @@ import {
 interface CustomSelectProps {
   icon?: ReactNode;
   options: SelectItem[];
+  roundedFull?: boolean
 }
 
 interface SelectItem {
@@ -17,7 +18,7 @@ interface SelectItem {
   value: string;
 }
 
-const CustomSelect: React.FC<CustomSelectProps> = ({ icon, options }) => {
+const CustomSelect: React.FC<CustomSelectProps> = ({ icon, options, roundedFull }) => {
   return (
     <div className="relative w-full">
       {icon && (
@@ -26,7 +27,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ icon, options }) => {
         </div>
       )}
       <Select>
-        <SelectTrigger className={icon ? "pl-10" : ""}>
+        <SelectTrigger className={` ${roundedFull && "rounded-full"} ${icon ? "pl-10" : ""}`}>
           <SelectValue placeholder="Select" />
         </SelectTrigger>
         <SelectContent>
