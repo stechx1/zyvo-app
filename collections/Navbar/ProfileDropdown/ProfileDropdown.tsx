@@ -61,8 +61,14 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
           <button
             className="py-2 mb-3 w-full border border-secondary-gray-700 rounded-xl bg-white text-secondary-gray-700 hover:bg-secondary-gray-100 hover:text-secondary-gray-700 focus:outline-none"
             onClick={() => {
-              setMode(mode === "GUEST" ? "HOST" : "GUEST");
-              router.push("/");
+              if (mode === "GUEST") {
+                setMode("HOST");
+                router.push("/");
+              }
+              if (mode === "HOST") {
+                setMode("GUEST");
+                router.push("/my-places");
+              }
               toggleDropdown();
             }}
           >
