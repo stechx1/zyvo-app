@@ -14,14 +14,14 @@ interface CustomDialogProps {
   button: ReactNode;
   title?: string;
   description?: string;
-  body: ReactNode;
+  children: ReactNode;
 }
 
 export function CustomDialog({
   button,
   title,
   description,
-  body,
+  children,
 }: CustomDialogProps) {
   return (
     <Dialog>
@@ -31,7 +31,7 @@ export function CustomDialog({
           {title && <DialogTitle>{title}</DialogTitle>}
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        <div className="flex items-center space-x-2">{body}</div>
+        <div className="flex items-center space-x-2">{children}</div>
         <DialogFooter className="sm:justify-start">
           <DialogClose asChild>Close</DialogClose>
         </DialogFooter>
