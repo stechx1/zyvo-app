@@ -1,9 +1,21 @@
 "use client";
 import CustomSelect from "@/components/SelectDropDown";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import Chart, { ChartConfiguration, DoughnutController } from "chart.js/auto";
+import PluginServiceGlobalRegistration from "chart.js/auto";
 
 export default function AdminDashboard() {
+  interface BarChartProps {
+    data: {
+      labels: string[];
+      values: number[];
+    };
+  }
+  const chartData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
+    values: [10, 20, 15, 30, 32, 40, 50, 32, 10],
+  };
   function getStatusColor(status?: string) {
     switch (status) {
       case "Finished":
@@ -65,6 +77,104 @@ export default function AdminDashboard() {
         </div>
       </div>
     );
+  };
+
+  const BarChart: React.FC<BarChartProps> = ({ data }) => {
+    const chartRef = useRef<HTMLCanvasElement | null>(null);
+    const chartInstance = useRef<Chart | null>(null);
+    useEffect(() => {
+      if (chartRef.current) {
+        const ctx = chartRef.current.getContext("2d");
+
+        if (ctx) {
+          if (chartInstance.current) {
+            chartInstance.current.destroy();
+          }
+
+          const config: ChartConfiguration = {
+            type: "bar",
+            data: {
+              labels: data.labels,
+              datasets: [
+                {
+                  label: "Bookings",
+                  data: [65, 59, 80, 81, 56, 55, 40, 50, 27, 48, 41, 55],
+                  backgroundColor: ["#389CE5"],
+                  barThickness: 30,
+                  borderRadius: 50,
+                },
+              ],
+            },
+            options: {
+              scales: {
+                y: {
+                  grid: {
+                    display: true,
+                    lineWidth: 0.5,
+                  },
+                },
+                x: {
+                  grid: {
+                    display: false,
+                  },
+                },
+              },
+            },
+          };
+          chartInstance.current = new Chart(ctx, config);
+        }
+      }
+      return () => {
+        if (chartInstance.current) {
+          chartInstance.current.destroy();
+        }
+      };
+    }, [data]);
+
+    return <canvas ref={chartRef} />;
+  };
+
+  const DoughnutChart: React.FC = () => {
+    const chartRef = useRef<HTMLCanvasElement | null>(null);
+    const chartInstance = useRef<Chart | null>(null);
+    useEffect(() => {
+      if (chartRef.current) {
+        const ctx = chartRef.current.getContext("2d");
+
+        if (ctx) {
+          if (chartInstance.current) {
+            chartInstance.current.destroy();
+          }
+          Chart.register(DoughnutController);
+          const config: ChartConfiguration = {
+            type: "doughnut",
+            data: {
+              datasets: [
+                {
+                  data: [300, 50],
+                  spacing: 1,
+                  backgroundColor: ["#64CCC1", "#CFEFEC"],
+                  hoverOffset: 4,
+                },
+              ],
+            },
+            options: {
+              cutout: "75%",
+              radius: 80,
+              borderRadius: 10,
+            },
+          };
+          chartInstance.current = new Chart(ctx, config);
+        }
+      }
+      return () => {
+        if (chartInstance.current) {
+          chartInstance.current.destroy();
+        }
+      };
+    }, []);
+
+    return <canvas height={"200px"} width={"200px"} ref={chartRef} />;
   };
 
   return (
@@ -140,7 +250,7 @@ export default function AdminDashboard() {
         </div>
         <div className="px-3 py-3 border rounded-xl w-[48.82%]">
           <div className="flex justify-between items-center">
-            <div>Recent Bookings</div>
+            <div>Bookings</div>
             <div className="min-w-[20%]">
               <CustomSelect
                 roundedFull
@@ -151,53 +261,90 @@ export default function AdminDashboard() {
               />
             </div>
           </div>
+          <div>
+            <BarChart data={chartData} />
+          </div>
         </div>
       </div>
 
-      <div className="px-6 py-3 border rounded-xl w-[48.82%]">
-        <div className="flex justify-between items-center">
-          Recent Reports
-          <div className="min-w-[20%]">
-            <CustomSelect
-              roundedFull
-              options={[
-                { label: "This week", value: "This week" },
-                { label: "This month", value: "This month" },
-              ]}
-            />
+      <div className="flex justify-between">
+        <div className="px-6 py-3 border rounded-xl w-[48.82%]">
+          <div className="flex justify-between items-center">
+            Recent Reports
+            <div className="min-w-[20%]">
+              <CustomSelect
+                roundedFull
+                options={[
+                  { label: "This week", value: "This week" },
+                  { label: "This month", value: "This month" },
+                ]}
+              />
+            </div>
+          </div>
+          <div className="my-2">
+            {UserDetailBar(
+              "Person Name",
+              "/icons/profile-icon.png",
+              "Solved",
+              "Finished"
+            )}
+          </div>
+          <div className="my-2">
+            {UserDetailBar(
+              "Person Name",
+              "/icons/profile-icon.png",
+              "Solved",
+              "Finished"
+            )}
+          </div>
+          <div className="my-2">
+            {UserDetailBar(
+              "Person Name",
+              "/icons/profile-icon.png",
+              "Pending",
+              "pending"
+            )}
+          </div>
+          <div className="my-2">
+            {UserDetailBar(
+              "Person Name",
+              "/icons/profile-icon.png",
+              "Pending",
+              "pending"
+            )}
           </div>
         </div>
-        <div className="my-2">
-          {UserDetailBar(
-            "Person Name",
-            "/icons/profile-icon.png",
-            "Solved",
-            "Finished"
-          )}
-        </div>
-        <div className="my-2">
-          {UserDetailBar(
-            "Person Name",
-            "/icons/profile-icon.png",
-            "Solved",
-            "Finished"
-          )}
-        </div>
-        <div className="my-2">
-          {UserDetailBar(
-            "Person Name",
-            "/icons/profile-icon.png",
-            "Pending",
-            "pending"
-          )}
-        </div>
-        <div className="my-2">
-          {UserDetailBar(
-            "Person Name",
-            "/icons/profile-icon.png",
-            "Pending",
-            "pending"
-          )}
+        <div className="flex w-[48.82%] justify-between" style={{ maxHeight: "18rem" }}>
+          <div className="border w-[49%] px-6 py-3 items-center rounded-xl space-y-2">
+            <div className="flex justify-between items-center">
+              Users
+              <div className="min-w-[40%]">
+                <CustomSelect
+                  roundedFull
+                  options={[
+                    { label: "This week", value: "This week" },
+                    { label: "This month", value: "This month" },
+                  ]}
+                />
+              </div>
+            </div>
+            <DoughnutChart />
+          </div>
+          <div className="border w-[49%] px-6 py-3 items-center rounded-xl space-y-2">
+            <div className="flex justify-between items-center">
+              Cash Flow
+              <div className="min-w-[40%]">
+                <CustomSelect
+                  roundedFull
+                  options={[
+                    { label: "This week", value: "This week" },
+                    { label: "This month", value: "This month" },
+                  ]}
+                />
+              </div>
+            </div>
+            <DoughnutChart />
+          </div>
         </div>
       </div>
     </div>

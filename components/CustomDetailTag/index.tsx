@@ -1,7 +1,7 @@
 import React from "react";
 
 interface TagProps {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   text: string;
   type?: "sm" | "lg";
 }
@@ -33,7 +33,7 @@ const CustomDetailTag: React.FC<TagProps> = ({ icon, text, type = "md" }) => {
     <div
       className={`flex items-center ${getPadding()} border ${getBorderRadius()} bg-[#fff] px-4`}
     >
-      <div className="mr-2">{icon}</div>
+      {icon && <div className="mr-2">{icon}</div>}
       <div>{text}</div>
     </div>
   );
