@@ -8,48 +8,44 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Place } from "@/types/place";
 import Image from "next/image";
 import React, { useState } from "react";
 export default function PlaceModal() {
-  interface CardProps {
-    imageUrl: string;
-    title: string;
-    ratings: string;
-    distance: string;
-    hrlyRate: string;
-    reviews: string;
-  }
+  const [selectedTab, setSelectedTab] = useState<number>(1);
+  const [place, setPlace] = useState<Place>({
+    addOns: [{ name: "test", price: 20 }],
+    allowPets: false,
+    ameneties: ["WIFI", "WASHER", "HEATING", "DRYER"],
+    availableMonths: [1, 2, 3],
+    availableDays: [1, 2, 3, 4, 5, 6, 7],
+    availableHoursFrom: 1,
+    availableHoursTo: 24,
+    bathrooms: 2,
+    bedrooms: 2,
+    beds: 2,
+    city: "Washington",
+    coordinates: [1.9447, 2.4533],
+    country: "United States",
+    description: "This is desc of Place",
+    discountedMinHours: 2,
+    discountPercentage: 30,
+    hostRules: "this is a list of host rules",
+    images: ["url"],
+    instantBook: true,
+    minHours: 2,
+    parkingRules: "This is a list of parking rules",
+    pricePerHour: 11,
+    propertyType: "APARTMENT",
+    selfCheckIn: true,
+    spaceType: "HOME",
+    state: "US",
+    street: "street 3",
+    zipCode: "1233",
+  });
 
   const [isToggled, setIsToggled] = useState<boolean>(false);
-  const [selectedTab, setSelectedTab] =
-    useState<string>("Home Setup");
 
-  const [properties, setProperties] = useState<CardProps[]>([
-    {
-      imageUrl: "/images/dummyImage-1.png",
-      title: "Cabin in Peshastin",
-      ratings: "5.0",
-      distance: "37 miles away",
-      hrlyRate: "$12 /h",
-      reviews: "1k+",
-    },
-    {
-      imageUrl: "/images/dummyImage-2.png",
-      title: "Property 1",
-      ratings: "5.0",
-      distance: "37 miles away",
-      hrlyRate: "$12 /h",
-      reviews: "1k+",
-    },
-    {
-      imageUrl: "/images/dummyImage-3.png",
-      title: "Cabin in Peshastin",
-      ratings: "5.0",
-      distance: "37 miles away",
-      hrlyRate: "$12 /h",
-      reviews: "1k+",
-    },
-  ]);
   const handleToggle = () => {
     setIsToggled(!isToggled);
   };
@@ -59,8 +55,11 @@ export default function PlaceModal() {
         <div className="px-4 space-y-2">
           <label>Type of space</label>
           <Tabs
-            options={["Entire Home", "Private Room"]}
-            selected={"Entire Home"}
+            options={[
+              { name: "Entire Home", value: "HOME" },
+              { name: "Private Room", value: "ROOM" },
+            ]}
+            selected={place.spaceType}
           />
         </div>
         <hr className="my-8" />
@@ -68,39 +67,116 @@ export default function PlaceModal() {
           <div>Rooms and beds</div>
           <div>Bedrooms</div>
           <Tabs
-            options={["0", "1", "2", "3", "4", "5", "6", "7", "8+"]}
-            selected="1"
+            options={[
+              { name: "0", value: 0 },
+              { name: "1", value: 1 },
+              { name: "2", value: 2 },
+              { name: "3", value: 3 },
+              { name: "4", value: 4 },
+              { name: "5", value: 5 },
+              { name: "6", value: 6 },
+              { name: "7", value: 7 },
+              { name: "8", value: 8 },
+              { name: "8+", value: 9 },
+            ]}
+            selected={place.bedrooms}
+            onSelect={(option) =>
+              setPlace((prev) => {
+                return { ...prev, bedrooms: +option.value };
+              })
+            }
           />
           <div>Beds</div>
           <Tabs
-            options={["0", "1", "2", "3", "4", "5", "6", "7", "8+"]}
-            selected="1"
-          />{" "}
+            options={[
+              { name: "0", value: 0 },
+              { name: "1", value: 1 },
+              { name: "2", value: 2 },
+              { name: "3", value: 3 },
+              { name: "4", value: 4 },
+              { name: "5", value: 5 },
+              { name: "6", value: 6 },
+              { name: "7", value: 7 },
+              { name: "8", value: 8 },
+              { name: "8+", value: 9 },
+            ]}
+            selected={place.beds}
+            onSelect={(option) =>
+              setPlace((prev) => {
+                return { ...prev, beds: +option.value };
+              })
+            }
+          />
           <div>Bathrooms</div>
           <Tabs
-            options={["0", "1", "2", "3", "4", "5", "6", "7", "8+"]}
-            selected="1"
-          />{" "}
+            options={[
+              { name: "0", value: 0 },
+              { name: "1", value: 1 },
+              { name: "2", value: 2 },
+              { name: "3", value: 3 },
+              { name: "4", value: 4 },
+              { name: "5", value: 5 },
+              { name: "6", value: 6 },
+              { name: "7", value: 7 },
+              { name: "8", value: 8 },
+              { name: "8+", value: 9 },
+            ]}
+            selected={place.bathrooms}
+            onSelect={(option) =>
+              setPlace((prev) => {
+                return { ...prev, bathrooms: +option.value };
+              })
+            }
+          />
         </div>
         <hr className="my-8" />
         <div className="px-4 space-y-3">
           <label>Property type</label>
           <div className="flex gap-3">
-            {Array.from({ length: 4 }, (_, index) => (
-              <>
-                {index == 0
-                  ? propertyTypeOptions("/icons/home-filled-icon.svg", "House")
-                  : index == 1
-                  ? propertyTypeOptions("/icons/building-icon.svg", "Apartment")
-                  : index == 2
-                  ? propertyTypeOptions(
-                      "/icons/guest-house-icon.svg",
-                      "Guesthouse"
-                    )
-                  : index == 3 &&
-                    propertyTypeOptions("/icons/hotel-icon.svg", "Hotel")}
-              </>
-            ))}
+            <PropertyType
+              imageUrl="/icons/home-filled-icon.svg"
+              text="House"
+              value="HOUSE"
+              selected={place.propertyType}
+              onSelect={(value) =>
+                setPlace((prev) => {
+                  return { ...prev, propertyType: value.toString() };
+                })
+              }
+            />
+            <PropertyType
+              imageUrl="/icons/building-icon.svg"
+              text="Apartment"
+              value="APARTMENT"
+              selected={place.propertyType}
+              onSelect={(value) =>
+                setPlace((prev) => {
+                  return { ...prev, propertyType: value.toString() };
+                })
+              }
+            />
+            <PropertyType
+              imageUrl="/icons/guest-house-icon.svg"
+              text="Guesthouse"
+              value="GUESTHOUSE"
+              selected={place.propertyType}
+              onSelect={(value) =>
+                setPlace((prev) => {
+                  return { ...prev, propertyType: value.toString() };
+                })
+              }
+            />
+            <PropertyType
+              imageUrl="/icons/hotel-icon.svg"
+              text="Hotel"
+              value="HOTEL"
+              selected={place.propertyType}
+              onSelect={(value) =>
+                setPlace((prev) => {
+                  return { ...prev, propertyType: value.toString() };
+                })
+              }
+            />
           </div>
           <Accord type="single" collapsible>
             <AccordionItem className="border-none" value="item-1">
@@ -108,35 +184,94 @@ export default function PlaceModal() {
                 Other property types
               </AccordionTrigger>
               <AccordionContent className="flex gap-3 flex-wrap">
-                {Array.from({ length: 8 }, (_, index) => (
-                  <>
-                    {index == 0
-                      ? propertyTypeOptions(
-                          "/icons/home-filled-icon.svg",
-                          "Barn"
-                        )
-                      : index == 1
-                      ? propertyTypeOptions("/icons/building-icon.svg", "Boat")
-                      : index == 2
-                      ? propertyTypeOptions(
-                          "/icons/guest-house-icon.svg",
-                          "Camper"
-                        )
-                      : index == 3
-                      ? propertyTypeOptions("/icons/hotel-icon.svg", "Castle")
-                      : index == 4
-                      ? propertyTypeOptions("/icons/hotel-icon.svg", "Cave")
-                      : index == 5
-                      ? propertyTypeOptions(
-                          "/icons/hotel-icon.svg",
-                          "Container"
-                        )
-                      : index == 6
-                      ? propertyTypeOptions("/icons/hotel-icon.svg", "Farm")
-                      : index == 7 &&
-                        propertyTypeOptions("/icons/hotel-icon.svg", "Tent")}
-                  </>
-                ))}
+                <PropertyType
+                  imageUrl="/icons/home-filled-icon.svg"
+                  text="Barn"
+                  value="BARN"
+                  selected={place.propertyType}
+                  onSelect={(value) =>
+                    setPlace((prev) => {
+                      return { ...prev, propertyType: value.toString() };
+                    })
+                  }
+                />
+                <PropertyType
+                  imageUrl="/icons/building-icon.svg"
+                  text="Boat"
+                  value="BOAT"
+                  selected={place.propertyType}
+                  onSelect={(value) =>
+                    setPlace((prev) => {
+                      return { ...prev, propertyType: value.toString() };
+                    })
+                  }
+                />
+                <PropertyType
+                  imageUrl="/icons/guest-house-icon.svg"
+                  text="Camper"
+                  value="CAMPER"
+                  selected={place.propertyType}
+                  onSelect={(value) =>
+                    setPlace((prev) => {
+                      return { ...prev, propertyType: value.toString() };
+                    })
+                  }
+                />
+                <PropertyType
+                  imageUrl="/icons/hotel-icon.svg"
+                  text="Castle"
+                  value="CASTLE"
+                  selected={place.propertyType}
+                  onSelect={(value) =>
+                    setPlace((prev) => {
+                      return { ...prev, propertyType: value.toString() };
+                    })
+                  }
+                />
+                <PropertyType
+                  imageUrl="/icons/hotel-icon.svg"
+                  text="Cave"
+                  value="CAVE"
+                  selected={place.propertyType}
+                  onSelect={(value) =>
+                    setPlace((prev) => {
+                      return { ...prev, propertyType: value.toString() };
+                    })
+                  }
+                />
+                <PropertyType
+                  imageUrl="/icons/hotel-icon.svg"
+                  text="Container"
+                  value="CONTAINER"
+                  selected={place.propertyType}
+                  onSelect={(value) =>
+                    setPlace((prev) => {
+                      return { ...prev, propertyType: value.toString() };
+                    })
+                  }
+                />
+                <PropertyType
+                  imageUrl="/icons/hotel-icon.svg"
+                  text="Farm"
+                  value="FARM"
+                  selected={place.propertyType}
+                  onSelect={(value) =>
+                    setPlace((prev) => {
+                      return { ...prev, propertyType: value.toString() };
+                    })
+                  }
+                />
+                <PropertyType
+                  imageUrl="/icons/hotel-icon.svg"
+                  text="Tent"
+                  value="TENT"
+                  selected={place.propertyType}
+                  onSelect={(value) =>
+                    setPlace((prev) => {
+                      return { ...prev, propertyType: value.toString() };
+                    })
+                  }
+                />
               </AccordionContent>
             </AccordionItem>
           </Accord>
@@ -368,27 +503,42 @@ export default function PlaceModal() {
         <div className="px-4 space-y-3">
           <div>Availability - Days</div>
           <div>Months</div>
-          <Tabs
+          <MultiTabs
             options={[
-              "All",
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dec",
+              { name: "All", value: 0 },
+              { name: "Jan", value: 1 },
+              { name: "Feb", value: 2 },
+              { name: "Mar", value: 3 },
+              { name: "Apr", value: 4 },
+              { name: "May", value: 5 },
+              { name: "Jun", value: 6 },
+              { name: "Jul", value: 7 },
+              { name: "Aug", value: 8 },
+              { name: "Sep", value: 9 },
+              { name: "Oct", value: 10 },
+              { name: "Nov", value: 11 },
+              { name: "Dec", value: 12 },
             ]}
-            selected="All"
+            selected={place.availableMonths}
           />
           <div>Days</div>
           <Tabs
-            options={["All", "Only Working Days", "Only Weekends"]}
-            selected="All"
+            options={[
+              { name: "All", value: 0 },
+              { name: "Only Working Days", value: 1 },
+              { name: "Only Weekends", value: 3 },
+            ]}
+            selected={
+              JSON.stringify(place.availableDays) ===
+              JSON.stringify([1, 2, 3, 4, 5, 6, 7])
+                ? 0
+                : JSON.stringify(place.availableDays) ===
+                  JSON.stringify([1, 2, 3, 4, 5])
+                ? 1
+                : JSON.stringify(place.availableDays) === JSON.stringify([6, 7])
+                ? 3
+                : 0
+            }
           />
         </div>
         <hr className="my-8" />
@@ -426,9 +576,40 @@ export default function PlaceModal() {
     selected,
     onSelect,
   }: {
-    options: string[];
-    selected: string;
-    onSelect?: (option: string) => void;
+    options: { name: string; value: number | string }[];
+    selected: string | number;
+    onSelect?: (option: { name: string; value: number | string }) => void;
+  }) => {
+    return (
+      <div className="flex justify-between text-center bg-gray-200 px-2 py-2 rounded-full">
+        {options.map((item, i) => {
+          return (
+            <div
+              key={i}
+              onClick={() => {
+                onSelect && onSelect(item);
+              }}
+              className={`w-[45%] py-1 rounded-full ${
+                item.value === selected
+                  ? "bg-white pointer-events-none"
+                  : "cursor-pointer"
+              }`}
+            >
+              {item.name}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+  const MultiTabs = ({
+    options,
+    selected,
+    onSelect,
+  }: {
+    options: { name: string; value: number | string }[];
+    selected: string[] | number[];
+    onSelect?: (option: { name: string; value: number | string }) => void;
   }) => {
     return (
       <div className="flex justify-between text-center bg-gray-200 px-2 py-2 rounded-full">
@@ -441,10 +622,10 @@ export default function PlaceModal() {
                 onSelect && onSelect(item);
               }}
               className={`w-[45%] py-1 rounded-full ${
-                item === selected ? "bg-white" : ""
+                selected.find((d) => d === item.value) ? "bg-white" : ""
               }`}
             >
-              {item}
+              {item.name}
             </div>
           );
         })}
@@ -452,9 +633,28 @@ export default function PlaceModal() {
     );
   };
 
-  const propertyTypeOptions = (imageUrl: string, text: string) => {
+  const PropertyType = ({
+    imageUrl,
+    text,
+    value,
+    selected,
+    onSelect,
+  }: {
+    imageUrl: string;
+    text: string;
+    value: string | number;
+    selected?: string | number;
+    onSelect?: (value: string | number) => void;
+  }) => {
     return (
-      <div className="space-y-3 border border-gray-300 px-4 py-3 rounded-lg w-[23%]">
+      <div
+        className={`space-y-3 border border-gray-300 px-4 py-3 rounded-lg w-[23%] ${
+          selected === value
+            ? "bg-gray-100 pointer-events-none"
+            : "cursor-pointer"
+        }`}
+        onClick={() => onSelect && onSelect(value)}
+      >
         <div className="h-6">
           <img src={imageUrl} height={20} width={20} />
         </div>
@@ -472,19 +672,23 @@ export default function PlaceModal() {
         <div>Manage your place</div>
         <span>Setup places, availability, prices and more.</span>
         <Tabs
-          options={["Home Setup", "Gallery & Location", "Availability"]}
+          options={[
+            { name: "Home Setup", value: 1 },
+            { name: "Gallery & Location", value: 2 },
+            { name: "Availability", value: 3 },
+          ]}
           selected={selectedTab}
-          onSelect={setSelectedTab}
+          onSelect={(option) => setSelectedTab(+option.value)}
         />
       </div>
       <hr className="my-8" />
 
-      {selectedTab === "Home Setup" ? (
+      {selectedTab === 1 ? (
         <HomeSetup />
-      ) : selectedTab === "Gallery & Location" ? (
+      ) : selectedTab === 2 ? (
         <GallaryAndLocation />
       ) : (
-        selectedTab === "Availability" && <Availability />
+        selectedTab === 3 && <Availability />
       )}
 
       <hr className="my-8" />
