@@ -125,7 +125,7 @@ const ConfirmationPage = () => {
           New Booking Confirmed
           </div>
           <div className="sm:hidden h-[0.5px] mt-[10px] mb-[25px] opacity-[0.20] bg-secondary-gray-700"></div>
-          <div className=" w-full sm:w-[30%] sm:order-2">
+          <div className="w-full sm:w-[30%] sm:order-2">
             <div className="flex flex-col gap-5">
               <div className="flex sm:flex-col sm:order-2 border rounded-lg p-3 sm:p-4 text-center ">
                 <div className="flex flex-col basis-2/5 text-left">
