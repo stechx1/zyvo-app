@@ -1,91 +1,67 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
+import { useAuthContext } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { getPlaceSnapshot } from "@/firebase/place";
+import { Place } from "@/types/place";
 
-const PropertyDetailsPage = () => {
-  const bookingSpecifications = [
-    {
-      icon: "/icons/gray-car-icon.svg",
-      iconAlt: "car-icon",
-      label: "Parking",
-      id: 1,
-    },
-    {
-      icon: "/icons/gray-wifi-icon.svg",
-      iconAlt: "wifi-icon",
-      label: "Wifi",
-      id: 2,
-    },
-    {
-      icon: "/icons/bed-icon.svg",
-      iconAlt: "bed-icon",
-      label: "2 Rooms",
-      id: 3,
-    },
-    {
-      icon: "/icons/gray-kitchen-icon.svg",
-      iconAlt: "kitchen-icon",
-      label: "Kitchen",
-      id: 4,
-    },
-    {
-      icon: "/icons/gray-table-icon.svg",
-      iconAlt: "table-icon",
-      label: "Tables",
-      id: 5,
-    },
-    {
-      icon: "/icons/gray-chair-icon.svg",
-      iconAlt: "chair-icon",
-      label: "Chairs",
-      id: 6,
-    },
-  ];
+const PropertyDetailsPage = ({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { id: string };
+}) => {
+  const { user } = useAuthContext();
+  const [place, setPlace] = useState<Place | null>(null);
+  const router = useRouter();
+  useEffect(() => {
+    if (user == null) {
+      router.push("/signin");
+      return;
+    }
+    const unsubscribe = getPlaceSnapshot(
+      params.id,
+      (place) => {
+        setPlace(place);
+      },
+      (e) => {
+        console.log(e);
+      }
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, [user]);
 
   const accordionItems: AccordionItem[] = [
     {
       value: "parking",
       title: "Parking",
       icon: "/icons/gray-car-icon.svg",
-      content: "Content for Parking accordion.",
+      content: place?.parkingRules ? place.parkingRules : "No rules!",
     },
     {
       value: "hostRules",
       title: "Host Rules",
       icon: "/icons/gray-warning-icon.svg",
-      content: "Content for Host Rules accordion.",
+      content: place?.hostRules ? place.hostRules : "No rules!",
     },
   ];
 
-  const addOnItems = [
-    {
-      icon: "/icons/gray-monitor-icon.svg",
-      title: "Computer Screen",
-      price: "$10 / item",
-    },
-    {
-      icon: "/icons/gray-bedsheet-icon.svg",
-      title: "Bed Sheets",
-      price: "$30 / item",
-    },
-    {
-      icon: "/icons/gray-battery-icon.svg",
-      title: "Phone Charger",
-      price: "$3 / item",
-    },
-    {
-      icon: "/icons/gray-ringlight-icon.svg",
-      title: "Ring Light",
-      price: "$3 / item",
-    },
-  ];
-
+  const getImagesOnIndex = (index: number) => {
+    if (place?.images?.length && place?.images?.length > index) {
+      return place?.images[index];
+    }
+    return "/images/no-image.jpg";
+  };
   return (
     <div className="flex container mx-auto my-24 px-14 md:px-10 gap-2  flex-col">
       <div className="text-black text-4xl font-normal font-Poppins">
-        Cabin in Peshastin
+        {place?.description}
       </div>
 
       {/* Icon's Details */}
@@ -154,7 +130,7 @@ const PropertyDetailsPage = () => {
       {/* Pictures of Property*/}
       <div className="flex space-x-4 w-full">
         <Image
-          src={"/images/dummyImage-1.png"}
+          src={getImagesOnIndex(0)}
           alt="detail-image"
           className="w-1/2 h-auto rounded-tl-[20px] rounded-bl-[20px]"
           width={200}
@@ -162,14 +138,14 @@ const PropertyDetailsPage = () => {
         />
         <div className="hidden md:flex flex-col w-1/4 gap-4">
           <Image
-            src={"/images/dummyImage-2.png"}
+            src={getImagesOnIndex(1)}
             alt="detail-image"
             className="w-full h-1/2"
             width={200}
             height={470}
           />
           <Image
-            src={"/images/dummyImage-3.png"}
+            src={getImagesOnIndex(2)}
             alt="detail-image"
             className="w-full h-1/2"
             width={200}
@@ -178,14 +154,14 @@ const PropertyDetailsPage = () => {
         </div>
         <div className="flex flex-col w-1/4 gap-4">
           <Image
-            src={"/images/dummyImage-4.png"}
+            src={getImagesOnIndex(3)}
             alt="detail-image"
             className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
             width={200}
             height={470}
           />
           <Image
-            src={"/images/dummyImage-5.png"}
+            src={getImagesOnIndex(4)}
             alt="detail-image"
             className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
             width={200}
@@ -203,17 +179,13 @@ const PropertyDetailsPage = () => {
             </div>
             <div className={` rounded-3xl `}>
               <div className="text-black text-lg font-normal">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has
-                survived not only...
+                {place?.description ? place.description : "No Description!"}
               </div>
             </div>
           </div>
-          <p className="text-primary-emerald-300 text-lg mt-4 hover:underline cursor-pointer w-fit">
+          {/* <p className="text-primary-emerald-300 text-lg mt-4 hover:underline cursor-pointer w-fit">
             Read more...
-          </p>
+          </p> */}
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
           {/* ================================= Included in the booking=================================== */}
 
@@ -222,26 +194,24 @@ const PropertyDetailsPage = () => {
               Included in your booking
             </p>
             <div className="flex flex-wrap gap-6">
-              {bookingSpecifications.map((tag) => (
+              {place?.ameneties.map((amenety) => (
                 <div
                   className={`border rounded-xl py-3 px-5 gap-3 w-fit flex items-center`}
-                  key={tag.id}
+                  key={amenety}
                 >
                   <Image
-                    src={tag.icon}
-                    alt={tag.iconAlt}
-                    width={20}
-                    height={20}
-                    className={
-                      tag.icon === "/icons/bed-icon.svg" ? "opacity-20" : ""
-                    }
+                    src={"/icons/amenety-icon.png"}
+                    alt={"icon"}
+                    width={40}
+                    height={40}
                   />
 
-                  <div className="text-black text-lg font-normal">
-                    {tag.label}
+                  <div className="text-black text-lg font-normal capitalize">
+                    {amenety.toLowerCase()}
                   </div>
                 </div>
               ))}
+              {place?.ameneties.length === 0 && <div>No Ameneties</div>}
             </div>
           </div>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
@@ -267,27 +237,28 @@ const PropertyDetailsPage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-              {addOnItems.map((addOn, index) => (
+              {place?.addOns.map((addOn, index) => (
                 <div
                   className="flex items-center rounded-xl border border-secondary-neutral-200 py-3 px-4"
                   key={index}
                 >
                   <div className="rounded-xl bg-gray-100 w-16 h-16 flex items-center justify-center mr-4">
                     <Image
-                      src={addOn.icon}
-                      alt={addOn.title}
+                      src={"/icons/addon-icon.png"}
+                      alt={addOn.name}
                       width={30}
                       height={30}
                     />
                   </div>
                   <div>
-                    <p className="text-lg font-medium">{addOn.title}</p>
+                    <p className="text-lg font-medium">{addOn.name}</p>
                     <div className="flex gap-2">
-                      <p>{addOn.price}</p>
+                      <p>${addOn.price} / item</p>
                     </div>
                   </div>
                 </div>
               ))}
+              {place?.addOns.length === 0 && <div>No Add Ons Added!</div>}
             </div>
           </div>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>

@@ -4,7 +4,7 @@ import Button from "@/components/Button";
 import { CustomDialog } from "@/components/Dialog";
 import Dropdown from "@/components/Dropdown";
 import { useAuthContext } from "@/context/AuthContext";
-import { addPlace, deletePlace, getPlacesSnapshot } from "@/firebase/place";
+import { addPlace, deletePlace, getMyPlacesSnapshot } from "@/firebase/place";
 import { Place } from "@/types/place";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -56,7 +56,7 @@ export default function MyPlaces() {
       router.push("/signin");
       return;
     }
-    const unsubscribe = getPlacesSnapshot(
+    const unsubscribe = getMyPlacesSnapshot(
       user.userId,
       (places) => {
         setPlaces(places);
@@ -120,6 +120,12 @@ export default function MyPlaces() {
               <div className="absolute top-0 right-0 p-4 text-white">
                 <Dropdown
                   items={[
+                    {
+                      title: "View",
+                      onClick: () => {
+                        router.push("/property-details/" + place.placeId);
+                      },
+                    },
                     {
                       title: "Delete",
                       onClick: () => {

@@ -58,10 +58,10 @@ export async function deletePlace(placeId: string) {
   }
   return { result, error };
 }
-export function getPlacesSnapshot(
+export function getMyPlacesSnapshot(
   userId: string,
   onSuccess: (data: Place[]) => void,
-  onError: (error: any) => void
+  onError?: (error: string) => void
 ) {
   let unsubscribe: Unsubscribe = () => {};
 
@@ -90,7 +90,57 @@ export function getPlacesSnapshot(
     );
   } catch (e) {
     console.log(e);
-    onError(e);
+    if (typeof e === "object" && onError) onError((e as errorType).code);
+  }
+  return unsubscribe;
+}
+export function getAllPlacesSnapshot(
+  onSuccess: (data: Place[]) => void,
+  onError?: (error: string) => void
+) {
+  let unsubscribe: Unsubscribe = () => {};
+
+  try {
+    unsubscribe = onSnapshot(
+      query(collection(db, "places")),
+      async (places) => {
+        let result: Place[] = [];
+        for (let index = 0; index < places.docs.length; index++) {
+          const place = places.docs[index].data() as Place;
+          const placeId = places.docs[index].id;
+
+          result = [
+            ...result,
+            {
+              ...place,
+              placeId,
+            },
+          ];
+          onSuccess(result);
+        }
+      }
+    );
+  } catch (e) {
+    console.log(e);
+    if (typeof e === "object" && onError) onError((e as errorType).code);
+  }
+  return unsubscribe;
+}
+export function getPlaceSnapshot(
+  placeId: string,
+  onSuccess: (data: Place) => void,
+  onError: (error: string) => void
+) {
+  let unsubscribe: Unsubscribe = () => {};
+
+  try {
+    unsubscribe = onSnapshot(doc(db, "places", placeId), async (place) => {
+      let result: Place = place.data() as Place;
+      onSuccess(result);
+    });
+  } catch (e) {
+    console.log(e);
+    if (typeof e === "object" && onError) onError((e as errorType).code);
   }
   return unsubscribe;
 }
