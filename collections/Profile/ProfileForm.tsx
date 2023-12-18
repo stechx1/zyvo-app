@@ -12,7 +12,7 @@ export default function ProfileForm({
   return state.map((data, di) => {
     return (
       <div className="flex flex-col gap-3" key={di}>
-        <div className="text-black text-2xl font-normal font-Poppins">
+        <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
           {data.title}
         </div>
         <div className="flex gap-3 flex-wrap">
@@ -27,7 +27,7 @@ export default function ProfileForm({
 
               <input
                 style={{ width: value.length * 10 + 25 + "px" }}
-                className={`text-black text-lg font-normal focus:outline-none `}
+                className={`text-black text-[14px] sm:text-lg font-normal focus:outline-none `}
                 value={value}
                 onChange={(e) => {
                   setState(
@@ -71,7 +71,7 @@ export default function ProfileForm({
             </div>
           ))}
           <div className="border border-neutral-200 rounded-full py-3 px-5 gap-3 w-fit flex items-center">
-            <div className="text-black text-lg font-normal">Add New</div>
+            <div className="text-black text-[14px] sm:text-lg font-normal">Add New</div>
             <div
               className="w-[24px] h-[24px] rounded-full bg-secondary-green flex items-center justify-center"
               role="button"

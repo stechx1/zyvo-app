@@ -149,9 +149,9 @@ const ProfilePage = () => {
   }, [auth]);
 
   return (
-    <div className="flex lg:gap-20 gap-10">
-      <div className="w-[70%] flex flex-col gap-12 ">
-        <div className="flex flex-col gap-3">
+    <div className="flex flex-col sm:container sm:flex-row lg:gap-20 gap-10">
+      <div className="sm:w-[30%] flex flex-col gap-6 sm:gap-10 sm:order-2">
+        <div className="flex flex-col gap-3 sm:hidden">
           <div className="text-black text-2xl font-normal font-Poppins">
             Complete your profile
           </div>
@@ -161,12 +161,73 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
+        <div className="h-full sm:h-[380px] w-full rounded-3xl border border-secondary-neutral-200 p-6 items-center sm:justify-center flex-row sm:flex-col flex">
+          <div className="relative">
+            <div className="w-[59px] h-[59px] sm:w-[188px] sm:h-[188px] border-8 border-secondary-neutral-200 bg-white rounded-full flex items-center justify-center">
+              <Image
+                src={
+                  imgPreview
+                    ? imgPreview
+                    : user?.photoURL
+                      ? user?.photoURL
+                      : "/icons/profile-icon.png"
+                }
+                alt="Profile Image"
+                className={`sm:w-[156px] sm:h-[156px] rounded-full ${!user?.photoURL && "opacity-10"
+                  }`}
+                width={156}
+                height={156}
+              />
+            </div>
+            <div className="w-[24px] h-[24px] md:w-[30px] md:h-[30px] rounded-full bg-secondary-green flex items-center justify-center absolute left-10 bottom-1 sm:top-36 sm:left-36">
+              <label htmlFor="files">
+                <Image
+                  src="/icons/plus-icon.svg"
+                  alt="plus-icon"
+                  width={13}
+                  height={13}
+                  className="cursor-pointer"
+                />
+              </label>
+            </div>
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            id="files"
+            onChange={onSelectFile}
+            className="hidden"
+          />
+          <div className="gap-1 flex flex-col ml-4 sm:items-center">
+            <div className="text-black text-[18px] sm:text-[28px] font-medium font-Poppins sm:mt-[20px]">
+              {user?.firstName + " " + user?.lastName}
+            </div>
+            <div className="text-black text-[13px] sm:text-[20px] font-light font-Poppins">
+              Guest
+            </div>
+          </div>
+        </div>
+        <div className="rounded-3xl bg-secondary-gray-700 p-3 sm:p-5 flex sm:flex-col object-contain">
+          <ProfileContactSection />
+        </div>
+      </div>
+      <div className="w-full sm:w-[70%] flex flex-col gap-6 sm:gap-12 sm:order-1">
+        <div className="flex-col gap-3 hidden sm:block">
+          <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
+            Complete your profile
+          </div>
+          <div className={` rounded-3xl `}>
+            <div className="text-black text-[14px] sm:text-lg font-normal">
+              Complete your profile here
+            </div>
+          </div>
+        </div>
         <div className="flex flex-col gap-3">
-          <div className="text-black text-2xl font-normal font-Poppins">
+          <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
             About Me
           </div>
           <div className={`border border-neutral-200 p-6 rounded-3xl `}>
-            <div className="text-black text-lg font-normal">
+            <div className="text-black text-[14px] sm:text-lg font-normal">
               <textarea
                 className="focus:outline-none w-full"
                 rows={5}
@@ -188,58 +249,7 @@ const ProfilePage = () => {
           {/* <Button text="Skip for now" onClick={() => {}} type="white" /> */}
         </div>
       </div>
-      <div className="w-[30%] flex flex-col gap-10">
-        <div className="h-[380px] w-full rounded-3xl border border-secondary-neutral-200 p-6 items-center justify-center flex-col flex">
-          <div className="relative">
-            <div className="w-[188px] h-[188px] border-8 border-secondary-neutral-200 bg-white rounded-full flex items-center justify-center">
-              <Image
-                src={
-                  imgPreview
-                    ? imgPreview
-                    : user?.photoURL
-                    ? user?.photoURL
-                    : "/icons/profile-icon.png"
-                }
-                alt="Profile Image"
-                className={`w-[156px] h-[156px] rounded-full ${
-                  !user?.photoURL && "opacity-10"
-                }`}
-                width={156}
-                height={156}
-              />
-            </div>
-            <div className="w-[24px] h-[24px] md:w-[30px] md:h-[30px] rounded-full bg-secondary-green flex items-center justify-center absolute top-36 right-4">
-              <label htmlFor="files">
-                <Image
-                  src="/icons/plus-icon.svg"
-                  alt="plus-icon"
-                  width={13}
-                  height={13}
-                  className="cursor-pointer"
-                />
-              </label>
-            </div>
-          </div>
-          <input
-            type="file"
-            accept="image/*"
-            id="files"
-            onChange={onSelectFile}
-            className="hidden"
-          />
-          <div className="gap-1 flex flex-col items-center">
-            <div className="text-black text-[28px] font-medium font-Poppins mt-[20px]">
-              {user?.firstName + " " + user?.lastName}
-            </div>
-            <div className="text-black text-[20px] font-light font-Poppins">
-              Guest
-            </div>
-          </div>
-        </div>
-        <div className="rounded-3xl bg-secondary-gray-700 p-5">
-          <ProfileContactSection />
-        </div>
-      </div>
+
     </div>
   );
 };
