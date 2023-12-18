@@ -22,7 +22,7 @@ export default function Input({
       <div className="relative flex">
         <input
           name={name}
-          className={`px-4 py-2 border rounded-full focus:outline-none text-gray-600 w-full sm:text-sm ${
+          className={`px-4 py-2 border rounded-full focus:outline-none text-gray-600 w-full text-[14px] sm:text-sm ${
             invalidMessage ? " focus:border-red-500" : " focus:border-gray-500 "
           }${invalidMessage ? " border-red-300 " : " border-gray-300 "} ${type === "lock" ? "placeholder-gray-950" : type === "year" && "placeholder-gray-950"  }`
         }
