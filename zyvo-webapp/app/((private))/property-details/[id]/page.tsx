@@ -7,6 +7,11 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { getPlaceSnapshot } from "@/firebase/place";
 import { Place } from "@/types/place";
+import HostProperties from "@/collections/HostProperties";
+import { getUserByRef } from "@/firebase/user";
+import { profileData } from "@/types/profile";
+import { getFullName } from "@/lib/utils";
+import { DocumentReference } from "firebase/firestore";
 
 const PropertyDetailsPage = ({
   params,
@@ -17,6 +22,7 @@ const PropertyDetailsPage = ({
 }) => {
   const { user } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
+  const [placeUser, setPlaceUser] = useState<null | profileData>();
   const router = useRouter();
   useEffect(() => {
     if (user == null) {
@@ -27,6 +33,7 @@ const PropertyDetailsPage = ({
       params.id,
       (place) => {
         setPlace(place);
+        if (place.sender) getUser(place.sender);
       },
       (e) => {
         console.log(e);
@@ -36,6 +43,13 @@ const PropertyDetailsPage = ({
       unsubscribe();
     };
   }, [user]);
+
+  const getUser = async (sender: DocumentReference) => {
+    const { result } = await getUserByRef(sender);
+    if (result) {
+      setPlaceUser(result);
+    }
+  };
 
   const accordionItems: AccordionItem[] = [
     {
@@ -263,7 +277,18 @@ const PropertyDetailsPage = ({
           </div>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
         </div>
-        <div className="w-[30%]"></div>
+        <div className="w-[30%]">
+          {user?.userId !== placeUser?.userId && (
+            <HostProperties
+              photoURL={user?.photoURL ?? ""}
+              fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
+              buttonText="Message the host"
+              onClick={() => {
+                router.push("/messages?userId=" + placeUser?.userId);
+              }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

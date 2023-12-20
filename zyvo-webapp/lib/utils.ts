@@ -1,28 +1,43 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { Poppins, Roboto } from 'next/font/google';
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { Poppins, Roboto } from "next/font/google";
+import { profileData } from "@/types/profile";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 export const getEllipsesText = (text: string, maxLength: number) => {
   if (text.length >= maxLength) {
-    return text.substring(0, maxLength) + '...';
+    return text.substring(0, maxLength) + "...";
   } else {
     return text;
   }
 };
 
 export const poppins = Poppins({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-poppins',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-poppins",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const roboto = Roboto({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto',
-  weight: ['100', '300', '400', '500', '700', '900'],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto",
+  weight: ["100", "300", "400", "500", "700", "900"],
 });
+
+export const getOtherUser = (users: profileData[], user: profileData) => {
+  const filteredUsers = users.filter((u) => {
+    return u.userId !== user?.userId;
+  });
+  if (filteredUsers.length > 0) return filteredUsers[0];
+};
+
+export const getFullName = (user?: profileData) => {
+  if (user) {
+    return user.firstName + " " + user.lastName;
+  }
+  return "";
+};
