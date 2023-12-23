@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useScreenDimensions } from "@/hooks/useScreenDimension";
 
 interface TableRowProps {
   user: string;
@@ -89,26 +90,34 @@ const TableRow: React.FC<TableRowProps> = ({
 };
 
 const DataTable: React.FC<TableProps> = ({ data }) => {
+  const [width] = useScreenDimensions();
   return (
-    <table className="w-full">
-      <thead>
-        <tr>
-          <th className="px-2 py-3 text-left font-normal"></th>
-          <th className="px-2 py-3 text-left font-normal">User</th>
-          <th className="px-2 py-3 text-left font-normal">ID</th>
-          <th className="px-2 py-3 text-left font-normal">Payment Method</th>
-          <th className="px-2 py-3 text-left font-normal">Status</th>
-          <th className="px-2 py-3 text-left font-normal">Strikes</th>
-          <th className="px-2 py-3 text-left font-normal">Last Booking</th>
-          <th className="px-2 py-3 text-left font-normal"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((rowData, index) => (
-          <TableRow key={index} {...rowData} />
-        ))}
-      </tbody>
-    </table>
+    <div
+      style={{
+        width: "100%",
+        overflowX: width < 768 ? "auto" : "hidden",
+      }}
+    >
+      <table className="w-full">
+        <thead className={width < 768 ? `bg-[#EFF2F5]` : "bg-[#fff]"}>
+          <tr>
+            <th className="px-2 py-3 text-left font-normal"></th>
+            <th className="px-2 py-3 text-left font-normal">User</th>
+            <th className="px-2 py-3 text-left font-normal">ID</th>
+            <th className="px-2 py-3 text-left font-normal">Payment Method</th>
+            <th className="px-2 py-3 text-left font-normal">Status</th>
+            <th className="px-2 py-3 text-left font-normal">Strikes</th>
+            <th className="px-2 py-3 text-left font-normal">Last Booking</th>
+            <th className="px-2 py-3 text-left font-normal"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((rowData, index) => (
+            <TableRow key={index} {...rowData} />
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

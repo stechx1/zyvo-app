@@ -53,13 +53,13 @@ export default function ManageUsers() {
     <div>
       <div className="flex justify-between">
         <div className="flex space-x-2">
-          <div className="w-40">
+          <div className="lg:w-40 w-28">
             <CustomSelect
               roundedFull
               options={[{ label: "All Users", value: "All Users" }]}
             />
           </div>
-          <div className="w-40">
+          <div className="lg:w-40">
             <CustomSelect
               roundedFull
               options={[{ label: "All Status", value: "All Status" }]}
