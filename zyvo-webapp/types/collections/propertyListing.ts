@@ -11,8 +11,3 @@ export type PropertyItem = {
     rating: number;
     milesAway: string;
   };
-
-
-export interface PropertyLisitngProps {
-    propertyListing: PropertyItem[];
-}

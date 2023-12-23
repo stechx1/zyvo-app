@@ -72,6 +72,7 @@ const PropertyDetailsPage = ({
     }
     return "/images/no-image.jpg";
   };
+  
   return (
     <div className="flex container mx-auto my-24 px-14 md:px-10 gap-2  flex-col">
       <div className="text-black text-4xl font-normal font-Poppins">
