@@ -126,9 +126,10 @@ export default function Reports() {
         {bookings.map((res) => {
           return (
             <div
-              className="flex mt-4 border px-2 py-2 rounded-xl"
+              className="flex mt-4 border px-2 justify-between py-2 rounded-xl"
               role="button"
             >
+              <div className="flex">
               <div className="flex items-center">
                 <div className="rounded-full border-2 border-gray-200 p-1 h-20 w-20">
                   <img
@@ -149,6 +150,9 @@ export default function Reports() {
                   {res.status}
                 </span>
               </div>
+                </div>
+              
+
               <div
                 className="h-[30px] flex items-center justify-center ml-6"
                 role="button"

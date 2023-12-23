@@ -4,8 +4,10 @@ import Image from "next/image";
 import React, { useEffect, useRef } from "react";
 import Chart, { ChartConfiguration, DoughnutController } from "chart.js/auto";
 import PluginServiceGlobalRegistration from "chart.js/auto";
+import { useScreenDimensions } from "@/hooks/useScreenDimension";
 
 export default function AdminDashboard() {
+  const [width] = useScreenDimensions();
   interface BarChartProps {
     data: {
       labels: string[];
@@ -33,15 +35,19 @@ export default function AdminDashboard() {
     iconBg: string
   ) => {
     return (
-      <div className="py-3 px-2 flex border rounded-xl space-x-3 min-w-[23%]">
+      <div className="py-3 mb-2 px-2 flex border rounded-xl space-x-3 w-[49%] lg:w-[23.5%]">
         <div
-          className={`${iconBg} rounded-xl justify-center items-center text-center py-3 px-3`}
+          className={`${iconBg} flex   rounded-xl justify-center items-center text-center py-3 px-3`}
         >
           <Image src={imageUrl} height={25} width={25} alt="dollar-icon" />
         </div>
         <div>
-          <div>{title}</div>
-          <div className="font-semibold font-medium">{value}</div>
+          <div className="text-xs sm:text-sm md:text-base lg:text-lg">
+            {title}
+          </div>
+          <div className="text-sm sm:text-sm md:text-base lg:text-lg font-semibold font-medium">
+            {value}
+          </div>
         </div>
       </div>
     );
@@ -64,11 +70,11 @@ export default function AdminDashboard() {
             alt="dollar-icon"
             className="rounded-full"
           />
-          <div>{name}</div>
+          <div className="text-sm lg:text-lg md:text-md sm:text-sm">{name}</div>
         </div>
         <div>
           <span
-            className={`inline-block mt-0.5 text-black px-2.5 py-2 text-sm leading-none ${getStatusColor(
+            className={`inline-block mt-0.5 text-black px-2.5 py-2 text-xs sm:text-sm md:text-md lg:text-md leading-none ${getStatusColor(
               status
             )} rounded-full`}
           >
@@ -100,12 +106,14 @@ export default function AdminDashboard() {
                   label: "Bookings",
                   data: [65, 59, 80, 81, 56, 55, 40, 50, 27, 48, 41, 55],
                   backgroundColor: ["#389CE5"],
-                  barThickness: 30,
+                  barPercentage: 0.5,
+                  categoryPercentage: 1.0,
                   borderRadius: 50,
                 },
               ],
             },
             options: {
+              responsive: true,
               scales: {
                 y: {
                   grid: {
@@ -159,9 +167,9 @@ export default function AdminDashboard() {
               ],
             },
             options: {
+              responsive: true,
               cutout: "75%",
-              radius: 80,
-              borderRadius: 10,
+              radius: width > 768 ? 80 : 70,
             },
           };
           chartInstance.current = new Chart(ctx, config);
@@ -174,12 +182,12 @@ export default function AdminDashboard() {
       };
     }, []);
 
-    return <canvas height={"200px"} width={"200px"} ref={chartRef} />;
+    return <canvas ref={chartRef} />;
   };
 
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="flex justify-between flex-wrap">
         {TotalCountsBox(
           "Total Revenue",
           "$125,000.00",
@@ -205,11 +213,11 @@ export default function AdminDashboard() {
           "bg-[#DB72D6]"
         )}
       </div>
-      <div className="flex justify-between my-6">
-        <div className="px-6 py-3 border rounded-xl w-[48.82%]">
-          <div className="flex justify-between items-center">
+      <div className="flex justify-between my-6 flex-wrap">
+        <div className="lg:px-6 px-3 py-2 lg:py-3 border rounded-xl lg:w-[48.82%] w-[100%] md:w-[49%] mb-8 lg:mb-0 md:mb-0">
+          <div className="flex justify-between items-center text-md lg:text-lg md:text-lg sm:text-md">
             Recent Bookings
-            <div className="min-w-[20%]">
+            <div className="lg:min-w-[20%] min-w-[30%] sm:min-w-[25%] md:min-w-[25%]">
               <CustomSelect
                 roundedFull
                 options={[
@@ -248,10 +256,12 @@ export default function AdminDashboard() {
             )}
           </div>
         </div>
-        <div className="px-3 py-3 border rounded-xl w-[48.82%]">
+        <div className="px-3 py-3 border rounded-xl lg:w-[48.82%] w-[100%] md:w-[49%]">
           <div className="flex justify-between items-center">
-            <div>Bookings</div>
-            <div className="min-w-[20%]">
+            <div className="text-md lg:text-lg md:text-lg sm:text-md">
+              Bookings
+            </div>
+            <div className="lg:min-w-[20%] min-w-[30%] sm:min-w-[25%] md:min-w-[25%]">
               <CustomSelect
                 roundedFull
                 options={[
@@ -267,11 +277,11 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="flex justify-between">
-        <div className="px-6 py-3 border rounded-xl w-[48.82%]">
-          <div className="flex justify-between items-center">
+      <div className="flex justify-between flex-wrap">
+        <div className="px-6 py-3 border rounded-xl lg:w-[48.82%] w-[100%] mb-7 lg:mb-0">
+          <div className="flex justify-between items-center text-md lg:text-lg md:text-lg sm:text-md">
             Recent Reports
-            <div className="min-w-[20%]">
+            <div className="lg:min-w-[20%] min-w-[30%] sm:min-w-[25%] md:min-w-[25%]">
               <CustomSelect
                 roundedFull
                 options={[
@@ -314,8 +324,8 @@ export default function AdminDashboard() {
             )}
           </div>
         </div>
-        <div className="flex w-[48.82%] justify-between" style={{ maxHeight: "18rem" }}>
-          <div className="border w-[49%] px-6 py-3 items-center rounded-xl space-y-2">
+        <div className="flex lg:w-[48.82%] w-[100%] justify-between flex-wrap">
+          <div className="border lg:w-[49%] md:w-[49%] w-[100%] px-6 py-3 items-center rounded-xl space-y-2 mb-8 sm:mb-0 md:mb-0 lg:m-0">
             <div className="flex justify-between items-center">
               Users
               <div className="min-w-[40%]">
@@ -328,9 +338,27 @@ export default function AdminDashboard() {
                 />
               </div>
             </div>
-            <DoughnutChart />
+            <div className="flex lg:block justify-between">
+              <div className="h-40 lg:h-full">
+                <DoughnutChart />
+              </div>
+              <div className="flex items-center flex-col justify-center">
+                <div className="flex items-center justify-center w-full">
+                  <div className="w-3 mr-1 h-3 bg-[#CFEFEC] rounded-full"></div>
+                  <div className="text-sm sm:text-sm md:text-md lg:text-md">
+                    Active users (365)
+                  </div>
+                </div>
+                <div className="flex items-center justify-center w-full">
+                  <div className="w-3 mr-1 h-3 bg-[#64CCC1] rounded-full"></div>
+                  <div className="text-sm sm:text-sm md:text-md lg:text-md">
+                    Incative users (115)
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="border w-[49%] px-6 py-3 items-center rounded-xl space-y-2">
+          <div className="border lg:w-[49%] md:w-[49%] w-[100%] px-6 py-3 items-center rounded-xl space-y-2">
             <div className="flex justify-between items-center">
               Cash Flow
               <div className="min-w-[40%]">
@@ -343,7 +371,25 @@ export default function AdminDashboard() {
                 />
               </div>
             </div>
-            <DoughnutChart />
+            <div className="flex lg:block justify-between">
+              <div className="h-40 lg:h-full">
+                <DoughnutChart />
+              </div>
+              <div className="flex items-center flex-col justify-center">
+                <div className="flex items-center justify-center w-full">
+                  <div className="w-3 mr-1 h-3 bg-[#CFEFEC] rounded-full"></div>
+                  <div className="text-sm sm:text-sm md:text-md lg:text-md">
+                    Active users (3654)
+                  </div>
+                </div>
+                <div className="flex items-center justify-center w-full">
+                  <div className="w-3 mr-1 h-3 bg-[#64CCC1] rounded-full"></div>
+                  <div className="text-sm sm:text-sm md:text-md lg:text-md">
+                    Incative users (212)
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
