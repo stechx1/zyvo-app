@@ -1,4 +1,6 @@
-type amenety =
+import { DocumentReference } from "firebase/firestore";
+
+export type amenety =
   | "WIFI"
   | "WASHER"
   | "HEATING"
@@ -11,17 +13,18 @@ type addOn = {
   price: number;
 };
 export type Place = {
+  placeId: string;
   addOns: addOn[];
   allowPets: boolean;
   ameneties: amenety[];
   availableMonths: number[];
   availableDays: number[];
-  availableHoursFrom: number;
-  availableHoursTo: number;
+  availableHoursFrom: string;
+  availableHoursTo: string;
   bathrooms: number;
   bedrooms: number;
   beds: number;
-  city: "Washington";
+  city: string;
   coordinates: number[];
   country: string;
   description: string;
@@ -35,8 +38,10 @@ export type Place = {
   pricePerHour: number;
   propertyType: string;
   selfCheckIn: boolean;
-  spaceType: "HOME" | "ROOM";
+  spaceType: string;
   state: string;
   street: string;
   zipCode: string;
+  createdAt?: Date;
+  sender?: DocumentReference;
 };

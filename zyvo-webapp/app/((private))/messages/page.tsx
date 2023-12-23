@@ -1,71 +1,64 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import Button from "@/components/Button";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "@/context/AuthContext";
 import {
   getMessagessSnapshot,
-  getConversationsSnapshot,
   sendMessage,
   resetUnreadCount,
 } from "@/firebase/messages";
 import { conversation, message } from "@/types/messages";
-import { profileData } from "@/types/profile";
 import { format, formatDistance } from "date-fns";
 import toast from "react-hot-toast";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import firebase_app from "@/config";
 import Badge from "@/components/Badge";
+import HostProperties from "@/collections/HostProperties";
+import { getFullName, getOtherUser } from "@/lib/utils";
+import { profileData } from "@/types/profile";
+import { getUserByPath } from "@/firebase/user";
 const storage = getStorage(firebase_app);
 
 export default function Messages() {
-  const { user } = useAuthContext();
+  const searchParams = useSearchParams();
+  let userId = searchParams.get("userId");
+
+  const { user, conversations } = useAuthContext();
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [isConversationsLoading, setIsConversationsLoading] = useState(false);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
-  const [conversations, setConversations] = useState<conversation[]>([]);
   const [messages, setMessages] = useState<message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedConversation, setSelectedConversation] =
-    useState<conversation | null>(null);
+    useState<conversation>();
+  const [newChatConversation, setNewChatConversation] =
+    useState<conversation>();
+  const [newChatUser, setNewChatUser] = useState<profileData | null>(null);
 
   useEffect(() => {
-    if (user == null) {
-      router.push("/signin");
-      return;
-    }
-    setIsConversationsLoading(true);
-    const unsubscribe = getConversationsSnapshot(
-      user.userId,
-      (convos) => {
-        setConversations(convos);
-        setIsConversationsLoading(false);
-      },
-      (e) => {
-        console.log(e);
-        setIsConversationsLoading(false);
+    if (userId) {
+      const fountConvo = conversations.find((c) =>
+        c.users.find((u) => u.userId === userId)
+      );
+      if (fountConvo) {
+        setSelectedConversation(fountConvo);
+      } else {
+        getNewChatUser("/users/" + userId);
       }
-    );
-    return () => {
-      unsubscribe();
-    };
-  }, [user]);
+    }
+  }, [userId, conversations]);
+
 
   useEffect(() => {
     if (selectedConversation == null) {
       return;
     }
-    console.log("yes");
-
     setIsMessagesLoading(true);
     const unsubscribe = getMessagessSnapshot(
       selectedConversation.conversationId,
       (msgs) => {
         setMessages(msgs);
-        console.log("msgs");
-
         setIsMessagesLoading(false);
       },
       (e) => {
@@ -88,16 +81,21 @@ export default function Messages() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const getOtherUser = (users: profileData[]) => {
-    const filteredUsers = users.filter((u) => u.userId !== user?.userId);
-    if (filteredUsers.length > 0) return filteredUsers[0];
-  };
-
-  const getFullName = (user?: profileData) => {
-    if (user) {
-      return user.firstName + " " + user.lastName;
+  const getNewChatUser = async (sender: string) => {
+    const { result } = await getUserByPath(sender);
+    if (result) {
+      if (user) {
+        const newConversation = {
+          conversationId: "",
+          lastMessage: { message: "", messageId: "", sender: user },
+          unreadCount: 0,
+          users: [user, result],
+        };
+        setNewChatUser(result);
+        setNewChatConversation(newConversation);
+        setSelectedConversation(newConversation);
+      }
     }
-    return "";
   };
   const getTimeDifference = (date?: Date) => {
     if (!date) return "";
@@ -118,8 +116,13 @@ export default function Messages() {
       sendMessage(
         selectedConversation?.conversationId,
         user?.userId,
-        newMessage
+        newMessage,
+        undefined,
+        undefined,
+        newChatUser?.userId
       ).then(({ result, error }) => {
+        setNewChatConversation(undefined);
+        setNewChatUser(null);
         if (error) {
           toast.error("error sending message!");
           setMessages((prev) => prev.splice(-1));
@@ -160,9 +163,12 @@ export default function Messages() {
       user?.userId,
       newMessage,
       fileType === "IMAGE" ? uploadedURL : undefined,
-      fileType === "FILE" ? uploadedURL : undefined
+      fileType === "FILE" ? uploadedURL : undefined,
+      newChatUser?.userId
     ).then(({ result, error }) => {
       if (error) {
+        setNewChatConversation(undefined);
+        setNewChatUser(null);
         toast.error("error sending message!");
         setMessages((prev) => prev.splice(-1));
       }
@@ -200,66 +206,22 @@ export default function Messages() {
           </div>
         </div>
         <div className="h-[75vh] overflow-auto space-y-3">
-          {conversations.length > 0 ? (
+          {conversations.length > 0 &&
             conversations.map((conversation) => {
               return (
-                <div
+                <ConversationBox
                   key={conversation.conversationId}
-                  className={`h-[100px] flex justify-between items-center border p-3 rounded-xl me-1 hover:border-gray-600 ${
-                    selectedConversation?.conversationId ===
-                    conversation.conversationId
-                      ? "border-gray-500"
-                      : ""
-                  }`}
-                  onClick={() => setSelectedConversation(conversation)}
-                >
-                  <div className="flex items-center space-x-2">
-                    <div className="rounded-full border-2 border-gray-200 p-1 min-w-[50px]">
-                      <Image
-                        className="rounded-full"
-                        src={getOtherUser(conversation.users)?.photoURL ?? ""}
-                        alt="profile-pic"
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                    <div className=" flex-col">
-                      <div>{getFullName(getOtherUser(conversation.users))}</div>
-                      <div className="text-gray-400 whitespace-nowrap">
-                        {getTimeDifference(conversation.lastMessage?.createdAt)}
-                      </div>
-                      <div className="line-clamp-1">
-                        {conversation.lastMessage.message
-                          ? conversation.lastMessage.message
-                          : conversation.lastMessage.imageURL
-                          ? "1 Image attached.."
-                          : conversation.lastMessage.fileURL
-                          ? "1 File attached.."
-                          : "-"}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col justify-between items-end  min-w-[25px] h-full">
-                    <div>
-                      <Image
-                        src={"/icons/dots.svg"}
-                        alt="dots"
-                        width={4}
-                        height={4}
-                      />
-                    </div>
-                    {conversation.lastMessage.sender.userId !== user?.userId &&
-                      selectedConversation?.conversationId !==
-                        conversation.conversationId && (
-                        <Badge text={conversation.unreadCount} />
-                      )}
-                  </div>
-                </div>
+                  user={user}
+                  conversation={conversation}
+                  onSelect={() => {setSelectedConversation(conversation)}}
+                  selectedConversation={selectedConversation}
+                  time={getTimeDifference(conversation.lastMessage?.createdAt)}
+                />
               );
-            })
-          ) : (
+            })}
+          {!newChatConversation && conversations.length === 0 && (
             <div className="text-center m-auto h-[100%] flex items-center justify-center">
-              {isConversationsLoading ? "Loading.." : "No Conversations"}
+              No Conversations
             </div>
           )}
         </div>
@@ -277,7 +239,10 @@ export default function Messages() {
                 <div className="rounded-full border-2 border-gray-200 p-1">
                   <Image
                     src={
-                      getOtherUser(selectedConversation.users)?.photoURL ?? ""
+                      user
+                        ? getOtherUser(selectedConversation.users, user)
+                            ?.photoURL ?? "/icons/profile-icon.png"
+                        : "/icons/profile-icon.png"
                     }
                     alt="profile-pic"
                     width={35}
@@ -287,7 +252,11 @@ export default function Messages() {
                 </div>
                 <div>
                   <div>
-                    {getFullName(getOtherUser(selectedConversation.users))}
+                    {user
+                      ? getFullName(
+                          getOtherUser(selectedConversation.users, user)
+                        )
+                      : ""}
                   </div>
                   <div className="text-green-500">online</div>
                 </div>
@@ -322,7 +291,10 @@ export default function Messages() {
                           <div className="flex space-x-2 items-center">
                             <div className="rounded-full border border-gray-200">
                               <Image
-                                src={message.sender?.photoURL ?? ""}
+                                src={
+                                  message.sender?.photoURL ??
+                                  "/icons/profile-icon.png"
+                                }
                                 alt="profile-pic"
                                 width={35}
                                 height={35}
@@ -442,59 +414,31 @@ export default function Messages() {
         }`}
       >
         {selectedConversation && (
-          <div>
-            <div className="border rounded-lg p-4 text-center space-y-2">
-              <div>Hosted By</div>
-              <div className="flex items-center justify-center space-x-2">
-                <div>
-                  <div className="rounded-full border-2 border-gray-200 p-1">
-                    <Image
-                      src={
-                        getOtherUser(selectedConversation.users)?.photoURL ?? ""
-                      }
-                      alt="profile-pic"
-                      width={35}
-                      height={35}
-                      className="rounded-full"
-                    />
-                  </div>
-                </div>
-                <div className="text-lg">
-                  {getFullName(getOtherUser(selectedConversation.users)) ?? ""}
-                </div>
-                <div>
-                  <Image
-                    src={"/icons/green-tick.svg"}
-                    alt="tick"
-                    width={15}
-                    height={15}
-                  />
-                </div>
-              </div>
-              <hr />
-              <Button
-                type="white"
-                text="Host Properties"
-                bordered
-                rounded
-                full
-                className="border-gray-700"
-              />
-              <div className="flex items-center justify-center space-x-2">
-                <Image
-                  src={"/icons/time.svg"}
-                  alt="time"
-                  width={15}
-                  height={15}
-                />
-                <div>Typically responds within 1 hr</div>
-              </div>
-            </div>
+          <div className="space-y-2">
+            <HostProperties
+              photoURL={
+                user
+                  ? getOtherUser(selectedConversation.users, user)?.photoURL ??
+                    "/icons/profile-icon.png"
+                  : "/icons/profile-icon.png"
+              }
+              fullName={
+                user
+                  ? getFullName(
+                      getOtherUser(selectedConversation.users, user)
+                    ) ?? ""
+                  : ""
+              }
+              buttonText="Host Properties"
+            />
             <div className="border rounded-lg p-4 space-y-4">
               <div className="flex justify-between items-center">
                 <div>From</div>
                 <div className="font-bold">
-                  {getOtherUser(selectedConversation.users)?.country ?? "-"}
+                  {user
+                    ? getOtherUser(selectedConversation.users, user)?.country ??
+                      "-"
+                    : "-"}
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -512,3 +456,69 @@ export default function Messages() {
     </div>
   );
 }
+const ConversationBox = ({
+  conversation,
+  selectedConversation,
+  onSelect,
+  user,
+  time,
+}: {
+  conversation: conversation;
+  selectedConversation?: conversation;
+  onSelect: () => void;
+  user: profileData | null;
+  time: string;
+}) => {
+  return (
+    <div
+      className={`h-[100px] flex justify-between items-center border p-3 rounded-xl me-1 hover:border-gray-600 ${
+        selectedConversation?.conversationId === conversation.conversationId
+          ? "border-gray-500"
+          : ""
+      }`}
+      onClick={onSelect}
+    >
+      <div className="flex items-center space-x-2">
+        <div className="rounded-full border-2 border-gray-200 p-1 min-w-[50px]">
+          <Image
+            className="rounded-full"
+            src={
+              user
+                ? getOtherUser(conversation.users, user)?.photoURL ??
+                  "/icons/profile-icon.png"
+                : "/icons/profile-icon.png"
+            }
+            alt="profile-pic"
+            width={40}
+            height={40}
+          />
+        </div>
+        <div className=" flex-col">
+          <div>
+            {user ? getFullName(getOtherUser(conversation.users, user)) : ""}
+          </div>
+          <div className="text-gray-400 whitespace-nowrap">{time}</div>
+          <div className="line-clamp-1">
+            {conversation.lastMessage.message
+              ? conversation.lastMessage.message
+              : conversation.lastMessage.imageURL
+              ? "1 Image attached.."
+              : conversation.lastMessage.fileURL
+              ? "1 File attached.."
+              : "-"}
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col justify-between items-end  min-w-[25px] h-full">
+        <div>
+          <Image src={"/icons/dots.svg"} alt="dots" width={4} height={4} />
+        </div>
+        {conversation.lastMessage.sender.userId !== user?.userId &&
+          selectedConversation?.conversationId !==
+            conversation.conversationId && (
+            <Badge text={conversation.unreadCount} />
+          )}
+      </div>
+    </div>
+  );
+};
