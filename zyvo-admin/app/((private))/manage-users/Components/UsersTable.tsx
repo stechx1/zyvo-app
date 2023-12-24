@@ -51,7 +51,7 @@ const TableRow: React.FC<TableRowProps> = ({
         />
       </td>
       <td className="p-2 flex items-center">
-        <div className="rounded-full border-2 border-gray-200 mr-3">
+        <div className="rounded-full border-2 border-gray-200 mr-3 min-w-[30px]">
           <Image
             src={"/icons/profile-icon.png"}
             alt="profile-pic"
@@ -99,7 +99,7 @@ const DataTable: React.FC<TableProps> = ({ data }) => {
       }}
     >
       <table className="w-full">
-        <thead className={width < 768 ? `bg-[#EFF2F5]` : "bg-[#fff]"}>
+        <thead className={`whitespace-nowrap ${width < 768 ? `bg-[#EFF2F5]` : "bg-[#fff]"}`}>
           <tr>
             <th className="px-2 py-3 text-left font-normal"></th>
             <th className="px-2 py-3 text-left font-normal">User</th>
@@ -111,7 +111,7 @@ const DataTable: React.FC<TableProps> = ({ data }) => {
             <th className="px-2 py-3 text-left font-normal"></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="whitespace-nowrap">
           {data.map((rowData, index) => (
             <TableRow key={index} {...rowData} />
           ))}
