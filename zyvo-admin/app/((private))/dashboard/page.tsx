@@ -278,7 +278,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="flex justify-between flex-wrap">
-        <div className="px-6 py-3 border rounded-xl lg:w-[48.82%] w-[100%] mb-7 lg:mb-0">
+        <div className="lg:px-6 py-2 px-3 md:px-5 lg:py-3 border rounded-xl lg:w-[48.82%] w-[100%] mb-7 lg:mb-0">
           <div className="flex justify-between items-center text-md lg:text-lg md:text-lg sm:text-md">
             Recent Reports
             <div className="lg:min-w-[20%] min-w-[30%] sm:min-w-[25%] md:min-w-[25%]">
