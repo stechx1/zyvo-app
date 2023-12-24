@@ -1,9 +1,11 @@
 "use client";
 import Button from "@/components/Button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import CustomDetailTag from "@/components/CustomDetailTag";
 import CustomSelect from "@/components/SelectDropDown";
+import { useScreenDimensions } from "@/hooks/useScreenDimension";
+import OrderAmountBox from "./components/orderAmountBox";
 
 export default function Reports() {
   interface bookings {
@@ -23,6 +25,7 @@ export default function Reports() {
     chairs?: boolean;
   }
 
+  const [width] = useScreenDimensions();
   const [bookings, setBookings] = useState<bookings[]>([
     {
       title: "Katelyn Francy",
@@ -81,6 +84,18 @@ export default function Reports() {
       ],
     },
   ]);
+  const [detailView, setDetailView] = useState(true);
+  const [selectionView, setSelectionView] = useState(true);
+
+  useEffect(() => {
+    if (width < 640) {
+      setDetailView(false);
+      setSelectionView(true);
+    } else {
+      setDetailView(true);
+      setSelectionView(true);
+    }
+  }, [width]);
 
   function getStatusColor(status: string) {
     switch (status) {
@@ -108,228 +123,186 @@ export default function Reports() {
 
   return (
     <div className="flex justify-between space-x-4">
-      <div className="w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-[80vh] space-y-2`">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="text-lg">All Reports</div>
-            <Image src={"/icons/down.svg"} alt="down" width={13} height={13} />
+      {selectionView && (
+        <div
+          onClick={() => {
+            if (width < 768) {
+              setDetailView(true);
+              setSelectionView(false);
+            }
+          }}
+          className="w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-[80vh] space-y-2`"
+        >
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2">
+              <div className="text-lg">All Reports</div>
+              <Image
+                src={"/icons/down.svg"}
+                alt="down"
+                width={13}
+                height={13}
+              />
+            </div>
+            <div className="me-1">
+              <Image
+                src={"/icons/search.svg"}
+                alt="search"
+                width={18}
+                height={18}
+              />
+            </div>
           </div>
-          <div className="me-1">
-            <Image
-              src={"/icons/search.svg"}
-              alt="search"
-              width={18}
-              height={18}
-            />
-          </div>
-        </div>
-        {bookings.map((res) => {
-          return (
-            <div
-              className="flex mt-4 border px-2 justify-between py-2 rounded-xl"
-              role="button"
-            >
-              <div className="flex">
-              <div className="flex items-center">
-                <div className="rounded-full border-2 border-gray-200 p-1 h-20 w-20">
-                  <img
-                    src={res.image}
-                    alt="profile-pic"
-                    className="rounded-full object-cover w-full h-full"
+          {bookings.map((res) => {
+            return (
+              <div
+                className="flex mt-4 border px-2 justify-between py-2 rounded-xl"
+                role="button"
+              >
+                <div className="flex">
+                  <div className="flex items-center">
+                    <div className="rounded-full border-2 border-gray-200 p-1 h-20 w-20">
+                      <img
+                        src={res.image}
+                        alt="profile-pic"
+                        className="rounded-full object-cover w-full h-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <div className="text-lg">{res.title}</div>
+                    <div className="text-[#A4A4A4]">{res.date}</div>
+                    <span
+                      className={`inline-block mt-0.5 text-black px-2.5 py-2 text-sm leading-none ${getStatusColor(
+                        res.status
+                      )} rounded-full`}
+                    >
+                      {res.status}
+                    </span>
+                  </div>
+                </div>
+
+                <div
+                  className="h-[30px] flex items-center justify-center ml-6"
+                  role="button"
+                >
+                  <Image
+                    src={"/icons/dots.svg"}
+                    alt="dots"
+                    width={4}
+                    height={4}
                   />
                 </div>
               </div>
-              <div className="ml-4">
-                <div className="text-lg">{res.title}</div>
-                <div className="text-[#A4A4A4]">{res.date}</div>
-                <span
-                  className={`inline-block mt-0.5 text-black px-2.5 py-2 text-sm leading-none ${getStatusColor(
-                    res.status
-                  )} rounded-full`}
-                >
-                  {res.status}
-                </span>
-              </div>
-                </div>
-              
-
-              <div
-                className="h-[30px] flex items-center justify-center ml-6"
-                role="button"
-              >
-                <Image
-                  src={"/icons/dots.svg"}
-                  alt="dots"
-                  width={4}
-                  height={4}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/******Booking Details*******/}
-      <div className="w-[100%] sm:w-[60%] lg:w-[50%] sm:flex flex-col border rounded-lg">
-        <div className="flex items-center p-4 space-x-3">
-          <div className="text-lg">User sent spam on inbox</div>
-          <span className="bg-[#4AEAB1] text-black px-2 py-1 rounded-full text-sm">
-            Solved
-          </span>
-        </div>
-        <hr />
-        <div className="pt-5 px-4 space-y-2">
-          <div className="text-lg">Report Detail</div>
-          <div className="flex gap-3">
-            <CustomDetailTag text="Spam" type="sm" />
-            <CustomDetailTag text="Unapproved images" type="sm" />
-          </div>
-        </div>
-        <hr className="my-9" />
-        <div className="px-5 space-y-2">
-          <label>Report Message</label>
-          <div>
-            <textarea
-              rows={4}
-              value={
-                "User shared images that violate a platform's guidelines or "
-              }
-              placeholder="Description"
-              className="px-2 focus:outline-none focus:border-gray-500 focus:border-1 rounded-lg py-1 text-black w-full border"
-            />
-          </div>
-        </div>
-        <hr className="my-9" />
-        <div className="px-5">
-          <label>Reviews</label>
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex">
-              <Image
-                src={"/icons/starIcon.svg"}
-                alt="star-icon"
-                width={15}
-                height={15}
-              />
-              <div className="ml-1">
-                <span className="text-[#FCA800]">
-                  4.9 <span className="text-black"> 30 reviews</span>
-                </span>
-              </div>
-            </div>
-            <div>Sort by: Recent Reviews</div>
-          </div>
-          {Array.from({ length: 4 }, (_, i) => (
-            <>
-              <div className="flex justify-between py-2">
-                <div className="flex px-2 space-x-2">
+      {detailView && (
+        <div className="w-[100%] sm:w-[60%] lg:w-[50%] sm:flex flex-col md:border lg:border sm:border rounded-lg">
+          {!selectionView && (
+            <div className="space-y-2">
+              <div className="border border-x-0 flex items-center justify-between py-3">
+                <div className="flex items-center space-x-3">
+                  <Image
+                    src={"/icons/white-back-arrow.svg"}
+                    alt="tick"
+                    width={30}
+                    height={30}
+                    onClick={() => {
+                      setSelectionView(true);
+                      setDetailView(false);
+                    }}
+                  />
                   <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
                     <Image
                       src={"/icons/profile-icon.png"}
                       alt="profile-pic"
-                      width={40}
-                      height={40}
+                      width={30}
+                      height={30}
                       className="rounded-full"
                     />
                   </div>
-                  <div>
-                    <label>Emily James</label>
-                    <div>Host was very helpful. thank you so much</div>
+                  <div className="flex items-center space-x-1">
+                    <div>Katelyn</div>
+                    <Image
+                      src={"/icons/starIcon.svg"}
+                      alt="tick"
+                      width={15}
+                      height={15}
+                    />
+                    <span className="text-sm">5.0</span>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex">
-                    {Array.from({ length: 5 }, (_, index) => (
-                      <Image
-                        src={"/icons/starIcon.svg"}
-                        alt="star-icon"
-                        width={15}
-                        height={15}
-                      />
-                    ))}
-                  </div>
-                  <div>Mar 09, 22</div>
+                <div className="h-8 w-0.5 bg-gray-200"></div>
+                <div className="flex items-center justify-center text-center">
+                  <Image
+                    src={"/icons/information-button.png"}
+                    alt="info"
+                    width={23}
+                    height={23}
+                  />
+                  <div className="ml-0.5">User Activity</div>
                 </div>
               </div>
-              <hr className="my-3" />
-            </>
-          ))}
-          <div className="text-center my-5">
-            <Button
-              roundedfull
-              className="border-gray-700"
-              bordered
-              type="white"
-              text="Show More Reviews"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/****** Right side details ******/}
-      <div className="hidden lg:block lg:w-[25%] space-y-4">
-        <div className="border rounded-2xl p-4 text-center space-y-2">
-          <div>Guest</div>
-          <div className="flex items-center justify-center space-x-1">
-            <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
-              <Image
-                src={"/icons/profile-icon.png"}
-                alt="profile-pic"
-                width={35}
-                height={35}
-                className="rounded-full"
-              />
+              <div className="flex justify-between items-center">
+                <div className="w-[48%]">
+                  <Button
+                    type="gray"
+                    text="Apply Warning"
+                    bordered
+                    rounded
+                    full
+                    className="border-gray-700 my-2"
+                  />
+                </div>
+                <div className="w-[48%]">
+                  <Button
+                    type="white"
+                    text="Block User"
+                    bordered
+                    rounded
+                    full
+                    className="border-gray-700"
+                  />
+                </div>
+              </div>
+              <OrderAmountBox />
             </div>
-            <div className="text-lg">Mia J.</div>
-            <div className="flex">
-              <Image
-                src={"/icons/starIcon.svg"}
-                alt="tick"
-                width={15}
-                height={15}
-              />
-              <span>5.0</span>
-            </div>
+          )}
+          <div className="flex items-center lg:p-4 md:p-4 sm:p-3 p-2 py-5 space-x-3">
+            <div className="text-lg">User sent spam on inbox</div>
+            <span className="bg-[#4AEAB1] text-black px-2 py-1 rounded-full text-sm">
+              Solved
+            </span>
           </div>
           <hr />
-          <div>
-            <Button
-              type="gray"
-              text="Apply Warning"
-              bordered
-              rounded
-              full
-              className="border-gray-700 my-2"
-            />
-            <Button
-              type="white"
-              text="Block User"
-              bordered
-              rounded
-              full
-              className="border-gray-700"
-            />
+          <div className="pt-5 md:px-4 lg:px-4 sm:px-3 md:px-3 px-2 space-y-2">
+            <div className="text-lg">Report Detail</div>
+            <div className="flex gap-3">
+              <CustomDetailTag text="Spam" type="sm" />
+              <CustomDetailTag text="Unapproved images" type="sm" />
+            </div>
           </div>
-          <div className="flex items-center justify-center">
-            <Image
-              src={"/icons/information-button.png"}
-              alt="info"
-              width={23}
-              height={23}
-            />
-            <div className="ml-0.5">Generate User Activity</div>
+          <hr className="my-9" />
+          <div className="md:px-5 sm:px-3 md:px-3 px-2 space-y-2">
+            <div className="text-lg">Report Message</div>
+            <div>
+              <textarea
+                rows={width > 640 ? 4 : 2}
+                value={
+                  "User shared images that violate a platform's guidelines or "
+                }
+                placeholder="Description"
+                className="px-2 focus:outline-none focus:border-gray-500 focus:border-1 rounded-lg py-2 text-black w-full border"
+              />
+            </div>
           </div>
-        </div>
-        <div className="border rounded-lg p-4 space-y-4">
-          <div className="flex">
-            <Image
-              src={"/images/dummyImage-1.png"}
-              alt="image"
-              width={95}
-              height={95}
-              className="rounded-xl object-cover"
-            />
-            <div className="ml-4">
-              <div className="text-xl">Cabin in Peshastin</div>
+          <hr className="my-9" />
+          <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+            <label className="text-lg">Reviews</label>
+            <div className="flex items-center justify-between mb-3">
               <div className="flex">
                 <Image
                   src={"/icons/starIcon.svg"}
@@ -337,49 +310,141 @@ export default function Reports() {
                   width={15}
                   height={15}
                 />
-                <div className="ml-1">
+                <div className="ml-1 text-md md:text-md lg:text-base">
                   <span className="text-[#FCA800]">
-                    5,0 <span className="text-[#A4A4A4]"> (1k+)</span>
+                    4.9 <span className="text-black"> 30 reviews</span>
                   </span>
                 </div>
               </div>
-              <div className="flex mt-1">
+              <div className="text-md md:text-md lg:text-base">
+                Sort by: Recent Reviews
+              </div>
+            </div>
+            {Array.from({ length: 4 }, (_, i) => (
+              <>
+                <div className="flex justify-between py-2">
+                  <div className="flex px-2 space-x-2 w-full xl:w-9/12 items-center">
+                    <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
+                      <Image
+                        src={"/icons/profile-icon.png"}
+                        alt="profile-pic"
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                    </div>
+                    <div className="w-full">
+                      <div className="flex justify-between">
+                        <div className="text-sm md:text-md lg:text-base font-semibold">
+                          Emily James
+                        </div>
+                        <div className="xl:hidden space-y-2 text-sm md:text-md lg:text-base xl:text-base">
+                          <div className="flex">
+                            {Array.from({ length: 5 }, (_, index) => (
+                              <Image
+                                src={"/icons/starIcon.svg"}
+                                alt="star-icon"
+                                width={width > 640 ? 15 : 12}
+                                height={width > 640 ? 15 : 12}
+                              />
+                            ))}
+                            <div className="ml-2">Mar 09, 22</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-sm md:text-md lg:text-base xl:text-base w-max">
+                        Host was very helpful. thank you so much
+                      </div>
+                    </div>
+                  </div>
+                  <div className="hidden xl:block space-y-2">
+                    <div className="flex">
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <Image
+                          src={"/icons/starIcon.svg"}
+                          alt="star-icon"
+                          width={15}
+                          height={15}
+                        />
+                      ))}
+                    </div>
+                    <div>Mar 09, 22</div>
+                  </div>
+                </div>
+                <hr className="my-3" />
+              </>
+            ))}
+            <div className="text-center my-5">
+              <Button
+                roundedfull
+                className="border-gray-700"
+                bordered
+                type="white"
+                text="Show More Reviews"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/****** Right side details ******/}
+      {detailView && (
+        <div className="hidden lg:block lg:w-[25%] space-y-4">
+          <div className="border rounded-2xl p-4 text-center space-y-2">
+            <div>Guest</div>
+            <div className="flex items-center justify-center space-x-1">
+              <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
                 <Image
-                  src={"/icons/path0.svg"}
-                  alt="star-icon"
+                  src={"/icons/profile-icon.png"}
+                  alt="profile-pic"
+                  width={35}
+                  height={35}
+                  className="rounded-full"
+                />
+              </div>
+              <div className="text-lg">Mia J.</div>
+              <div className="flex">
+                <Image
+                  src={"/icons/starIcon.svg"}
+                  alt="tick"
                   width={15}
                   height={15}
                 />
-                <div className="ml-1 text-[#A4A4A4] text-sm">
-                  <span>37 miles away</span>
-                </div>
+                <span>5.0</span>
               </div>
             </div>
+            <hr />
+            <div>
+              <Button
+                type="gray"
+                text="Apply Warning"
+                bordered
+                rounded
+                full
+                className="border-gray-700 my-2"
+              />
+              <Button
+                type="white"
+                text="Block User"
+                bordered
+                rounded
+                full
+                className="border-gray-700"
+              />
+            </div>
+            <div className="flex items-center justify-center">
+              <Image
+                src={"/icons/information-button.png"}
+                alt="info"
+                width={23}
+                height={23}
+              />
+              <div className="ml-0.5">Generate User Activity</div>
+            </div>
           </div>
-          <hr />
-          <div className="flex justify-between items-center">
-            <div>2 Hours</div>
-            <div>$300</div>
-          </div>
-          <div className="flex justify-between items-center">
-            <div>Zyvo Service Fee</div>
-            <div>$2</div>
-          </div>
-          <div className="flex justify-between items-center">
-            <div>Cleaning Fee</div>
-            <div>$20</div>
-          </div>
-          <div className="flex justify-between items-center">
-            <div>Taxes</div>
-            <div>$10</div>
-          </div>
-          <hr />
-          <div className="flex justify-between items-center text-xl">
-            <div>Total</div>
-            <div>$322</div>
-          </div>
+          <OrderAmountBox />
         </div>
-      </div>
+      )}
     </div>
   );
 }

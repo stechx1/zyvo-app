@@ -42,6 +42,7 @@ export default function Button({
       ${full ? "w-full" : ""}
       ${bordered ? "border" : ""}
       ${className}
+      text-sm md:text-md lg:text-base
       `}
       disabled={disabled || isLoading}
       onClick={onClick}
