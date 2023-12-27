@@ -15,6 +15,7 @@ import {
   deleteFile,
   getFilePathFromURL,
 } from "@/firebase/firestore/manageFiles";
+import { timeArray } from "@/lib/utils";
 import { Place, amenety } from "@/types/place";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -22,17 +23,13 @@ import React, { useState } from "react";
 export default function PlaceModal({
   place,
   setPlace,
-  files,
-  setFiles,
   onClose,
   onSubmit,
   isLoading,
 }: {
   place: Place;
   setPlace: React.Dispatch<React.SetStateAction<Place>>;
-  files: Array<File | null>;
   isLoading: boolean;
-  setFiles: React.Dispatch<React.SetStateAction<Array<File | null>>>;
   onClose: () => void;
   onSubmit: () => void;
 }) {
@@ -69,11 +66,7 @@ export default function PlaceModal({
         {selectedTab === 1 ? (
           <HomeSetup place={place} setPlace={setPlace} />
         ) : selectedTab === 2 ? (
-          <GallaryAndLocation
-            place={place}
-            setPlace={setPlace}
-            setFiles={setFiles}
-          />
+          <GallaryAndLocation place={place} setPlace={setPlace} />
         ) : (
           selectedTab === 3 && (
             <Availability place={place} setPlace={setPlace} />
@@ -102,11 +95,9 @@ export default function PlaceModal({
 const GallaryAndLocation = ({
   place,
   setPlace,
-  setFiles,
 }: {
   place: Place;
   setPlace: React.Dispatch<React.SetStateAction<Place>>;
-  setFiles: React.Dispatch<React.SetStateAction<Array<File | null>>>;
 }) => {
   const [progress, setprogress] = useState(0);
   const [file, setFile] = useState<File | null>(null);
@@ -732,57 +723,6 @@ const Availability = ({
   place: Place;
   setPlace: React.Dispatch<React.SetStateAction<Place>>;
 }) => {
-  const timeArray = [
-    { label: "12:00 AM", value: "00:00" },
-    { label: "12:30 AM", value: "00:30" },
-    { label: "01:00 AM", value: "01:00" },
-    { label: "01:30 AM", value: "01:30" },
-    { label: "02:00 AM", value: "02:00" },
-    { label: "02:30 AM", value: "02:30" },
-    { label: "03:00 AM", value: "03:00" },
-    { label: "03:30 AM", value: "03:30" },
-    { label: "04:00 AM", value: "04:00" },
-    { label: "04:30 AM", value: "04:30" },
-    { label: "05:00 AM", value: "05:00" },
-    { label: "05:30 AM", value: "05:30" },
-    { label: "06:00 AM", value: "06:00" },
-    { label: "06:30 AM", value: "06:30" },
-    { label: "07:00 AM", value: "07:00" },
-    { label: "07:30 AM", value: "07:30" },
-    { label: "08:00 AM", value: "08:00" },
-    { label: "08:30 AM", value: "08:30" },
-    { label: "09:00 AM", value: "09:00" },
-    { label: "09:30 AM", value: "09:30" },
-    { label: "10:00 AM", value: "10:00" },
-    { label: "10:30 AM", value: "10:30" },
-    { label: "11:00 AM", value: "11:00" },
-    { label: "11:30 AM", value: "11:30" },
-    { label: "12:00 PM", value: "12:00" },
-    { label: "12:30 PM", value: "12:30" },
-    { label: "01:00 PM", value: "13:00" },
-    { label: "01:30 PM", value: "13:30" },
-    { label: "02:00 PM", value: "14:00" },
-    { label: "02:30 PM", value: "14:30" },
-    { label: "03:00 PM", value: "15:00" },
-    { label: "03:30 PM", value: "15:30" },
-    { label: "04:00 PM", value: "16:00" },
-    { label: "04:30 PM", value: "16:30" },
-    { label: "05:00 PM", value: "17:00" },
-    { label: "05:30 PM", value: "17:30" },
-    { label: "06:00 PM", value: "18:00" },
-    { label: "06:30 PM", value: "18:30" },
-    { label: "07:00 PM", value: "19:00" },
-    { label: "07:30 PM", value: "19:30" },
-    { label: "08:00 PM", value: "20:00" },
-    { label: "08:30 PM", value: "20:30" },
-    { label: "09:00 PM", value: "21:00" },
-    { label: "09:30 PM", value: "21:30" },
-    { label: "10:00 PM", value: "22:00" },
-    { label: "10:30 PM", value: "22:30" },
-    { label: "11:00 PM", value: "23:00" },
-    { label: "11:30 PM", value: "23:30" },
-  ];
-
   return (
     <div>
       <div className="px-4 space-y-3">
@@ -986,19 +926,18 @@ const Availability = ({
         <div>Months</div>
         <MultiTabs
           options={[
-            { name: "All", value: 0 },
-            { name: "Jan", value: 1 },
-            { name: "Feb", value: 2 },
-            { name: "Mar", value: 3 },
-            { name: "Apr", value: 4 },
-            { name: "May", value: 5 },
-            { name: "Jun", value: 6 },
-            { name: "Jul", value: 7 },
-            { name: "Aug", value: 8 },
-            { name: "Sep", value: 9 },
-            { name: "Oct", value: 10 },
-            { name: "Nov", value: 11 },
-            { name: "Dec", value: 12 },
+            { name: "Jan", value: 0 },
+            { name: "Feb", value: 1 },
+            { name: "Mar", value: 2 },
+            { name: "Apr", value: 3 },
+            { name: "May", value: 4 },
+            { name: "Jun", value: 5 },
+            { name: "Jul", value: 6 },
+            { name: "Aug", value: 7 },
+            { name: "Sep", value: 8 },
+            { name: "Oct", value: 9 },
+            { name: "Nov", value: 10 },
+            { name: "Dec", value: 11 },
           ]}
           selected={place.availableMonths}
           onSelect={(values) => {
@@ -1019,12 +958,12 @@ const Availability = ({
           ]}
           selected={
             JSON.stringify(place.availableDays) ===
-            JSON.stringify([1, 2, 3, 4, 5, 6, 7])
+            JSON.stringify([0, 1, 2, 3, 4, 5, 6])
               ? 0
               : JSON.stringify(place.availableDays) ===
-                JSON.stringify([1, 2, 3, 4, 5])
+                JSON.stringify([0, 1, 2, 3, 4])
               ? 1
-              : JSON.stringify(place.availableDays) === JSON.stringify([6, 7])
+              : JSON.stringify(place.availableDays) === JSON.stringify([5, 6])
               ? 2
               : 3
           }
@@ -1034,11 +973,11 @@ const Availability = ({
                 ...prev,
                 availableDays:
                   option.value === 0
-                    ? [1, 2, 3, 4, 5, 6, 7]
+                    ? [0, 1, 2, 3, 4, 5, 6]
                     : option.value === 1
-                    ? [1, 2, 3, 4, 5]
+                    ? [0, 1, 2, 3, 4]
                     : option.value === 2
-                    ? [6, 7]
+                    ? [5, 6]
                     : [],
               };
             });

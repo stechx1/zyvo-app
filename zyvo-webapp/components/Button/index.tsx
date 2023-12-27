@@ -1,4 +1,5 @@
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
   disabled?: boolean;
   isLoading?: boolean;
   className?: string;
+  icon?: string;
 };
 
 export default function Button({
@@ -25,10 +27,12 @@ export default function Button({
   disabled = false,
   isLoading = false,
   className,
+  icon,
 }: Props) {
   return (
     <button
-      className={`${
+      className={`
+      flex flex-nowrap items-center justify-center ${
         type === "green"
           ? "bg-secondary-green"
           : type === "white"
@@ -46,6 +50,15 @@ export default function Button({
       disabled={disabled || isLoading}
       onClick={onClick}
     >
+      {icon && (
+        <Image
+          src={icon}
+          alt="clock-icon"
+          width={18}
+          height={18}
+          className="mr-2"
+        />
+      )}
       {isLoading ? (
         <div className="flex items-center justify-center">
           Please wait...
