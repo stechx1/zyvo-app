@@ -164,12 +164,13 @@ const PaymentsPage = () => {
                     />
                 </div>
                 <div className="w-full rounded-xl border border-secondary-neutral-200 p-2 sm:p-3 flex flex-col gap-1 sm:gap-3 sm:order-1">
-                    <div className="flex-row flex gap-1">
+                    <div className="flex-row flex gap-1 items-center">
                         <Image
                             src="/icons/green-dollar-icon.svg"
                             alt="green-dollar-icon"
                             width={30}
                             height={30}
+                            className="sm:w-[50px] sm:h-[50px]"
                         />
                         <div className="flex flex-col">
                             <div className="text-black text-[12px] sm:text-[15px] font-normal font-Poppins">
