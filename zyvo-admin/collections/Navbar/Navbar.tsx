@@ -13,7 +13,7 @@ export const Navbar = () => {
   const { user, mode } = useAuthContext();
 
   return (
-    <nav className="px-8 sm:px-14 md:px-20 lg:px-20 xl:px-32 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
+    <nav className="px-8 hidden lg:block md:block xl:block sm:px-14 md:px-20 lg:px-20 xl:px-32 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
       <div className="flex justify-between items-center">
         <div className="hidden md:flex items-center md:space-x-6">
           <Link href="/">
@@ -26,74 +26,37 @@ export const Navbar = () => {
             />
           </Link>
         </div>
-
-        {user ? (
-          <>
-            {mode === "GUEST" && <FilterSearch />}
-            <div className="border border-gray-200 rounded-full p-[10px] xxs:flex md:hidden">
-              <Image
-                src={"/icons/filter-icon.svg"}
-                alt="filter-icon"
-                width={20}
-                height={20}
-              />
-            </div>
-            <div className="hidden items-center space-x-6 md:flex">
-              {mode === "HOST" && (
-                <BadgeIcon
-                  src="/icons/home-icon.svg"
-                  alt="Clock Icon"
-                  width={28}
-                  height={28}
-                  badgeCount={1}
-                />
-              )}
-              <BadgeIcon
-                src="/icons/clock-icon.svg"
-                alt="Clock Icon"
-                width={28}
-                height={28}
-                badgeCount={1}
-              />
-              <BadgeIcon
-                onClick={() => router.push("/messages")}
-                src="/icons/chat-icon.svg"
-                alt="Chat Icon"
-                width={28}
-                height={28}
-                badgeCount={1}
-              />
-              <BadgeIcon
-                src="/icons/bell-icon.svg"
-                alt="Bell Icon"
-                width={26}
-                height={26}
-                badgeCount={4}
-              />
-              <ProfileDropdown
-                photoURL={user.photoURL ?? "/icons/profile-icon.png"}
-              />
-            </div>
-          </>
-        ) : (
-          <div className="hidden items-center space-x-6 md:flex">
-            <Button
-              text="About Us"
-              onClick={() => {
-                router.push("/about");
-              }}
-              type="white"
-            />
-            <Button
-              text="Register"
-              onClick={() => {
-                router.push("/signup");
-              }}
-              type="green"
-              roundedfull
-            />
-          </div>
-        )}
+        <div className="hidden items-center space-x-6 md:flex">
+          <BadgeIcon
+            src="/icons/gray-cutout-pie-icon.svg"
+            alt="Clock Icon"
+            width={30}
+            height={30}
+          />
+          <BadgeIcon
+            src="/icons/white-background-info-icon.svg"
+            alt="Clock Icon"
+            width={28}
+            height={28}
+            badgeCount={2}
+          />
+          <BadgeIcon
+            src="/icons/gray-checklist-icon.svg"
+            alt="Chat Icon"
+            width={27}
+            height={27}
+          />
+          <BadgeIcon
+            src="/icons/bell-icon.svg"
+            alt="Bell Icon"
+            width={25}
+            height={25}
+            badgeCount={4}
+          />
+          <ProfileDropdown
+            photoURL={user?.photoURL ?? "/icons/profile-icon.png"}
+          />
+        </div>
       </div>
     </nav>
   );

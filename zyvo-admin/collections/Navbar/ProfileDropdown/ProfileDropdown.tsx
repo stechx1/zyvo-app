@@ -13,10 +13,10 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
   const router = useRouter();
 
   const userProfileDropdownLinks = [
-    { name: "Wishlist", route: "/" },
     { name: "Language", route: "/" },
-    { name: "Help Center", route: "/" },
-    { name: "Settings", route: "account-settings" },
+    { name: "Notifications", route: "/" },
+    { name: "Downloads", route: "/" },
+    { name: "Settings", route: "/" },
   ];
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -58,23 +58,6 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
       />
       {isDropdownOpen && (
         <div className="absolute py-4 px-4 right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
-          <button
-            className="py-2 mb-3 w-full border border-secondary-gray-700 rounded-xl bg-white text-secondary-gray-700 hover:bg-secondary-gray-100 hover:text-secondary-gray-700 focus:outline-none"
-            onClick={() => {
-              if (mode === "GUEST") {
-                setMode("HOST");
-                router.push("/");
-              }
-              if (mode === "HOST") {
-                setMode("GUEST");
-                router.push("/my-places");
-              }
-              toggleDropdown();
-            }}
-          >
-            Switch to <span className="capitalize">{mode.toLowerCase()}</span>
-          </button>
-
           <ul>
             {userProfileDropdownLinks.map((menuItem, index) => (
               <li
