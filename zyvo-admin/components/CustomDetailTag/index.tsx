@@ -34,7 +34,7 @@ const CustomDetailTag: React.FC<TagProps> = ({ icon, text, type = "md" }) => {
       className={`flex items-center ${getPadding()} border ${getBorderRadius()} bg-[#fff] px-4`}
     >
       {icon && <div className="mr-2">{icon}</div>}
-      <div>{text}</div>
+      <div className="text-sm lg:text-md md:text-md sm:text-sm">{text}</div>
     </div>
   );
 };

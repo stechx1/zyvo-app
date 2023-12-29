@@ -4,7 +4,6 @@ import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "@/config";
 import { PreLoader } from "@/components/PreLoader";
 import { Navbar } from "@/collections/Navbar/Navbar";
-import { Footer } from "@/collections/Footer/Footer";
 import { usePathname } from "next/navigation";
 import getData from "@/firebase/firestore/getData";
 import { profileData } from "@/types/profile";
@@ -65,7 +64,6 @@ export const AuthContextProvider = ({
     >
       <Navbar />
       {children}
-      {pathname !== "/messages" && <Footer />}
     </AuthContext.Provider>
   );
 };

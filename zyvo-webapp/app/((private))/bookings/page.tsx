@@ -312,26 +312,16 @@ export default function Bookings() {
           <label>Rules</label>
           <div className="items-center space-y-3 mt-2">
             <CustomSelect
-              icon={
-                <Image
-                  src={"/icons/gray-parking-icon.svg"}
-                  alt="favourite-icon"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon="/icons/gray-parking-icon.svg"
               options={rulesOptions}
+              onValueChange={() => {}}
+              value=""
             />
             <CustomSelect
-              icon={
-                <Image
-                  src={"/icons/gray-warning-icon.svg"}
-                  alt="favourite-icon"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon="/icons/gray-warning-icon.svg"
               options={hotRulesOptions}
+              onValueChange={() => {}}
+              value=""
             />
           </div>
         </div>

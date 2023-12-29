@@ -1,26 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { PropertyCardProps } from "@/types";
-import { getEllipsesText } from "@/lib/utils";
-export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
-  const {
-    imageUrl,
-    hostImage,
-    host,
-    location,
-    title,
-    price,
-    rating,
-    reviews,
-    milesAway,
-  } = propertyItem;
+import { getFullName } from "@/lib/utils";
+import { Place } from "@/types/place";
+import { profileData } from "@/types/profile";
+import { DocumentReference } from "firebase/firestore";
+import { getUserByRef } from "@/firebase/user";
+import { useRouter } from "next/navigation";
+export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
+  const router = useRouter();
+  const [placeUser, setPlaceUser] = useState<null | profileData>();
 
+  useEffect(() => {
+    if (propertyItem.sender) getUser(propertyItem.sender);
+  }, []);
+
+  const getUser = async (sender: DocumentReference) => {
+    const { result } = await getUserByRef(sender);
+    if (result) {
+      setPlaceUser(result);
+    }
+  };
   return (
-    <div className="rounded-xl relative overflow-hidden mb-6">
+    <div
+      className="rounded-xl relative overflow-hidden mb-6"
+      role="button"
+      onClick={() => {
+        router.push("/property-details/" + propertyItem.placeId);
+      }}
+    >
       <div
         className="bg-cover bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
         style={{
-          backgroundImage: `url(${imageUrl})`,
+          backgroundImage: `url(${
+            propertyItem.images.length > 0
+              ? propertyItem.images[0]
+              : "images/no-image.jpg"
+          })`,
           paddingBottom: "75%",
         }}
       >
@@ -35,22 +50,26 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
         </div>
         <div className="bg-opacity-80 bg-white text-black p-3 rounded-xl items-center gap-4 mt-[225px] hidden md:flex">
           <Image
-            src={hostImage}
+            src={placeUser?.photoURL ?? "/icons/profile-icon.png"}
             alt={"host-image"}
             width={60}
             height={60}
             className="rounded-full"
           />
           <div className="flex flex-col">
-            <p className="text-md line-clamp-1">Host By {host}</p>
-            <p className="text-sm">{location}</p>
+            <p className="text-md line-clamp-1">
+              Host By {placeUser ? getFullName(placeUser) : "-"}
+            </p>
+            <p className="text-sm">
+              {propertyItem.country + " " + propertyItem.state}
+            </p>
           </div>
         </div>
       </div>
       <div className="flex flex-col gap-1 px-0 md:px-3">
         <div className="justify-between flex">
           <p className="sm:text-lg lg:text-md text-[14px] font-medium md:font-normal  line-clamp-1">
-            {title}
+            {propertyItem.description}
           </p>
           <p className="items-center hidden md:flex text-[16px] whitespace-nowrap">
             <Image
@@ -60,7 +79,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
               height={18}
               className="mr-2"
             />
-            ${price} / h
+            ${propertyItem.pricePerHour} / h
           </p>
         </div>
         <div className="items-center flex gap-[0.3rem] sm:gap-1">
@@ -72,9 +91,9 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
               height={14}
               className="mr-1"
             />
-            {rating}
+            {4}
           </p>
-          <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2">{`(${reviews})`}</p>
+          <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2">{`(${200})`}</p>
           <p className="flex items-center  text-[10px] sm:text-[16px] text-secondary-neutral-400">
             <Image
               src={"/icons/gray-location-icon.svg"}
@@ -83,7 +102,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
               height={14}
               className="mr-1"
             />
-            {milesAway} miles away
+            {1} miles away
           </p>
         </div>
         <div>
@@ -95,7 +114,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ propertyItem }) => {
               height={16}
               className="mr-2"
             />
-            ${price} / h
+            ${propertyItem.pricePerHour} / h
           </p>
         </div>
       </div>

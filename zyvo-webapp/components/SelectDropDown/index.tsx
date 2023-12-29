@@ -6,9 +6,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from "next/image";
 
 interface CustomSelectProps {
-  icon?: ReactNode;
+  icon?: string;
   options: SelectItem[];
   roundedFull?: boolean;
   onValueChange: (value: string) => void;
@@ -31,7 +32,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     <div className="relative w-full">
       {icon && (
         <div className="absolute inset-y-0 left-0 pl-3 mr-5 flex items-center pointer-events-none">
-          {icon}
+          <Image src={icon} alt="icon" width={20} height={20} />
         </div>
       )}
       <Select onValueChange={onValueChange} value={value}>

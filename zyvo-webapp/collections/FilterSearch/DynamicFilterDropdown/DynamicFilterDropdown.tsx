@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { PriceFilter } from "../PriceFilter/PriceFilter";
 import { PlaceFilter } from "../PlaceFilter/PlaceFilter";
 import { DynamicFilterDropdownProps } from "@/types";
-import DateTimePicker from "@/components/DateTimePicker";
+import DateTimePicker from "@/collections/AvailabilitySelection";
 
 export const DynamicFilterDropdown: React.FC<DynamicFilterDropdownProps> = ({
   label,
@@ -56,7 +56,7 @@ export const DynamicFilterDropdown: React.FC<DynamicFilterDropdownProps> = ({
       <span className="text-md cursor-pointer">{label}</span>
       {isDropdownOpen && (
         <div
-          className="absolute bg-white rounded-xl shadow-lg mt-[8px] w-52 left-[-42px] sm:left-0"
+          className="absolute bg-white rounded-xl shadow-lg mt-[8px]  left-[-42px] sm:left-0"
           onClick={stopPropagation}
         >
           {content}

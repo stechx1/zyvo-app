@@ -62,8 +62,8 @@ export function getConversationsSnapshot(
                 createdAt: lastMessageRef?.data()?.createdAt.toDate(),
                 sender: lastMessageSender,
                 message: lastMessageRef?.data()?.message,
-                imageURL:lastMessageRef.data()?.imageURL, 
-                fileURL:lastMessageRef.data()?.fileURL, 
+                imageURL: lastMessageRef.data()?.imageURL,
+                fileURL: lastMessageRef.data()?.fileURL,
               },
               users,
             },
@@ -128,7 +128,8 @@ export async function sendMessage(
   userId: string,
   message: string,
   imageURL?: string,
-  fileURL?: string
+  fileURL?: string,
+  otherUserId?: string
 ) {
   let result = null;
   let error = null;
@@ -140,23 +141,50 @@ export async function sendMessage(
     fileURLS[key] === undefined ? delete fileURLS[key] : {}
   );
   try {
-    result = await addDoc(collection(db, "messages"), {
-      sender: doc(db, "users", userId),
-      conversationId,
-      message,
-      ...fileURLS,
-      createdAt: serverTimestamp(),
-    });
-    result = await setDoc(
-      doc(db, "conversations", conversationId),
-      {
-        lastMessage: result,
-        unreadCount: increment(1),
-      },
-      {
-        merge: true,
+    let conversationRef;
+
+    if (conversationId) {
+      conversationRef = doc(collection(db, "conversations"), conversationId);
+      result = await addDoc(collection(db, "messages"), {
+        sender: doc(db, "users", userId),
+        conversationId: conversationRef.id,
+        message,
+        ...fileURLS,
+        createdAt: serverTimestamp(),
+      });
+      result = await setDoc(
+        doc(db, "conversations", conversationRef.id),
+        {
+          lastMessage: result,
+          unreadCount: increment(1),
+        },
+        {
+          merge: true,
+        }
+      );
+    } else {
+      if (otherUserId) {
+        conversationRef = doc(collection(db, "conversations"));
+        result = await addDoc(collection(db, "messages"), {
+          sender: doc(db, "users", userId),
+          conversationId: conversationRef.id,
+          message,
+          ...fileURLS,
+          createdAt: serverTimestamp(),
+        });
+        result = await setDoc(
+          doc(db, "conversations", conversationRef.id),
+          {
+            lastMessage: result,
+            unreadCount: increment(1),
+            users: [doc(db, "users", userId), doc(db, "users", otherUserId)],
+          },
+          {
+            merge: true,
+          }
+        );
       }
-    );
+    }
   } catch (e) {
     if (typeof e === "object") error = e as errorType;
   }

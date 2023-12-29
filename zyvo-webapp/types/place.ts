@@ -1,3 +1,5 @@
+import { DocumentReference } from "firebase/firestore";
+
 export type amenety =
   | "WIFI"
   | "WASHER"
@@ -41,4 +43,5 @@ export type Place = {
   street: string;
   zipCode: string;
   createdAt?: Date;
+  sender?: DocumentReference;
 };

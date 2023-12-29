@@ -7,6 +7,12 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { getPlaceSnapshot } from "@/firebase/place";
 import { Place } from "@/types/place";
+import HostProperties from "@/collections/HostProperties";
+import { getUserByRef } from "@/firebase/user";
+import { profileData } from "@/types/profile";
+import { getFullName } from "@/lib/utils";
+import { DocumentReference } from "firebase/firestore";
+import AvailabilitySelection from "@/collections/AvailabilitySelection";
 
 const PropertyDetailsPage = ({
   params,
@@ -17,6 +23,10 @@ const PropertyDetailsPage = ({
 }) => {
   const { user } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
+  const [placeUser, setPlaceUser] = useState<null | profileData>();
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [hours, setHours] = useState(1);
+
   const router = useRouter();
   useEffect(() => {
     if (user == null) {
@@ -27,6 +37,7 @@ const PropertyDetailsPage = ({
       params.id,
       (place) => {
         setPlace(place);
+        if (place.sender) getUser(place.sender);
       },
       (e) => {
         console.log(e);
@@ -36,6 +47,13 @@ const PropertyDetailsPage = ({
       unsubscribe();
     };
   }, [user]);
+
+  const getUser = async (sender: DocumentReference) => {
+    const { result } = await getUserByRef(sender);
+    if (result) {
+      setPlaceUser(result);
+    }
+  };
 
   const accordionItems: AccordionItem[] = [
     {
@@ -58,6 +76,8 @@ const PropertyDetailsPage = ({
     }
     return "/images/no-image.jpg";
   };
+  console.log(place);
+
   return (
     <div className="flex sm:container sm:mx-auto sm:my-24 sm:px-14 md:px-10 gap-2 flex-col">
       <div className="flex flex-row ">
@@ -278,7 +298,52 @@ const PropertyDetailsPage = ({
           </div>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
         </div>
-        <div className="w-full sm:w-[30%]"></div>
+        <div className="w-full sm:w-[30%]">
+          {place && (
+            <div className="border rounded-lg p-4 text-center space-y-2 mb-8">
+              <div className="text-2xl">${place?.pricePerHour}/hr</div>
+              <div className="text-sm text-gray-800">
+                {place?.minHours} hr minimum
+              </div>
+
+              <hr />
+
+              <div className="flex items-center justify-between space-x-2">
+                <div className="text-sm text-gray-800">
+                  {place?.discountedMinHours}+ Hrs discount
+                </div>
+                <div className="text-sm text-gray-800">
+                  {place?.discountPercentage}% off
+                </div>
+              </div>
+            </div>
+          )}
+
+          {user && placeUser && user?.userId !== placeUser?.userId && (
+            <>
+              <div className="my-8">
+                <HostProperties
+                  photoURL={user?.photoURL ?? ""}
+                  fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
+                  buttonText="Message the host"
+                  onClick={() => {
+                    router.push("/messages?userId=" + placeUser?.userId);
+                  }}
+                />
+              </div>
+              <AvailabilitySelection
+                hours={hours}
+                setHours={setHours}
+                price={place?.pricePerHour ?? 0}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                availableMonths={place?.availableMonths ?? []}
+                availableDays={place?.availableDays ?? []}
+                onCheckOutClick={() => router.push("/checkout")}
+              />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
