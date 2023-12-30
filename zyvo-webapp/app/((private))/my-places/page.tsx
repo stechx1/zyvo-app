@@ -174,8 +174,7 @@ export default function MyPlaces() {
             </div>
           </div>
         ))}
-        <div className="w-full justify-center flex items-center h-64 sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] relative rounded-xl border-2 border-dashed border-gray-200">
-          <div className="text-center my-50">
+        <div className="w-full flex-col justify-center flex items-center h-64 sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] relative rounded-xl border-2 border-dashed border-gray-200">
             <Button
               text="+"
               type="gray"
@@ -186,7 +185,6 @@ export default function MyPlaces() {
               }}
             />
             <p className="text-sm mt-2">Add new Place</p>
-          </div>
           <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
             <div className="border-t-4 border-l-4 border-r-4 border-transparent rounded-xl"></div>
           </div>
