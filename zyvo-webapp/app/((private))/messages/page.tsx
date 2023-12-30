@@ -18,6 +18,7 @@ import HostProperties from "@/collections/HostProperties";
 import { getFullName, getOtherUser } from "@/lib/utils";
 import { profileData } from "@/types/profile";
 import { getUserByPath } from "@/firebase/user";
+import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 const storage = getStorage(firebase_app);
 
 export default function Messages() {
@@ -31,7 +32,7 @@ export default function Messages() {
   const [messages, setMessages] = useState<message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedConversation, setSelectedConversation] =
-    useState<conversation>();
+    useState<conversation | null>();
   const [newChatConversation, setNewChatConversation] =
     useState<conversation>();
   const [newChatUser, setNewChatUser] = useState<profileData | null>(null);
@@ -48,7 +49,6 @@ export default function Messages() {
       }
     }
   }, [userId, conversations]);
-
 
   useEffect(() => {
     if (selectedConversation == null) {
@@ -184,14 +184,14 @@ export default function Messages() {
     document.body.removeChild(link);
   };
   return (
-    <div className="flex justify-between space-x-4">
+    <div className="flex justify-between lg:space-x-4 md:space-x-4 xl:space-x-4">
       {/*========================================= conversations ===================================== */}
       <div
         className={`${
           selectedConversation ? "hidden" : "block"
         } w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-[80vh] space-y-2`}
       >
-        <div className="flex justify-between items-center">
+        <div className="hidden lg:flex md:flex sm:flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <div className="text-lg">All Conversations</div>
             <Image src={"/icons/down.svg"} alt="down" width={13} height={13} />
@@ -205,6 +205,12 @@ export default function Messages() {
             />
           </div>
         </div>
+        <div
+          className="sm:hidden md:hidden lg:hidden xl:hidden border-t border-b py-3"
+          style={{ marginBottom: "1.5rem" }}
+        >
+          <MobileSearchAndFilter />
+        </div>
         <div className="h-[75vh] overflow-auto space-y-3">
           {conversations.length > 0 &&
             conversations.map((conversation) => {
@@ -213,8 +219,10 @@ export default function Messages() {
                   key={conversation.conversationId}
                   user={user}
                   conversation={conversation}
-                  onSelect={() => {setSelectedConversation(conversation)}}
-                  selectedConversation={selectedConversation}
+                  onSelect={() => {
+                    setSelectedConversation(conversation);
+                  }}
+                  selectedConversation={selectedConversation ?? null}
                   time={getTimeDifference(conversation.lastMessage?.createdAt)}
                 />
               );
@@ -230,11 +238,26 @@ export default function Messages() {
       <div
         className={`${
           !selectedConversation ? "hidden" : "flex"
-        } w-[100%] sm:w-[60%] lg:w-[50%] h-[80vh] sm:flex flex-col border rounded-lg`}
+        } w-[100%] sm:w-[60%] lg:w-[50%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[97vh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-lg`}
       >
         {selectedConversation ? (
           <div className="flex flex-col h-[100%]">
-            <div className="flex justify-between items-center px-4 py-3 border-b">
+            <div className="px-3 xl:hidden my-4 lg:hidden md:hidden sm:hidden flex justify-between items-center space-x-2">
+              <Image
+                role="button"
+                src={"/icons/white-back-arrow.svg"}
+                alt="tick"
+                width={35}
+                height={35}
+                onClick={() => {
+                  setSelectedConversation(null);
+                }}
+              />
+              <div className="w-full">
+                <MobileSearchAndFilter />
+              </div>
+            </div>
+            <div className="flex justify-between items-center px-4 py-3 border-b border-t sm:border-t-0 md:border-t-0 lg:border-t-0">
               <div className="flex space-x-2 items-center">
                 <div className="rounded-full border-2 border-gray-200 p-1">
                   <Image
@@ -258,7 +281,7 @@ export default function Messages() {
                         )
                       : ""}
                   </div>
-                  <div className="text-green-500">online</div>
+                  <div className="text-green-500 text-sm md:text-base lg:text-base xl:text-base">online</div>
                 </div>
               </div>
               <div className="flex justify-between items-center space-x-2">
@@ -302,17 +325,17 @@ export default function Messages() {
                               />
                             </div>
                             <div>
-                              <div>{getFullName(message.sender)}</div>
+                              <div className="text-sm md:text-base lg:text-base">{getFullName(message.sender)}</div>
                             </div>
                           </div>
                         </div>
-                        <div className="mb-auto mt-1">
+                        <div className="text-xs sm:text-sm md:text-base lg:text-base">
                           {message.createdAt
                             ? format(message.createdAt, "MMM dd, yyyy, hh:mm a")
                             : "sending..."}
                         </div>
                       </div>
-                      <div>{message.message}</div>
+                      <div className="text-sm md:text-base lg:text-base">{message.message}</div>
                       <div>
                         {message?.imageURL ? (
                           <Image
@@ -464,7 +487,7 @@ const ConversationBox = ({
   time,
 }: {
   conversation: conversation;
-  selectedConversation?: conversation;
+  selectedConversation?: conversation | null;
   onSelect: () => void;
   user: profileData | null;
   time: string;

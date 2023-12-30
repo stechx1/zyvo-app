@@ -19,7 +19,7 @@ export default function Input({
 }: props) {
   return (
     <div className="flex flex-col">
-      <div className="relative flex">
+      <div className="relative flex items-center">
         <input
           name={name}
           className={`px-4 py-2 border rounded-full focus:outline-none text-gray-600 w-full sm:text-sm ${
