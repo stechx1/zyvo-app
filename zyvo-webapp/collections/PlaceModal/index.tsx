@@ -48,7 +48,7 @@ export default function PlaceModal({
           </div>
         </div>
       )}
-      <div className="px-4 space-y-3">
+      <div className="xl:px-4 lg:px-4 md:px-4 sm:px-2 px-3 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div>Manage your place</div>
         <span>Setup places, availability, prices and more.</span>
         <Tabs
@@ -355,7 +355,7 @@ const HomeSetup = ({
   };
   return (
     <div>
-      <div className="px-4 space-y-2">
+      <div className="xl:px-4 lg:px-4 md:px-3 px-3 space-y-2 mt-4 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <label>Type of space</label>
         <Tabs
           options={[
@@ -371,7 +371,7 @@ const HomeSetup = ({
         />
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div>Rooms and beds</div>
         <div>Bedrooms</div>
         <Tabs
@@ -438,9 +438,9 @@ const HomeSetup = ({
         />
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="xl:px-4 lg:px-4 md:px-4 sm:px-4 px-3 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <label>Property type</label>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
           <PropertyType
             imageUrl="/icons/home-filled-icon.svg"
             text="House"
@@ -592,7 +592,7 @@ const HomeSetup = ({
         </Accord>
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div>Amenities</div>
         <div className="flex gap-2 flex-wrap">
           <div className="w-[47%] space-x-1.5">
@@ -657,7 +657,7 @@ const HomeSetup = ({
         </div> */}
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div>Booking</div>
         <div className="flex justify-between items-center">
           <div>
@@ -1034,17 +1034,20 @@ const PropertyType = ({
 }) => {
   return (
     <div
-      className={`space-y-3 border border-gray-300 px-4 py-3 rounded-lg w-[23%] ${
+      className={`space-y-3 border border-gray-300 xl:px-4 lg:px-4 md:px-4 sm:px-3 px-2 xl:py-3 lg:py-3 md:py-3 py-2 rounded-lg xl:w-[23%] lg:w-[23%] md:w-[23%] sm:w-[23%] w-max ${
         selected === value
           ? "bg-gray-100 pointer-events-none"
           : "cursor-pointer"
       }`}
+      style={{ minWidth: "4.65rem" }}
       onClick={() => onSelect && onSelect(value)}
     >
       <div className="h-6">
         <img src={imageUrl} height={20} width={20} />
       </div>
-      <div className="text-sm">{text}</div>
+      <div className="sm:text-sm md:text-sm lg:text-sm xl:text-sm text-xs">
+        {text}
+      </div>
     </div>
   );
 };
