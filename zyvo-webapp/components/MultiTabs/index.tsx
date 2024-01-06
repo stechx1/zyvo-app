@@ -8,7 +8,7 @@ export const MultiTabs = ({
   onSelect?: (values: (string | number)[]) => void;
 }) => {
   return (
-    <div className="flex justify-between text-center bg-gray-200 px-2 py-2 rounded-full">
+    <div className="flex flex-wrap justify-between text-center bg-gray-200 px-2 py-2 rounded-full">
       {options.map((item, i) => {
         return (
           <div
@@ -23,7 +23,7 @@ export const MultiTabs = ({
                 }
               }
             }}
-            className={`w-[45%] py-1 rounded-full ${
+            className={`py-1 rounded-full px-1 text-xs md:text-base sm:text-base lg:text-base xl:text-base ${
               selected.find((d) => d === item.value) ? "bg-white" : ""
             }`}
           >

@@ -100,11 +100,11 @@ export default function MyPlaces() {
           <span>Filters</span>
         </div>
       </div>
-      <div className="flex flex-wrap gap-4 mt-3">
+      <div className="flex flex-wrap gap-2 sm:gap-2 md:gap-4 lg:gap-4 xl:gap-4 mt-3">
         {places.map((place, index) => (
           <div
             key={index}
-            className="w-full sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] overflow-hidden"
+            className="w-[48%] sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] overflow-hidden"
           >
             <div className="relative">
               <img
@@ -173,7 +173,7 @@ export default function MyPlaces() {
             </div>
           </div>
         ))}
-        <div className="w-full flex-col justify-center flex items-center h-64 sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] relative rounded-xl border-2 border-dashed border-gray-200">
+        <div className="w-[48%] flex-col justify-center flex items-center h-64 sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] relative rounded-xl border-2 border-dashed border-gray-200">
             <Button
               text="+"
               type="gray"
