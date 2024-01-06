@@ -725,7 +725,7 @@ const Availability = ({
 }) => {
   return (
     <div>
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div>Minimum hour & Pricing</div>
         <div className="flex justify-between gap-4">
           <CustomSelect
@@ -769,7 +769,7 @@ const Availability = ({
         </div>
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div>Bulk discount</div>
         <div className="flex justify-between gap-4">
           <CustomSelect
@@ -817,14 +817,14 @@ const Availability = ({
         </div>
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div>Add-ons from the host</div>
         <div className="flex flex-wrap gap-2">
           {place.addOns.map((ao, i) => {
             return (
               <div
                 key={i}
-                className={`border rounded-full py-3 px-5  flex items-center`}
+                className={`border rounded-full py-1 xl:py-3 lg:py-3 md:py-3 sm:py-3 xl:px-5 lg:px-5 md:px-5 sm:px-5 px-3 flex items-center`}
               >
                 <input
                   style={{ width: ao.name.length * 8 + 15 + "px" }}
@@ -879,7 +879,7 @@ const Availability = ({
                   alt="close-icon"
                   width={25}
                   height={25}
-                  className="cursor-pointer mx-2"
+                  className="cursor-pointer mx-2 h-[72%] xl:h-max lg:h-max md:h-max sm:h-max"
                   onClick={() => {
                     setPlace((prev) => {
                       return {
@@ -893,12 +893,12 @@ const Availability = ({
             );
           })}
 
-          <div className="border border-neutral-200 rounded-full py-3 px-5 gap-3 w-fit flex items-center">
+          <div className="border text-sm xl:text-base lg:text-base md:text-base border-neutral-200 rounded-full py-1 xl:py-3 lg:py-3 md:py-3 sm:py-3 xl:px-5 lg:px-5 md:px-5 sm:px-5 px-3 gap-3 w-fit flex items-center">
             <div className="text-black font-normal whitespace-nowrap">
               Add New
             </div>
             <div
-              className="w-[24px] h-[24px] rounded-full bg-secondary-green flex items-center justify-center"
+              className="xl:w-[24px] lg:w-[24px] md:w-[24px] sm:w-[24px] w-[20px] xl:h-[24px] lg:h-[24px] md:h-[24px] sm:h-[22px] h-[20px] rounded-full bg-secondary-green flex items-center justify-center"
               role="button"
               onClick={() => {
                 setPlace((prev) => {
@@ -914,14 +914,14 @@ const Availability = ({
                 alt="plus-icon"
                 width={13}
                 height={13}
-                className="cursor-pointer"
+                className="cursor-pointer h-[45%] xl:h-max lg:h-max md:h-max sm:h-max"
               />
             </div>
           </div>
         </div>
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div>Availability - Days</div>
         <div>Months</div>
         <MultiTabs
@@ -985,7 +985,7 @@ const Availability = ({
         />
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div>Availability - Hours</div>
         <div className="flex gap-3">
           <div className="w-full">
