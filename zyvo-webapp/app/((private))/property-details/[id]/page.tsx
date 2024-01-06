@@ -10,21 +10,28 @@ import { Place } from "@/types/place";
 import HostProperties from "@/collections/HostProperties";
 import { getUserByRef } from "@/firebase/user";
 import { profileData } from "@/types/profile";
-import { getFullName } from "@/lib/utils";
+import { getFullName, timeArray } from "@/lib/utils";
 import { DocumentReference } from "firebase/firestore";
 import AvailabilitySelection from "@/collections/AvailabilitySelection";
+import toast from "react-hot-toast";
 
-const PropertyDetailsPage = ({
-  params,
-  searchParams,
-}: {
-  params: { id: string };
-  searchParams: { id: string };
-}) => {
+export type BookingDetailsType = {
+  placeId: string;
+  hours: number;
+  date: string;
+  from: string;
+  to: string;
+};
+
+const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
   const { user } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
   const [placeUser, setPlaceUser] = useState<null | profileData>();
   const [selectedDate, setSelectedDate] = useState<Date>();
+  const [selectedavailableHoursTo, setSelectedavailableHoursTo] =
+    useState<string>();
+  const [selectedavailableHoursFrom, setSelectedavailableHoursFrom] =
+    useState<string>();
   const [hours, setHours] = useState(1);
 
   const router = useRouter();
@@ -52,6 +59,32 @@ const PropertyDetailsPage = ({
     const { result } = await getUserByRef(sender);
     if (result) {
       setPlaceUser(result);
+    }
+  };
+
+  const onCheckOutClick = () => {
+    if (!place) return;
+    const availableHoursFromIndex = timeArray.findIndex(
+      (t) => t.value === selectedavailableHoursFrom
+    );
+    const availableHoursToIndex = timeArray.findIndex(
+      (t) => t.value === selectedavailableHoursTo
+    );
+    if (!selectedDate) {
+      toast.error("Select date of booking to checkout!");
+    } else if (!selectedavailableHoursFrom || !selectedavailableHoursTo) {
+      toast.error("Select time of booking to checkout!");
+    } else if (availableHoursFromIndex >= availableHoursToIndex) {
+      toast.error("Select valid time of booking to checkout!");
+    } else {
+      const data: BookingDetailsType = {
+        placeId: place?.placeId,
+        hours,
+        date: selectedDate.toISOString(),
+        from: selectedavailableHoursFrom,
+        to: selectedavailableHoursTo,
+      };
+      router.push("/checkout?data=" + JSON.stringify(data));
     }
   };
 
@@ -323,7 +356,7 @@ const PropertyDetailsPage = ({
             <>
               <div className="my-8">
                 <HostProperties
-                  photoURL={user?.photoURL ?? ""}
+                  photoURL={placeUser?.photoURL ?? ""}
                   fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
                   buttonText="Message the host"
                   onClick={() => {
@@ -333,13 +366,19 @@ const PropertyDetailsPage = ({
               </div>
               <AvailabilitySelection
                 hours={hours}
+                availableHoursFrom={place?.availableHoursFrom}
+                availableHoursTo={place?.availableHoursTo}
+                selectedAvailableHoursFrom={selectedavailableHoursFrom}
+                selectedAvailableHoursTo={selectedavailableHoursTo}
+                setSelectedAvailableHoursTo={setSelectedavailableHoursTo}
+                setSelectedAvailableHoursFrom={setSelectedavailableHoursFrom}
                 setHours={setHours}
                 price={place?.pricePerHour ?? 0}
                 selectedDate={selectedDate}
                 setSelectedDate={setSelectedDate}
                 availableMonths={place?.availableMonths ?? []}
                 availableDays={place?.availableDays ?? []}
-                onCheckOutClick={() => router.push("/checkout")}
+                onCheckOutClick={onCheckOutClick}
               />
             </>
           )}

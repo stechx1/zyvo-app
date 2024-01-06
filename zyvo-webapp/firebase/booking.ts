@@ -1,9 +1,7 @@
 import {
-  DocumentReference,
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getFirestore,
   onSnapshot,
   query,
@@ -14,39 +12,64 @@ import {
 import firebase_app from "@/config";
 import { Place } from "@/types/place";
 import { Unsubscribe } from "firebase/auth";
+import { Booking } from "@/types/booking";
 const db = getFirestore(firebase_app);
 type errorType = { message: string; code: string };
 
-export async function addPlace(
-  place: Place,
+export async function addUpdateBooking(
+  booking: Booking,
   userId: string,
+  placeId: string,
   docId: string = ""
 ) {
   let result = null;
   let error = null;
 
   try {
-    let placeRef;
-    if (docId) placeRef = doc(collection(db, "places"), docId);
-    else placeRef = doc(collection(db, "places"));
+    let bookingRef;
+    if (docId) bookingRef = doc(collection(db, "bookings"), docId);
+    else bookingRef = doc(collection(db, "bookings"));
 
-    result = await setDoc(
-      placeRef,
+    await setDoc(
+      bookingRef,
       {
-        ...place,
-        placeId: placeRef.id,
-        sender: doc(db, "users", userId),
+        ...booking,
+        bookingId: bookingRef.id,
+        user: doc(db, "users", userId),
+        place: doc(db, "places", placeId),
         createdAt: serverTimestamp(),
       },
       {
         merge: true,
       }
     );
+    result = bookingRef.id;
   } catch (e) {
     if (typeof e === "object") error = e as errorType;
     console.log(e);
   }
   return { result, error };
+}
+export function getBookingSnapshot(
+  bookingId: string,
+  onSuccess: (data: Booking) => void,
+  onError: (error: string) => void
+) {
+  let unsubscribe: Unsubscribe = () => {};
+
+  try {
+    unsubscribe = onSnapshot(doc(db, "bookings", bookingId), async (place) => {
+      let result: Booking = {
+        ...place.data(),
+        date: place.data()?.date.toDate(),
+      } as Booking;
+      onSuccess(result);
+    });
+  } catch (e) {
+    console.log(e);
+    if (typeof e === "object" && onError) onError((e as errorType).code);
+  }
+  return unsubscribe;
 }
 export async function deletePlace(placeId: string) {
   let result = null;
@@ -127,35 +150,4 @@ export function getAllPlacesSnapshot(
     if (typeof e === "object" && onError) onError((e as errorType).code);
   }
   return unsubscribe;
-}
-export function getPlaceSnapshot(
-  placeId: string,
-  onSuccess: (data: Place) => void,
-  onError: (error: string) => void
-) {
-  let unsubscribe: Unsubscribe = () => {};
-
-  try {
-    unsubscribe = onSnapshot(doc(db, "places", placeId), async (place) => {
-      let result: Place = place.data() as Place;
-      onSuccess(result);
-    });
-  } catch (e) {
-    console.log(e);
-    if (typeof e === "object" && onError) onError((e as errorType).code);
-  }
-  return unsubscribe;
-}
-export async function getPlaceByRef(placeRef: DocumentReference) {
-  let result = null;
-  let error = null;
-
-  try {
-    result = (await getDoc(placeRef)).data() as Place;
-  } catch (e) {
-    console.log(e);
-    error = e;
-  }
-
-  return { result, error };
 }

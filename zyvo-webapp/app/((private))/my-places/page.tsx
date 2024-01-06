@@ -49,7 +49,6 @@ export default function MyPlaces() {
     zipCode: "",
   });
   const [places, setPlaces] = useState<Place[]>([]);
-  const [files, setFiles] = useState<Array<File | null>>([]);
 
   useEffect(() => {
     if (user == null) {
@@ -194,8 +193,6 @@ export default function MyPlaces() {
         <PlaceModal
           place={place}
           setPlace={setPlace}
-          files={files}
-          setFiles={setFiles}
           onClose={() => setIsModalOpen(false)}
           onSubmit={onSubmitHandler}
           isLoading={isLoading}

@@ -7,6 +7,19 @@ import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
 import Input from "@/components/Input";
 import { InputSectionProps } from "@/types";
+import { BookingDetailsType } from "../property-details/[id]/page";
+import { useEffect, useState } from "react";
+import { profileData } from "@/types/profile";
+import { Place } from "@/types/place";
+import { getPlaceSnapshot } from "@/firebase/place";
+import { DocumentReference } from "firebase/firestore";
+import { getUserByRef } from "@/firebase/user";
+import HostProperties from "@/collections/HostProperties";
+import { formatDate, formatTime, getFullName } from "@/lib/utils";
+import { addUpdateBooking } from "@/firebase/booking";
+import toast from "react-hot-toast";
+import { Booking } from "@/types/booking";
+import PropertySideDetails from "@/collections/PropertySideDetails";
 
 const InputSection: React.FC<InputSectionProps> = ({
   title,
@@ -27,52 +40,64 @@ const InputSection: React.FC<InputSectionProps> = ({
   </>
 );
 
-const CheckoutPage = () => {
+const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
+  const router = useRouter();
+  const { user } = useAuthContext();
+  const [place, setPlace] = useState<Place | null>(null);
+  const [placeUser, setPlaceUser] = useState<null | profileData>();
+  const [isLoading, setIsLoading] = useState(false);
+  const details = JSON.parse(searchParams.data) as BookingDetailsType;
 
+  useEffect(() => {
+    if (user == null) {
+      router.push("/signin");
+      return;
+    }
+    if (!searchParams.data) {
+      router.back();
+    }
+    const unsubscribe = getPlaceSnapshot(
+      details.placeId,
+      (place) => {
+        setPlace(place);
+        if (place.sender) getUser(place.sender);
+      },
+      (e) => {
+        console.log(e);
+      }
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, [user]);
+
+  const getUser = async (sender: DocumentReference) => {
+    const { result } = await getUserByRef(sender);
+    if (result) {
+      setPlaceUser(result);
+    }
+  };
   const bookingDetails = [
     {
       icon: "/icons/clock-icon.svg",
       iconAlt: "clock-icon",
-      label: "2 Hours",
-      edit: true,
+      label: `${details.hours} Hour${details.hours > 1 ? "s" : ""}`,
+      edit: false,
       id: 1,
     },
     {
       icon: "/icons/calendar-icon.svg",
       iconAlt: "calendar-icon",
-      label: "October 22, 2023",
-      edit: true,
+      label: formatDate(details.date),
+      edit: false,
       id: 2,
     },
     {
       icon: "/icons/clock-icon.svg",
       iconAlt: "clock-icon",
-      label: "From 01pm to 03pm",
-      edit: true,
+      label: `From ${formatTime(details.from)} to ${formatTime(details.to)}`,
+      edit: false,
       id: 3,
-    },
-  ];
-
-  const costDetails = [
-    {
-      detail: "2 Hours",
-      cost: "$300",
-      id: 1,
-    },
-    {
-      detail: "Zyvo Service Fee",
-      cost: "$2",
-      id: 2,
-    },
-    {
-      detail: "Cleaning Fee",
-      cost: "$20",
-      id: 3,
-    },
-    {
-      detail: "Taxes",
-      cost: "$10",
-      id: 4,
     },
   ];
 
@@ -81,45 +106,47 @@ const CheckoutPage = () => {
       value: "parking",
       title: "Parking",
       icon: "/icons/gray-car-icon.svg",
-      content: "Content for Parking accordion.",
+      content: place?.parkingRules ?? "No parking rules defined!",
     },
     {
       value: "hostRules",
       title: "Host Rules",
       icon: "/icons/gray-warning-icon.svg",
-      content: "Content for Host Rules accordion.",
+      content: place?.hostRules ?? "No host rules defined!",
     },
   ];
 
-  const paymentMethods: AccordionItem[] = [
-    {
-      value: "months",
-      title: "Month:",
-      icon: "",
-      content: "Content for Months.",
-    },
-    {
-      value: "year",
-      title: "Year:",
-      icon: "",
-      content: "Content for Years.",
-    },
-  ];
-
-  const router = useRouter();
-  const { user } = useAuthContext();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    // setAccountSettings((prev) => {
-    //   return { ...prev, [name]: value };
-    // });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {};
+  const getImagesOnIndex = (index: number) => {
+    if (place?.images?.length && place?.images?.length > index) {
+      return place?.images[index];
+    }
+    return "/images/no-image.jpg";
   };
-
+  const onSubmitHandler = () => {
+    if (!user) return;
+    setIsLoading(true);
+    const booking: Booking = {
+      bookingId: "",
+      date: new Date(details.date),
+      from: details.from,
+      to: details.to,
+      hours: details.hours,
+    };
+    addUpdateBooking(booking, user?.userId, details.placeId).then(
+      ({ result, error }) => {
+        if (error) {
+          toast.error("error booking property!");
+        } else {
+          router.push("confirmation/" + result);
+        }
+        setIsLoading(false);
+      }
+    );
+  };
   return (
     <>
-      <div className='flex sm:container sm:my-24 sm:px-14 md:px-10 sm:gap-2 flex-col'>
-
+      <div className="flex sm:container sm:my-24 sm:px-14 md:px-10 sm:gap-2 flex-col">
         <div className="sm:flex sm:gap-10">
           <div className="text-black text-lg sm:hidden font-normal font-Poppins">
             Checkout and Pay
@@ -127,113 +154,36 @@ const CheckoutPage = () => {
           <div className="sm:hidden h-[0.5px] mt-[10px] mb-[25px] opacity-[0.20] bg-secondary-gray-700"></div>
           <div className=" w-full sm:w-[30%] sm:order-2">
             <div className="flex flex-col gap-5">
-              <div className="flex sm:flex-col sm:order-2 border rounded-lg p-3 sm:p-4 text-center ">
-                <div className="flex flex-col basis-2/5 text-left">
-                  <div className="text-black text-sm sm:text-base font-normal font-Poppins">Hosted By</div>
-                  <div className="flex items-center justify-center py-2 space-x-1 sm:space-x-2 space-y-2">
-                    <div className="rounded-full border-2 border-gray-200 p-[2px]">
-                      <Image
-                        src={"/icons/profile-icon.png"}
-                        alt="profile-pic"
-                        width={35}
-                        height={35}
-                        className="rounded-full w-[27px] h-[27]"
-                      />
-                    </div>
-                    <div className="text-black text-base sm:text-lg font-normal font-Poppins">Mia J.</div>
-                      <Image
-                        src={"/icons/green-tick.svg"}
-                        alt="tick"
-                        width={20}
-                        height={20}
-                        className="w-[15px]"
-                      />
-                  </div>
-                </div>
-                <div className="hidden sm:block h-[0.5px] my-[15px] opacity-[0.20] bg-secondary-gray-700"></div>
-                <div className="sm:hidden w-[0.5px] mx-[15px] opacity-[0.20] bg-secondary-gray-700"></div>
-                <div className="flex flex-col basis-3/5 justify-center items-center">
-                  <div className="sm:order-2 flex items-center justify-center space-x-2">
-                    <Image src={"/icons/time.svg"} alt="time" width={15} height={15} />
-                    <div className="sm:hidden text-black text-[13px] font-normal font-Poppins ">Responds within 1 hr</div>
-                    <div className="hidden sm:block text-black text-[14px] font-normal font-Poppins ">Typically responds within 1 hr</div>
-                  </div>
-                  <Button
-                    type="white"
-                    text="Message the host"
-                    bordered
-                    rounded
-                    full
-                    className="sm:order-1 border-gray-700 text-black text-[15px] font-normal px-2 py-1 whitespace-nowrap font-Poppins my-[8px]"
-                  />
-                </div>
-
-              </div>
-              <div className=" sm:order-1 border rounded-lg w-full">
-                <div className="flex m-3 gap-4">
-                  <div className="w-[30%]">
-                    <Image
-                      src={"/images/dummyImage-1.png"}
-                      alt="detail-image"
-                      className="rounded-[15px] w-full h-full"
-                      width={50}
-                      height={50}
-                    />
-                  </div>
-                  <div className="flex flex-col w-[70%]">
-                    <div className="text-black text-lg font-normal font-Poppins whitespace-nowrap">
-                      Cabin in Peshastin
-                    </div>
-                    <div className="flex space-x-2">
-                      <p className="flex items-center text-[10px] text-base sm:text-[14px] text-primary-amber-500 mr-0 font-Poppins">
-                        <Image
-                          src={"/icons/orange-star-icon.svg"}
-                          alt="star-icon"
-                          width={14}
-                          height={14}
-                          className="mr-1"
-                        />
-                        {"5.0"}
-                      </p>
-                      <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${1}k+)`}</p>
-                    </div>
-                    <div className="flex space-x-1">
-                      <Image
-                        src={"/icons/gray-location-icon.svg"}
-                        alt="location-icon"
-                        width={14}
-                        height={14}
-                      />
-                      <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins whitespace-nowrap">{`37 miles away`}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="h-[0.5px] m-[20px] opacity-[0.20] bg-secondary-gray-700"></div>
-                {costDetails.map((item) => (
-                  <div className={`flex flex-row justify-between my-[10px] mx-[20px]`} key={item.id}>
-                    <div className="text-black text-base font-normal font-Poppins whitespace-nowrap">{item.detail}</div>
-                    <div className="text-black text-base font-normal font-Poppins  whitespace-nowrap">{item.cost}</div>
-                  </div>
-                ))}
-                <div className="h-[0.5px] m-[20px] opacity-[0.20] bg-secondary-gray-700"></div>
-                <div className={`flex flex-row justify-between my-[10px] mx-[20px]`}>
-                  <div className="text-black text-lg font-normal font-Poppins whitespace-nowrap">Total</div>
-                  <div className="text-black text-lg font-normal font-Poppins whitespace-nowrap">$322</div>
-                </div>
-
-              </div>
-
-
+              {placeUser && (
+                <HostProperties
+                  photoURL={placeUser?.photoURL ?? ""}
+                  fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
+                  buttonText="Message the host"
+                  onClick={() => {
+                    router.push("/messages?userId=" + placeUser?.userId);
+                  }}
+                />
+              )}
+              {place && (
+                <PropertySideDetails
+                  imageURL={getImagesOnIndex(0)}
+                  price={place.pricePerHour * details.hours}
+                  description={place.description}
+                  hours={details.hours}
+                />
+              )}
             </div>
           </div>
           {/* =================================Left Section=================================== */}
 
-          <div className="w-full sm:w-[70%] sm:order-1" >
+          <div className="w-full sm:w-[70%] sm:order-1">
             <div className="flex flex-col sm:gap-3">
               <div className="flex flex-row items-center">
                 <div
                   role="button"
-                  onClick={() => { }}
+                  onClick={() => {
+                    router.push("/");
+                  }}
                   className="hidden sm:block"
                 >
                   <Image
@@ -255,7 +205,10 @@ const CheckoutPage = () => {
               </div>
               <div className="flex flex-wrap gap-2 sm:gap-3 mt-1">
                 {bookingDetails.map((tag) => (
-                  <div className={`border border-neutral-200 rounded-full py-2 px-3 gap-3 w-fit flex items-center`} key={tag.id}>
+                  <div
+                    className={`border border-neutral-200 rounded-full py-2 px-3 gap-3 w-fit flex items-center`}
+                    key={tag.id}
+                  >
                     <Image
                       src={tag.icon}
                       alt={tag.iconAlt}
@@ -263,22 +216,22 @@ const CheckoutPage = () => {
                       height={20}
                       className="w-[15px]"
                     />
-                    <div className="text-black text-[13px] sm:text-lg font-normal whitespace-nowrap">{tag.label}</div>
-                    <div
-                      role="button"
-                      onClick={() => { }}
-                    >
-                      <Image
-                        src="/icons/pen-icon.svg"
-                        alt="pen-icon"
-                        width={30}
-                        height={30}
-                        className="cursor-pointer w-[20px]"
-                      />
+                    <div className="text-black text-[13px] sm:text-lg font-normal whitespace-nowrap">
+                      {tag.label}
                     </div>
+                    {tag.edit && (
+                      <div role="button" onClick={() => {}}>
+                        <Image
+                          src="/icons/pen-icon.svg"
+                          alt="pen-icon"
+                          width={30}
+                          height={30}
+                          className="cursor-pointer w-[20px]"
+                        />
+                      </div>
+                    )}
                   </div>
                 ))}
-
               </div>
               <div className="h-[0.5px] my-[30px] sm:my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
               {/* ================================= Payment Method=================================== */}
@@ -364,10 +317,8 @@ const CheckoutPage = () => {
                         placeholder="Year:"
                         onChange={handleChange}
                       />
-
                     </div>
                   </div>
-
                 </div>
               </div>
               <div className="h-[0.5px] my-[30px] sm:my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
@@ -376,11 +327,11 @@ const CheckoutPage = () => {
               </div>
               <div className={` rounded-3xl `}>
                 <div className="text-black text-sm sm:text-lg font-normal">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting
-                  industry. Lorem Ipsum has been the industry's standard dummy
-                  text ever since the 1500s, when an unknown printer took a galley
-                  of type and scrambled it to make a type specimen book. It has
-                  survived not only...
+                  Lorem Ipsum is simply dummy text of the printing and
+                  typesetting industry. Lorem Ipsum has been the industry's
+                  standard dummy text ever since the 1500s, when an unknown
+                  printer took a galley of type and scrambled it to make a type
+                  specimen book. It has survived not only...
                 </div>
               </div>
             </div>
@@ -391,8 +342,12 @@ const CheckoutPage = () => {
 
             {/* ================================= Rules Accordion=================================== */}
             <div className="flex-col flex gap-2 sm:gap-7">
-              <p className="hidden sm:block font-Poppins text-2xl font-medium">Rules</p>
-              <p className="sm:hidden font-Poppins text-lg font-medium">Included in your booking</p>
+              <p className="hidden sm:block font-Poppins text-2xl font-medium">
+                Rules
+              </p>
+              <p className="sm:hidden font-Poppins text-lg font-medium">
+                Included in your booking
+              </p>
               <div className="w-full">
                 <Accordion items={accordionItems} />
               </div>
@@ -402,14 +357,13 @@ const CheckoutPage = () => {
               <Button
                 className="px-8"
                 text="Confirm & Pay"
-                // onClick={}
+                onClick={onSubmitHandler}
                 type="green"
                 roundedfull
+                isLoading={isLoading}
               />
             </div>
-
           </div>
-
         </div>
       </div>
     </>

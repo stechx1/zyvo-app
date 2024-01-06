@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Poppins, Roboto } from "next/font/google";
 import { profileData } from "@/types/profile";
+import { format, parse, parseISO } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -91,3 +92,15 @@ export const timeArray = [
   { label: "11:00 PM", value: "23:00" },
   { label: "11:30 PM", value: "23:30" },
 ];
+
+export const formatDate = (date: string) => {
+  const originalDate = "2023-10-22T19:00:00.000Z";
+  const parsedDate = parseISO(originalDate); // Parse the ISO string to a Date object
+  return format(parsedDate, "MMMM d, yyyy");
+};
+
+export const formatTime = (timeString: string) => {
+  const parsedTime = parse(timeString, "HH:mm", new Date()); // Parse the time string
+  const formattedTime = format(parsedTime, "h:mm a"); // Format the time to "h:mm a" (e.g., 4:00 PM)
+  return formattedTime;
+};
