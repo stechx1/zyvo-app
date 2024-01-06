@@ -126,7 +126,7 @@ const GallaryAndLocation = ({
   };
   return (
     <div>
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
         <div>Gallery</div>
         <div className="flex flex-wrap gap-4">
           {place.images.map((img, i) => {
@@ -186,7 +186,7 @@ const GallaryAndLocation = ({
         </div>
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
         <div>About the Space</div>
         <div>
           <textarea
@@ -206,7 +206,7 @@ const GallaryAndLocation = ({
         </div>
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
         <div>Parking Rules</div>
         <div>
           <textarea
@@ -226,7 +226,7 @@ const GallaryAndLocation = ({
         </div>
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
         <div>Host Rules</div>
         <div>
           <textarea
@@ -246,7 +246,7 @@ const GallaryAndLocation = ({
         </div>
       </div>
       <hr className="my-8" />
-      <div className="px-4 space-y-3">
+      <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
         <div>Address</div>
         <Input
           type="text"
