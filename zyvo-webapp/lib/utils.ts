@@ -94,8 +94,7 @@ export const timeArray = [
 ];
 
 export const formatDate = (date: string) => {
-  const originalDate = "2023-10-22T19:00:00.000Z";
-  const parsedDate = parseISO(originalDate); // Parse the ISO string to a Date object
+  const parsedDate = parseISO(date); // Parse the ISO string to a Date object
   return format(parsedDate, "MMMM d, yyyy");
 };
 

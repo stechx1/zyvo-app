@@ -58,13 +58,16 @@ export function getBookingSnapshot(
   let unsubscribe: Unsubscribe = () => {};
 
   try {
-    unsubscribe = onSnapshot(doc(db, "bookings", bookingId), async (place) => {
-      let result: Booking = {
-        ...place.data(),
-        date: place.data()?.date.toDate(),
-      } as Booking;
-      onSuccess(result);
-    });
+    unsubscribe = onSnapshot(
+      doc(db, "bookings", bookingId),
+      async (booking) => {
+        let result: Booking = {
+          ...booking.data(),
+          date: booking.data()?.date.toDate(),
+        } as Booking;
+        onSuccess(result);
+      }
+    );
   } catch (e) {
     console.log(e);
     if (typeof e === "object" && onError) onError((e as errorType).code);
@@ -83,9 +86,9 @@ export async function deletePlace(placeId: string) {
   }
   return { result, error };
 }
-export function getMyPlacesSnapshot(
+export function getMyBookingsSnapshot(
   userId: string,
-  onSuccess: (data: Place[]) => void,
+  onSuccess: (data: Booking[]) => void,
   onError?: (error: string) => void
 ) {
   let unsubscribe: Unsubscribe = () => {};
@@ -93,21 +96,19 @@ export function getMyPlacesSnapshot(
   try {
     unsubscribe = onSnapshot(
       query(
-        collection(db, "places"),
-        where("sender", "==", doc(db, "users", userId))
+        collection(db, "bookings"),
+        where("user", "==", doc(db, "users", userId))
       ),
-      async (places) => {
-        let result: Place[] = [];
-        for (let index = 0; index < places.docs.length; index++) {
-          const place = places.docs[index].data() as Place;
-          const placeId = places.docs[index].id;
-
+      async (bookings) => {
+        let result: Booking[] = [];
+        for (let index = 0; index < bookings.docs.length; index++) {
+          const booking = bookings.docs[index].data();
           result = [
             ...result,
             {
-              ...place,
-              placeId,
-            },
+              ...booking,
+              date: booking.date.toDate(),
+            } as Booking,
           ];
           onSuccess(result);
         }
