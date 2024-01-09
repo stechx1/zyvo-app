@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Poppins, Roboto } from "next/font/google";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import { format, parse, parseISO } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
@@ -29,14 +29,14 @@ export const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
 });
 
-export const getOtherUser = (users: profileData[], user: profileData) => {
+export const getOtherUser = (users: User[], user: User) => {
   const filteredUsers = users.filter((u) => {
     return u.userId !== user?.userId;
   });
   if (filteredUsers.length > 0) return filteredUsers[0];
 };
 
-export const getFullName = (user?: profileData) => {
+export const getFullName = (user?: User) => {
   if (user) {
     return user.firstName + " " + user.lastName;
   }

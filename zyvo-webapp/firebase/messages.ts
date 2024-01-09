@@ -15,7 +15,7 @@ import {
 } from "firebase/firestore";
 import firebase_app from "@/config";
 import { conversation, message } from "@/types/messages";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import { Unsubscribe } from "firebase/auth";
 
 const db = getFirestore(firebase_app);
@@ -45,9 +45,9 @@ export function getConversationsSnapshot(
 
           const lastMessageSender = (
             await getDoc(lastMessageRef.data()?.sender)
-          ).data() as profileData;
+          ).data() as User;
 
-          let users: profileData[] = [];
+          let users: User[] = [];
           for (let j = 0; j < conversation.users.length; j++) {
             let user = (await getDoc(conversation.users[j])).data() as any;
             users = [...users, user];
@@ -100,7 +100,7 @@ export function getMessagessSnapshot(
 
           const messageSender = (
             await getDoc(message?.sender)
-          ).data() as profileData;
+          ).data() as User;
 
           result = [
             ...result,

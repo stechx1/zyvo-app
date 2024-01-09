@@ -14,20 +14,23 @@ import { Place } from "@/types/place";
 import { formatDate, formatTime, getFullName } from "@/lib/utils";
 import HostProperties from "@/collections/HostProperties";
 import PropertySideDetails from "@/collections/PropertySideDetails";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import { getUserByRef } from "@/firebase/user";
 import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
+import { getReviewsSnapshot } from "@/firebase/reviews";
+import { Review } from "@/types/review";
 
 export default function Bookings() {
   const { user } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking>();
   const [selectedBookingPlace, setSelectedBookingPlace] = useState<Place>();
   const [selectedBookingPlaceUser, setSelectedBookingPlaceUser] =
-    useState<profileData>();
+    useState<User>();
   const [places, setPlaces] = useState<Place[]>([]);
   function getStatusColor(status: string) {
     switch (status) {
@@ -59,6 +62,23 @@ export default function Bookings() {
       unsubscribe();
     };
   }, [user]);
+
+  useEffect(() => {
+    if (!selectedBookingPlace) return;
+    const unsubscribe = getReviewsSnapshot(
+      selectedBookingPlace.placeId,
+      (reviews) => {
+        setReviews(reviews);
+        console.log(reviews);
+      },
+      (e) => {
+        console.log(e);
+      }
+    );
+    return () => {
+      unsubscribe();
+    };
+  }, [selectedBookingPlace]);
 
   useEffect(() => {
     if (bookings.length > 0) {
@@ -99,16 +119,6 @@ export default function Bookings() {
       setSelectedBookingPlaceUser(result);
     }
   };
-  const rulesOptions = [
-    { label: "Parking", value: "Parking" },
-    { label: "Food", value: "Food" },
-    { label: "System", value: "System" },
-  ];
-
-  const hotRulesOptions = [
-    { label: "Host rules", value: "Host rules" },
-    { label: "option b", value: "option b" },
-  ];
   const getPlace = (places: Place[], id: string) => {
     return places.find((p) => p.placeId === id);
   };
@@ -196,8 +206,13 @@ export default function Bookings() {
           return (
             <div
               key={booking.bookingId}
-              className="flex mt-4 border px-2 py-2 rounded-xl"
+              className={`flex mt-4 border px-2 py-2 rounded-xl ${
+                selectedBooking?.bookingId === booking.bookingId
+                  ? "border-2 border-black"
+                  : ""
+              }`}
               role="button"
+              onClick={() => setSelectedBooking(booking)}
             >
               <Image
                 src={getPlaceImage(booking.place)}
@@ -406,13 +421,17 @@ export default function Bookings() {
                 </div>
                 <div>Sort by: Recent Reviews</div>
               </div>
-              {Array.from({ length: 4 }, (_, i) => (
-                <React.Fragment key={i}>
+              {reviews.map((review) => (
+                <React.Fragment key={review.reviewId}>
                   <div className="flex justify-between py-2">
                     <div className="flex px-2 space-x-2">
                       <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
                         <Image
-                          src={"/icons/profile-icon.png"}
+                          src={
+                            review.user?.photoURL
+                              ? review.user.photoURL
+                              : "/icons/profile-icon.png"
+                          }
                           alt="profile-pic"
                           width={40}
                           height={40}
@@ -420,13 +439,13 @@ export default function Bookings() {
                         />
                       </div>
                       <div>
-                        <label>Emily James</label>
-                        <div>Host was very helpful. thank you so much</div>
+                        <label>{getFullName(review.user)}</label>
+                        <div>{review.comment}</div>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex">
-                        {Array.from({ length: 5 }, (_, index) => (
+                        {Array.from({ length: review.rating }, (_, index) => (
                           <Image
                             key={index}
                             src={"/icons/starIcon.svg"}
@@ -436,7 +455,7 @@ export default function Bookings() {
                           />
                         ))}
                       </div>
-                      <div>Mar 09, 22</div>
+                      <div>{formatDate(review.createdAt.toISOString())}</div>
                     </div>
                   </div>
                   <hr className="my-3" />

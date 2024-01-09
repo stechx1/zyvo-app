@@ -1,6 +1,6 @@
 import firebase_app from "@/config";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import addData from "../firestore/addData";
 import toast from "react-hot-toast";
 
@@ -13,7 +13,7 @@ export async function googleSignin() {
 
     signInWithPopup(auth, provider)
       .then(function ({ user }) {
-        const profileData: profileData = {
+        const User: User = {
           userId: user?.uid,
           firstName: "",
           lastName: "",
@@ -26,16 +26,16 @@ export async function googleSignin() {
         };
         const splitedDisplayName = user.displayName?.split(" ") ?? [""];
         if (splitedDisplayName?.length > 1) {
-          profileData.lastName = splitedDisplayName.slice(1).join(" ");
+          User.lastName = splitedDisplayName.slice(1).join(" ");
         }
-        profileData.firstName = splitedDisplayName[0];
-        profileData.email = user.email ?? "";
-        profileData.emailVerified = user.emailVerified ?? "";
-        profileData.photoURL = user.photoURL ?? "";
-        profileData.phoneNumber = user.phoneNumber ?? "";
-        profileData.phoneNumberVerified = !!user.phoneNumber;
+        User.firstName = splitedDisplayName[0];
+        User.email = user.email ?? "";
+        User.emailVerified = user.emailVerified ?? "";
+        User.photoURL = user.photoURL ?? "";
+        User.phoneNumber = user.phoneNumber ?? "";
+        User.phoneNumberVerified = !!user.phoneNumber;
 
-        addData("users", user?.uid, profileData);
+        addData("users", user?.uid, User);
       })
       .catch(function (error) {
         console.log(error);

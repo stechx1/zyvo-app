@@ -1,5 +1,5 @@
 import firebase_app from "@/config";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import {
   DocumentReference,
   doc,
@@ -13,7 +13,7 @@ export async function getUserByRef(userRef: DocumentReference) {
   let error = null;
 
   try {
-    result = (await getDoc(userRef)).data() as profileData;
+    result = (await getDoc(userRef)).data() as User;
   } catch (e) {
     console.log(e);
     error = e;
@@ -26,7 +26,7 @@ export async function getUserByPath(userPath: string) {
   let error = null;
 
   try {
-    result = (await getDoc(doc(db, userPath))).data() as profileData;
+    result = (await getDoc(doc(db, userPath))).data() as User;
   } catch (e) {
     console.log(e);
     error = e;

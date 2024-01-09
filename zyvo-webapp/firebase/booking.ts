@@ -1,6 +1,5 @@
 import {
   collection,
-  deleteDoc,
   doc,
   getFirestore,
   onSnapshot,
@@ -10,7 +9,6 @@ import {
   where,
 } from "firebase/firestore";
 import firebase_app from "@/config";
-import { Place } from "@/types/place";
 import { Unsubscribe } from "firebase/auth";
 import { Booking } from "@/types/booking";
 const db = getFirestore(firebase_app);
@@ -74,18 +72,6 @@ export function getBookingSnapshot(
   }
   return unsubscribe;
 }
-export async function deletePlace(placeId: string) {
-  let result = null;
-  let error = null;
-
-  try {
-    await deleteDoc(doc(db, "places", placeId));
-  } catch (e) {
-    if (typeof e === "object") error = e as errorType;
-    console.log(e);
-  }
-  return { result, error };
-}
 export function getMyBookingsSnapshot(
   userId: string,
   onSuccess: (data: Booking[]) => void,
@@ -109,38 +95,6 @@ export function getMyBookingsSnapshot(
               ...booking,
               date: booking.date.toDate(),
             } as Booking,
-          ];
-          onSuccess(result);
-        }
-      }
-    );
-  } catch (e) {
-    console.log(e);
-    if (typeof e === "object" && onError) onError((e as errorType).code);
-  }
-  return unsubscribe;
-}
-export function getAllPlacesSnapshot(
-  onSuccess: (data: Place[]) => void,
-  onError?: (error: string) => void
-) {
-  let unsubscribe: Unsubscribe = () => {};
-
-  try {
-    unsubscribe = onSnapshot(
-      query(collection(db, "places")),
-      async (places) => {
-        let result: Place[] = [];
-        for (let index = 0; index < places.docs.length; index++) {
-          const place = places.docs[index].data() as Place;
-          const placeId = places.docs[index].id;
-
-          result = [
-            ...result,
-            {
-              ...place,
-              placeId,
-            },
           ];
           onSuccess(result);
         }

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getFullName } from "@/lib/utils";
 import { Place } from "@/types/place";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import { DocumentReference } from "firebase/firestore";
 import { getUserByRef } from "@/firebase/user";
 import { useRouter } from "next/navigation";
 export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
   const router = useRouter();
-  const [placeUser, setPlaceUser] = useState<null | profileData>();
+  const [placeUser, setPlaceUser] = useState<null | User>();
 
   useEffect(() => {
     if (propertyItem.sender) getUser(propertyItem.sender);

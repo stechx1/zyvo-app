@@ -10,7 +10,7 @@ import { getBookingSnapshot } from "@/firebase/booking";
 import { Booking } from "@/types/booking";
 import { DocumentReference } from "firebase/firestore";
 import { getUserByRef } from "@/firebase/user";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import HostProperties from "@/collections/HostProperties";
 import { formatDate, formatTime, getFullName } from "@/lib/utils";
 import { Place } from "@/types/place";
@@ -19,7 +19,7 @@ import PropertySideDetails from "@/collections/PropertySideDetails";
 
 const ConfirmationPage = ({ params }: { params: { id: string } }) => {
   const [booking, setBooking] = useState<Booking | null>(null);
-  const [placeUser, setPlaceUser] = useState<null | profileData>();
+  const [placeUser, setPlaceUser] = useState<null | User>();
   const [bookingPlace, setBookingPlace] = useState<null | Place>();
 
   const { user } = useAuthContext();

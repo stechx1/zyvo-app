@@ -7,15 +7,15 @@ import { Navbar } from "@/collections/Navbar/Navbar";
 import { Footer } from "@/collections/Footer/Footer";
 import { usePathname } from "next/navigation";
 import getData from "@/firebase/firestore/getData";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import { conversation } from "@/types/messages";
 import { getConversationsSnapshot } from "@/firebase/messages";
 
 const auth = getAuth(firebase_app);
 
 const defaultValue: {
-  user: profileData | null;
-  setUser: (user: profileData) => void;
+  user: User | null;
+  setUser: (user: User) => void;
   mode: "GUEST" | "HOST";
   setMode: (mode: "GUEST" | "HOST") => void;
   conversations: conversation[];
@@ -37,7 +37,7 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [user, setUser] = React.useState<profileData | null>(null);
+  const [user, setUser] = React.useState<User | null>(null);
   const [mode, setMode] = React.useState<"GUEST" | "HOST">("GUEST");
   const [conversations, setConversations] = React.useState<conversation[]>([]);
   const [convosSubscribeFN, setConvosSubscribeFN] =
@@ -50,7 +50,7 @@ export const AuthContextProvider = ({
       if (user) {
         getData("users", user.uid)
           .then(({ result, error }) => {
-            setUser(result as profileData);
+            setUser(result as User);
           })
           .catch((e) => {
             console.log(e);

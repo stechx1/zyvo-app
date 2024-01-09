@@ -16,7 +16,7 @@ import firebase_app from "@/config";
 import Badge from "@/components/Badge";
 import HostProperties from "@/collections/HostProperties";
 import { getFullName, getOtherUser } from "@/lib/utils";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import { getUserByPath } from "@/firebase/user";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 const storage = getStorage(firebase_app);
@@ -35,7 +35,7 @@ export default function Messages() {
     useState<conversation | null>();
   const [newChatConversation, setNewChatConversation] =
     useState<conversation>();
-  const [newChatUser, setNewChatUser] = useState<profileData | null>(null);
+  const [newChatUser, setNewChatUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (userId) {
@@ -489,7 +489,7 @@ const ConversationBox = ({
   conversation: conversation;
   selectedConversation?: conversation | null;
   onSelect: () => void;
-  user: profileData | null;
+  user: User | null;
   time: string;
 }) => {
   return (

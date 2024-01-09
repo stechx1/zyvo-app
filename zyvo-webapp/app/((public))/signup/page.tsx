@@ -7,7 +7,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useAuthContext } from "@/context/AuthContext";
 import { googleSignin } from "@/firebase/auth/sociaiLogin";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import toast from "react-hot-toast";
 import addData from "@/firebase/firestore/addData";
 
@@ -81,7 +81,7 @@ function Page() {
       }
       const user = result?.user;
       if (user) {
-        const profileData: profileData = {
+        const User: User = {
           userId: user.uid,
           firstName: state.firstName,
           lastName: state.lastName,
@@ -92,8 +92,8 @@ function Page() {
           phoneNumberVerified: false,
           isSocialLogin: false,
         };
-        profileData.email = user.email ?? "";
-        addData("users", user?.uid, profileData)
+        User.email = user.email ?? "";
+        addData("users", user?.uid, User)
           .then((result) => {
             toast.success("Registered Successfully!");
             setIsLoading(false);

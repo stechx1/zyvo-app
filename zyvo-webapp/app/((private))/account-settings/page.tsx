@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import Input from "@/components/Input";
 import { InputSectionProps } from "@/types";
 import Button from "@/components/Button";
@@ -45,7 +45,7 @@ const AccountSettingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File>();
   const [imgPreview, setImgPreview] = useState<string>();
-  const [accountSettings, setAccountSettings] = useState<profileData>({
+  const [accountSettings, setAccountSettings] = useState<User>({
     userId: "",
     firstName: "",
     lastName: "",

@@ -9,7 +9,7 @@ import { getPlaceSnapshot } from "@/firebase/place";
 import { Place } from "@/types/place";
 import HostProperties from "@/collections/HostProperties";
 import { getUserByRef } from "@/firebase/user";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import { getFullName, timeArray } from "@/lib/utils";
 import { DocumentReference } from "firebase/firestore";
 import AvailabilitySelection from "@/collections/AvailabilitySelection";
@@ -27,7 +27,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
   const { user } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
   const [readMore, setReadMore] = useState<boolean>(false);
-  const [placeUser, setPlaceUser] = useState<null | profileData>();
+  const [placeUser, setPlaceUser] = useState<null | User>();
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedavailableHoursTo, setSelectedavailableHoursTo] =
     useState<string>();

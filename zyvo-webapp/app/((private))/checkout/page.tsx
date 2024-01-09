@@ -9,7 +9,7 @@ import Input from "@/components/Input";
 import { InputSectionProps } from "@/types";
 import { BookingDetailsType } from "../property-details/[id]/page";
 import { useEffect, useState } from "react";
-import { profileData } from "@/types/profile";
+import { User } from "@/types/profile";
 import { Place } from "@/types/place";
 import { getPlaceSnapshot } from "@/firebase/place";
 import { DocumentReference } from "firebase/firestore";
@@ -44,7 +44,7 @@ const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
   const router = useRouter();
   const { user } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
-  const [placeUser, setPlaceUser] = useState<null | profileData>();
+  const [placeUser, setPlaceUser] = useState<null | User>();
   const [isLoading, setIsLoading] = useState(false);
   const details = JSON.parse(searchParams.data) as BookingDetailsType;
 

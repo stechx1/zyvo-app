@@ -1,9 +1,9 @@
-import { profileData } from "./profile";
+import { User } from "./profile";
 
 export interface message {
   messageId: string;
   createdAt?: Date;
-  sender: profileData;
+  sender: User;
   message: string;
   imageURL?: string;
   fileURL?: string;
@@ -11,6 +11,6 @@ export interface message {
 export interface conversation {
   conversationId: string;
   lastMessage: message;
-  users: profileData[];
+  users: User[];
   unreadCount: number;
 }
