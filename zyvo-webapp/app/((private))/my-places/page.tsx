@@ -147,7 +147,7 @@ export default function MyPlaces() {
             </div>
             <div className="py-1 px-0.5">
               <div className="flex justify-between font-normal">
-                {place.description}
+                <div className="truncate w-2/3">{place.description}</div>
                 <div className="flex space-x-1">
                   <Image
                     width={15}
@@ -174,16 +174,16 @@ export default function MyPlaces() {
           </div>
         ))}
         <div className="w-[48%] flex-col justify-center flex items-center h-64 sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] relative rounded-xl border-2 border-dashed border-gray-200">
-            <Button
-              text="+"
-              type="gray"
-              roundedfull
-              className="text-xl"
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-            />
-            <p className="text-sm mt-2">Add new Place</p>
+          <Button
+            text="+"
+            type="gray"
+            roundedfull
+            className="text-xl"
+            onClick={() => {
+              setIsModalOpen(true);
+            }}
+          />
+          <p className="text-sm mt-2">Add new Place</p>
           <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
             <div className="border-t-4 border-l-4 border-r-4 border-transparent rounded-xl"></div>
           </div>

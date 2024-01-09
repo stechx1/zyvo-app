@@ -26,6 +26,7 @@ export type BookingDetailsType = {
 const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
   const { user } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
+  const [readMore, setReadMore] = useState<boolean>(false);
   const [placeUser, setPlaceUser] = useState<null | profileData>();
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedavailableHoursTo, setSelectedavailableHoursTo] =
@@ -112,24 +113,24 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
   console.log(place);
 
   return (
-    <div className="flex sm:container sm:mx-auto sm:my-24 sm:px-14 md:px-10 gap-2 flex-col">
+    <div className="flex sm:container sm:mx-auto my-5 sm:px-14 md:px-10 gap-2 flex-col">
       <div className="flex flex-row ">
-      <div className="text-black text-[18px] sm:text-4xl font-normal font-Poppins">
-        Cabin in Peshastin
-      </div>
-      <div className="sm:hidden flex space-x-2 ml-2 items-center">
-        <p className="flex items-center text-[13px] sm:text-[16px] text-primary-amber-500 mr-0 font-Poppins">
-          <Image
-            src={"/icons/orange-star-icon.svg"}
-            alt="star-icon"
-            width={14}
-            height={14}
-            className="mr-1"
-          />
-          {"5.0"}
-        </p>
-        <p className=" sm:text-[16px] text-[13px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${30} reviews)`}</p>
-      </div>
+        <div className="text-black text-[18px] sm:text-4xl font-normal font-Poppins">
+          Cabin in Peshastin
+        </div>
+        <div className="sm:hidden flex space-x-2 ml-2 items-center">
+          <p className="flex items-center text-[13px] sm:text-[16px] text-primary-amber-500 mr-0 font-Poppins">
+            <Image
+              src={"/icons/orange-star-icon.svg"}
+              alt="star-icon"
+              width={14}
+              height={14}
+              className="mr-1"
+            />
+            {"5.0"}
+          </p>
+          <p className=" sm:text-[16px] text-[13px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${30} reviews)`}</p>
+        </div>
       </div>
 
       {/* Icon's Details */}
@@ -196,47 +197,98 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
       </div>
 
       {/* Pictures of Property*/}
-      <div className="flex space-x-4 w-full">
+      <div className="flex xl:space-x-3 xl:h-[58vh] lg:h-[50vh] md:h-[50vh] sm:h-[45vh] h-[30vh] lg:space-x-3 md:space-x-2 sm:space-x-3 space-x-2 w-full">
         <Image
           src={getImagesOnIndex(0)}
           alt="detail-image"
-          className=" w-3/5 md:w-1/2 h-auto rounded-tl-[20px] rounded-bl-[20px]"
+          className="w-3/5 bg-gray-100 object-cover rounded-tl-[20px] rounded-bl-[20px]"
           width={200}
-          height={470}
+          height={170}
         />
-        <div className="hidden md:flex md:flex-col md:w-1/4 md:gap-4">
+        <div className="hidden md:flex md:flex-col md:w-1/4 gap-2 md:gap-2 xl:gap-3 lg:gap-3 sm:gap-3">
           <Image
             src={getImagesOnIndex(1)}
             alt="detail-image"
-            className="w-full h-1/2"
+            className="object-cover w-full h-1/2"
             width={200}
             height={470}
           />
           <Image
             src={getImagesOnIndex(2)}
             alt="detail-image"
-            className="w-full h-1/2"
+            className="object-cover w-full h-1/2"
             width={200}
             height={470}
           />
         </div>
-        <div className="flex flex-col  w-2/5 md:w-1/4 gap-4">
+        <div className="flex flex-col w-2/5 md:w-1/4 gap-2 xl:gap-3 lg:gap-3 md:gap-2 sm:gap-3">
           <Image
             src={getImagesOnIndex(3)}
             alt="detail-image"
-            className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
+            className="object-cover w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
             width={200}
             height={470}
           />
           <Image
             src={getImagesOnIndex(4)}
             alt="detail-image"
-            className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
+            className="object-cover w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
             width={200}
             height={470}
           />
         </div>
       </div>
+
+      {place && (
+        <div className="sm:hidden md:hidden lg:hidden xl:hidden block mt-7 border rounded-lg p-4 text-center space-y-2 mb-8">
+          <div className="text-2xl">${place?.pricePerHour}/hr</div>
+          <div className="text-sm text-gray-800">
+            {place?.minHours} hr minimum
+          </div>
+
+          <hr />
+
+          <div className="flex items-center justify-between space-x-2">
+            <div className="text-sm text-gray-800">
+              {place?.discountedMinHours}+ Hrs discount
+            </div>
+            <div className="text-sm text-gray-800">
+              {place?.discountPercentage}% off
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="sm:hidden md:hidden lg:hidden xl:hidden block border border-gray-700 rounded-xl">
+        <AvailabilitySelection
+          hours={hours}
+          availableHoursFrom={place?.availableHoursFrom}
+          availableHoursTo={place?.availableHoursTo}
+          selectedAvailableHoursFrom={selectedavailableHoursFrom}
+          selectedAvailableHoursTo={selectedavailableHoursTo}
+          setSelectedAvailableHoursTo={setSelectedavailableHoursTo}
+          setSelectedAvailableHoursFrom={setSelectedavailableHoursFrom}
+          setHours={setHours}
+          price={place?.pricePerHour ?? 0}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          availableMonths={place?.availableMonths ?? []}
+          availableDays={place?.availableDays ?? []}
+          onCheckOutClick={onCheckOutClick}
+        />
+      </div>
+
+      <div className="my-8 block sm:hidden md:hidden lg:hidden xl:hidden">
+        <HostProperties
+          photoURL={placeUser?.photoURL ?? ""}
+          fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
+          buttonText="Message the host"
+          onClick={() => {
+            router.push("/messages?userId=" + placeUser?.userId);
+          }}
+        />
+      </div>
+
       <div className="sm:flex sm:gap-10 my-10 sm:my-20">
         {/* =================================Left Section=================================== */}
 
@@ -245,26 +297,33 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
               About the Space
             </div>
-            <div className={` rounded-3xl `}>
+            <div className={`${!readMore && "line-clamp-3"}`}>
               <div className="text-black text-[14px] sm:text-lg font-normal">
-              {place?.description ? place.description : "No Description!"}
+                {place?.description ? place.description : "No Description!"}
               </div>
             </div>
           </div>
-          <p className="text-primary-emerald-300 text-[15px] sm:text-lg mt-4 hover:underline cursor-pointer w-fit">
-            Read more...
-          </p> 
+          <p
+            onClick={() => setReadMore(!readMore)}
+            className={`text-primary-emerald-300 text-[15px] sm:text-lg mt-4 hover:underline cursor-pointer w-fit`}
+          >
+            {place?.description && place?.description?.length > 200
+              ? !readMore
+                ? "Read more..."
+                : "Read less..."
+              : null}
+          </p>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
           {/* ================================= Included in the booking=================================== */}
 
-          <div className="flex-col flex gap-7">
+          <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-3">
             <p className="font-Poppins text-[18px] sm:text-2xl font-medium">
               Included in your booking
             </p>
-            <div className="flex flex-wrap gap-6">
+            <div className="flex flex-wrap xl:gap-6 lg:gap-6 md:gap-6 sm:gap-6 gap-2">
               {place?.ameneties.map((amenety) => (
                 <div
-                  className={`border rounded-xl py-3 px-5 gap-3 w-fit flex items-center`}
+                  className={`border rounded-xl xl:py-3 lg:py-3 md:py-3 sm:py-3 py-1 px-2 xl:px-5 lg:px-5 md:px-5 sm:px-4 xl:gap-3 lg:gap-3 gap-3 w-fit flex items-center`}
                   key={amenety}
                 >
                   <Image
@@ -272,6 +331,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                     alt={"icon"}
                     width={40}
                     height={40}
+                    className="xl:w-[40] lg:w-[40] md:w-[40] sm:w-[40] w-[2rem] xl:h-[40] "
                   />
 
                   <div className="text-black text-[14px] sm:text-lg font-normal">
@@ -284,8 +344,10 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
           {/* ================================= Rules Accordion=================================== */}
-          <div className="flex-col flex gap-7">
-            <p className="font-Poppins text-[18px] sm:text-2xl font-medium">Rules</p>
+          <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-2">
+            <p className="font-Poppins text-[18px] sm:text-2xl font-medium">
+              Rules
+            </p>
             <div className="w-full">
               <Accordion items={accordionItems} />
             </div>
@@ -294,8 +356,8 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
 
           {/* ================================= Add-ons from the host =================================== */}
 
-          <div className="flex-col flex gap-7">
-            <div className="flex flex-col gap-2">
+          <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-2">
+            <div className="flex flex-col xl:gap-2 lg:gap-2 md:gap-2">
               <p className="font-Poppins text-[18px] sm:text-2xl font-medium">
                 Add-ons from the host
               </p>
@@ -307,10 +369,10 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
               {place?.addOns.map((addOn, index) => (
                 <div
-                  className="flex items-center rounded-xl border border-secondary-neutral-200 py-3 px-4"
+                  className="flex items-center rounded-xl border border-secondary-neutral-200 xl:py-3 lg:py-3 md:py-3 sm:py-3 p-2 xl:px-4 lg:px-4 md:px-4 sm:px-4"
                   key={index}
                 >
-                  <div className="rounded-xl bg-gray-100 w-16 h-16 flex items-center justify-center mr-4">
+                  <div className="rounded-xl bg-gray-100 xl:p-4 lg:p-4 md:p-4 sm:p-4 p-2 flex items-center justify-center mr-4">
                     <Image
                       src={"/icons/addon-icon.png"}
                       alt={addOn.name}
@@ -318,8 +380,8 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                       height={30}
                     />
                   </div>
-                  <div>
-                    <p className="text-[14px] sm:text-lg font-medium">{addOn.name}</p>
+                  <div className="text-sm sm:text-sm md:text-md lg:text-base xl:text-base">
+                    <p className="font-medium">{addOn.name}</p>
                     <div className="flex gap-2">
                       <p>${addOn.price} / item</p>
                     </div>
@@ -331,7 +393,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           </div>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
         </div>
-        <div className="w-full sm:w-[30%]">
+        <div className="w-full sm:w-[30%] hidden sm:block md:block lg:block xl:block">
           {place && (
             <div className="border rounded-lg p-4 text-center space-y-2 mb-8">
               <div className="text-2xl">${place?.pricePerHour}/hr</div>
@@ -354,7 +416,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
 
           {user && placeUser && user?.userId !== placeUser?.userId && (
             <>
-              <div className="my-8">
+              <div className="my-8 hidden sm:block md:block lg:block xl:block">
                 <HostProperties
                   photoURL={placeUser?.photoURL ?? ""}
                   fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
@@ -364,22 +426,24 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                   }}
                 />
               </div>
-              <AvailabilitySelection
-                hours={hours}
-                availableHoursFrom={place?.availableHoursFrom}
-                availableHoursTo={place?.availableHoursTo}
-                selectedAvailableHoursFrom={selectedavailableHoursFrom}
-                selectedAvailableHoursTo={selectedavailableHoursTo}
-                setSelectedAvailableHoursTo={setSelectedavailableHoursTo}
-                setSelectedAvailableHoursFrom={setSelectedavailableHoursFrom}
-                setHours={setHours}
-                price={place?.pricePerHour ?? 0}
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
-                availableMonths={place?.availableMonths ?? []}
-                availableDays={place?.availableDays ?? []}
-                onCheckOutClick={onCheckOutClick}
-              />
+              <div className="sm:block md:block lg:block xl:block hidden">
+                <AvailabilitySelection
+                  hours={hours}
+                  availableHoursFrom={place?.availableHoursFrom}
+                  availableHoursTo={place?.availableHoursTo}
+                  selectedAvailableHoursFrom={selectedavailableHoursFrom}
+                  selectedAvailableHoursTo={selectedavailableHoursTo}
+                  setSelectedAvailableHoursTo={setSelectedavailableHoursTo}
+                  setSelectedAvailableHoursFrom={setSelectedavailableHoursFrom}
+                  setHours={setHours}
+                  price={place?.pricePerHour ?? 0}
+                  selectedDate={selectedDate}
+                  setSelectedDate={setSelectedDate}
+                  availableMonths={place?.availableMonths ?? []}
+                  availableDays={place?.availableDays ?? []}
+                  onCheckOutClick={onCheckOutClick}
+                />
+              </div>
             </>
           )}
         </div>

@@ -59,7 +59,7 @@ export default function AvailabilitySelection({
     (t) => t.value === availableHoursTo
   );
   return (
-    <div className="w-[320px] p-5 text-center">
+    <div className="p-5 text-center">
       <Tabs
         options={[
           { name: "Choose Hours", value: 1 },
