@@ -6,7 +6,9 @@ export type Review = {
   reviewId: string;
   createdAt: Date;
   comment: string;
-  rating:number;
+  placeRating: number;
+  communicationRating: number;
+  responseRating: number;
   user?: User;
   place?: Place;
   userRef: DocumentReference;

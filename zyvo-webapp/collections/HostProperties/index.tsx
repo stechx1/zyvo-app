@@ -7,11 +7,15 @@ export default function HostProperties({
   fullName,
   buttonText,
   onClick,
+  showReviewButton,
+  onReviewClick,
 }: {
   photoURL: string;
   fullName: string;
   buttonText: string;
   onClick?: () => void;
+  showReviewButton: boolean;
+  onReviewClick?: () => void;
 }) {
   return (
     <div className="border rounded-lg p-4 text-center space-y-2">
@@ -39,6 +43,17 @@ export default function HostProperties({
         </div>
       </div>
       <hr />
+      {showReviewButton && (
+        <Button
+          type="gray"
+          text={"Review Booking"}
+          bordered
+          rounded
+          full
+          className="border-gray-700"
+          onClick={() => onReviewClick && onReviewClick()}
+        />
+      )}
       <Button
         type="white"
         text={buttonText}

@@ -445,15 +445,18 @@ export default function Bookings() {
                     </div>
                     <div className="space-y-2">
                       <div className="flex">
-                        {Array.from({ length: review.rating }, (_, index) => (
-                          <Image
-                            key={index}
-                            src={"/icons/starIcon.svg"}
-                            alt="star-icon"
-                            width={15}
-                            height={15}
-                          />
-                        ))}
+                        {Array.from(
+                          { length: review.placeRating },
+                          (_, index) => (
+                            <Image
+                              key={index}
+                              src={"/icons/starIcon.svg"}
+                              alt="star-icon"
+                              width={15}
+                              height={15}
+                            />
+                          )
+                        )}
                       </div>
                       <div>{formatDate(review.createdAt.toISOString())}</div>
                     </div>
@@ -489,6 +492,7 @@ export default function Bookings() {
                 ? getFullName(selectedBookingPlaceUser) ?? ""
                 : ""
             }
+            showReviewButton={true}
             buttonText="Message the host"
             onClick={() => {
               router.push(
