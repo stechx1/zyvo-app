@@ -189,7 +189,7 @@ export default function MyPlaces() {
           </div>
         </div>
       </div>
-      <CustomDialog open={isModalOpen}>
+      <CustomDialog open={isModalOpen} onClose={setIsModalOpen}>
         <PlaceModal
           place={place}
           setPlace={setPlace}

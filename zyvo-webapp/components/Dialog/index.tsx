@@ -9,12 +9,13 @@ interface CustomDialogProps {
   description?: string;
   children: ReactNode;
   open: boolean;
+  onClose: (val: boolean) => void;
 }
 
-export function CustomDialog({ children, open }: CustomDialogProps) {
+export function CustomDialog({ children, open, onClose }: CustomDialogProps) {
   return (
-    <Dialog open={open}>
-      <DialogContent className="p-0 py-2">
+    <Dialog open={open} onOpenChange={() => onClose(!open)}>
+      <DialogContent className="p-0 py-2 outline-none">
         {children}
       </DialogContent>
     </Dialog>

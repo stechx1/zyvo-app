@@ -20,6 +20,8 @@ import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
 import { getReviewsSnapshot } from "@/firebase/reviews";
 import { Review } from "@/types/review";
+import { CustomDialog } from "@/components/Dialog";
+import ReviewModal from "@/collections/ReviewModal";
 
 export default function Bookings() {
   const { user } = useAuthContext();
@@ -32,6 +34,7 @@ export default function Bookings() {
   const [selectedBookingPlaceUser, setSelectedBookingPlaceUser] =
     useState<User>();
   const [places, setPlaces] = useState<Place[]>([]);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   function getStatusColor(status: string) {
     switch (status) {
       case "Finished":
@@ -494,6 +497,7 @@ export default function Bookings() {
             }
             showReviewButton={true}
             buttonText="Message the host"
+            onReviewClick={() => setIsReviewModalOpen(true)}
             onClick={() => {
               router.push(
                 "/messages?userId=" + selectedBookingPlaceUser?.userId
@@ -510,6 +514,9 @@ export default function Bookings() {
           />
         )}
       </div>
+      <CustomDialog open={isReviewModalOpen} onClose={setIsReviewModalOpen}>
+        <ReviewModal />
+      </CustomDialog>
     </div>
   );
 }
