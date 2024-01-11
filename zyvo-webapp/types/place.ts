@@ -44,4 +44,6 @@ export type Place = {
   zipCode: string;
   createdAt?: Date;
   sender?: DocumentReference;
+  reviewsCount: number;
+  rating: number;
 };

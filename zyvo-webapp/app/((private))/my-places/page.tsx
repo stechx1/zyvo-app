@@ -47,6 +47,8 @@ export default function MyPlaces() {
     state: "",
     street: "",
     zipCode: "",
+    reviewsCount: 0,
+    rating: 0,
   });
   const [places, setPlaces] = useState<Place[]>([]);
 

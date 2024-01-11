@@ -7,14 +7,14 @@ export default function HostProperties({
   fullName,
   buttonText,
   onClick,
-  showReviewButton,
+  showReviewButton = false,
   onReviewClick,
 }: {
   photoURL: string;
   fullName: string;
   buttonText: string;
   onClick?: () => void;
-  showReviewButton: boolean;
+  showReviewButton?: boolean;
   onReviewClick?: () => void;
 }) {
   return (

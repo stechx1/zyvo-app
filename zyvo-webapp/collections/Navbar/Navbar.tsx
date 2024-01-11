@@ -10,7 +10,7 @@ import { useAuthContext } from "@/context/AuthContext";
 
 export const Navbar = () => {
   const router = useRouter();
-  const { user, mode } = useAuthContext();
+  const { user, conversations, mode } = useAuthContext();
 
   return (
     <nav className="hidden md:block lg:block xl:block sm:block px-8 sm:px-14 md:px-20 lg:px-20 xl:px-32 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
@@ -49,6 +49,7 @@ export const Navbar = () => {
                 />
               )}
               <BadgeIcon
+                onClick={() => router.push("bookings")}
                 src="/icons/clock-icon.svg"
                 alt="Clock Icon"
                 width={28}
@@ -56,12 +57,17 @@ export const Navbar = () => {
                 badgeCount={1}
               />
               <BadgeIcon
-                onClick={() => router.push("/messages")}
+                onClick={() => router.push("messages")}
                 src="/icons/chat-icon.svg"
                 alt="Chat Icon"
                 width={28}
                 height={28}
-                badgeCount={1}
+                badgeCount={conversations.reduce((total, conversation) => {
+                  return total + conversation.lastMessage.sender.userId !==
+                    user?.userId
+                    ? conversation.unreadCount
+                    : 0;
+                }, 0)}
               />
               <BadgeIcon
                 src="/icons/bell-icon.svg"
@@ -80,14 +86,14 @@ export const Navbar = () => {
             <Button
               text="About Us"
               onClick={() => {
-                router.push("/about");
+                router.push("about");
               }}
               type="white"
             />
             <Button
               text="Register"
               onClick={() => {
-                router.push("/signup");
+                router.push("signup");
               }}
               type="green"
               roundedfull

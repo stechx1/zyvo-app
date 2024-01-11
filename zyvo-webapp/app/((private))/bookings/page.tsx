@@ -18,11 +18,12 @@ import { User } from "@/types/profile";
 import { getUserByRef } from "@/firebase/user";
 import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
-import { getReviewsSnapshot } from "@/firebase/reviews";
+import { addReview, getReviewsSnapshot } from "@/firebase/reviews";
 import { Review } from "@/types/review";
 import { CustomDialog } from "@/components/Dialog";
 import ReviewModal from "@/collections/ReviewModal";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
+import toast from "react-hot-toast";
 
 export default function Bookings() {
   const { user } = useAuthContext();
@@ -111,6 +112,36 @@ export default function Bookings() {
     }
   }, [places, selectedBooking]);
 
+  const submitReview = ({
+    comment,
+    placeRating,
+    communicationRating,
+    responseRating,
+  }: {
+    comment: string;
+    placeRating: number;
+    communicationRating: number;
+    responseRating: number;
+  }) => {
+    if (selectedBookingPlace && user) {
+      addReview({
+        comment,
+        communicationRating,
+        placeId: selectedBookingPlace.placeId,
+        userId: user.userId,
+        placeRating,
+        responseRating,
+      }).then(({ result, error }) => {
+        if (error) {
+          toast.error(error.message);
+        } else {
+          toast.success("Your Review Added successfully!");
+          setIsReviewModalOpen(false);
+        }
+      });
+    }
+  };
+
   const selectBooking = (id: string) => {
     if (!selectedBooking) {
       setSelectedBooking(bookings[0]);
@@ -189,6 +220,8 @@ export default function Bookings() {
       content: selectedBookingPlace?.hostRules ?? "No host rules defined!",
     },
   ];
+  console.log(selectedBookingPlace);
+
   return (
     <>
       <div
@@ -496,7 +529,10 @@ export default function Bookings() {
                     />
                     <div className="ml-1">
                       <span className="text-[#FCA800]">
-                        4.9 <span className="text-black"> 30 reviews</span>
+                        {selectedBookingPlace?.rating.toFixed(2) ?? 0}
+                        <span className="text-black ms-2">
+                          {selectedBookingPlace?.reviewsCount ?? 0} reviews
+                        </span>
                       </span>
                     </div>
                   </div>
@@ -619,7 +655,7 @@ export default function Bookings() {
           )}
         </div>
         <CustomDialog open={isReviewModalOpen} onClose={setIsReviewModalOpen}>
-          <ReviewModal />
+          <ReviewModal handleSubmit={submitReview} />
         </CustomDialog>
       </div>
     </>
