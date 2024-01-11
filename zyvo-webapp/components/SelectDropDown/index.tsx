@@ -37,7 +37,8 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
       )}
       <Select onValueChange={onValueChange} value={value}>
         <SelectTrigger
-          className={`text-sm xl:text-base md:text-base lg:text-base h-[85%] xl:h-max lg:h-max md:h-max sm:h-max ${roundedFull && "rounded-full"} ${icon ? "pl-10" : ""}`}
+          className={`outline-0 ring-offset-0 outline-offset-0 text-sm xl:text-base md:text-base lg:text-base h-[85%] xl:h-max lg:h-max md:h-max sm:h-max ${roundedFull && "rounded-full"} ${icon ? "pl-10" : ""}`}
+          style={{ boxShadow: 'none', ring: 'none' } as React.CSSProperties}
         >
           <SelectValue placeholder="Select" />
         </SelectTrigger>
