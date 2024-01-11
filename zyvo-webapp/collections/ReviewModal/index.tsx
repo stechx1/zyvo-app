@@ -8,34 +8,46 @@ function ReviewModal(props: Props) {
   const {} = props;
 
   return (
-    <div className="justify-center text-center px-10 py-5 space-y-5">
+    <div className="justify-center text-center px-5 sm:px-10 py-5 space-y-5">
       <div className="font-bold">Review Booking</div>
       <div className="flex justify-between items-center">
         <div>Response Rate</div>
-        <Image
-          width={100}
-          height={100}
-          src={"/icons/ratings.svg"}
-          alt="rate-icon"
-        />
+        <div className="flex space-x-1">
+          {Array.from({ length: 5 }, (_, index) => (
+            <Image
+              width={18}
+              height={18}
+              src={"/icons/empty-star-icon.svg"}
+              alt="rate-icon"
+            />
+          ))}
+        </div>
       </div>
       <div className="flex justify-between items-center">
         <div>Communication</div>
-        <Image
-          width={100}
-          height={100}
-          src={"/icons/ratings.svg"}
-          alt="rate-icon"
-        />
+        <div className="flex space-x-1">
+          {Array.from({ length: 5 }, (_, index) => (
+            <Image
+              width={18}
+              height={18}
+              src={"/icons/empty-star-icon.svg"}
+              alt="rate-icon"
+            />
+          ))}
+        </div>
       </div>
       <div className="flex justify-between items-center">
         <div>Property</div>
-        <Image
-          width={100}
-          height={100}
-          src={"/icons/ratings.svg"}
-          alt="rate-icon"
-        />
+        <div className="flex space-x-1">
+          {Array.from({ length: 5 }, (_, index) => (
+            <Image
+              width={18}
+              height={18}
+              src={"/icons/empty-star-icon.svg"}
+              alt="rate-icon"
+            />
+          ))}
+        </div>
       </div>
       <textarea
         className="outline-none border rounded-xl p-3 w-full"

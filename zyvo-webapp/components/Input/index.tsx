@@ -22,7 +22,7 @@ export default function Input({
       <div className="relative flex items-center">
         <input
           name={name}
-          className={`px-4 py-2 border rounded-full focus:outline-none text-gray-600 w-full sm:text-sm ${
+          className={`px-4 py-2 xl:py-3 lg:py-3 border rounded-full focus:outline-none text-gray-600 w-full sm:text-sm ${
             invalidMessage ? " focus:border-red-500" : " focus:border-gray-500 "
           }${invalidMessage ? " border-red-300 " : " border-gray-300 "} ${type === "lock" ? "placeholder-gray-950" : type === "year" && "placeholder-gray-950"  }`
         }
@@ -34,7 +34,7 @@ export default function Input({
         {type === "search" ? (
           <Image
             src={"/icons/filter-search-icon.svg"}
-            className="cursor-pointer absolute top-[3px] right-1"
+            className="cursor-pointer absolute top-[5px] sm:top-[3.5px] xl:top-[7px] lg:top-[7px] right-1"
             alt="search-icon"
             width={32}
             height={32}
@@ -42,7 +42,7 @@ export default function Input({
         ): type === "lock" && (
           <Image
             src={"/icons/lock.svg"}
-            className="cursor-pointer absolute top-[9px] right-4"
+            className="cursor-pointer absolute top-[9px] xl:top-[13.5px] lg:top-[13.5px] right-4"
             alt="lock-icon"
             width={13}
             height={13}

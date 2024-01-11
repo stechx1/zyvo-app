@@ -13,18 +13,15 @@ export default function PropertySideDetails({
   price: number;
 }) {
   return (
-    <div className=" sm:order-1 border rounded-lg w-full">
+    <div className=" sm:order-1 border rounded-[6%] sm:rounded-lg w-full">
       <div className="flex m-3 gap-4">
-        <div className="w-[30%]">
-          <Image
-            src={imageURL}
-            alt="detail-image"
-            className="rounded-[15px]"
-            width={50}
-            height={50}
-            objectFit="cover"
-          />
-        </div>
+        <Image
+          src={imageURL}
+          alt="detail-image"
+          className="rounded-[15px] sm:w-[30%] lg:w-[35%] object-fill"
+          width={50}
+          height={50}
+        />
         <div className="flex flex-col w-[70%]">
           <div className="text-black text-lg font-normal font-Poppins whitespace-nowrap">
             {description ?? "-"}
@@ -53,7 +50,7 @@ export default function PropertySideDetails({
           </div>
         </div>
       </div>
-      <div className="h-[0.5px] m-[20px] opacity-[0.20] bg-secondary-gray-700"></div>
+      <div className="hidden sm:block h-[0.5px] m-[20px] opacity-[0.20] bg-secondary-gray-700"></div>
       <div className={`flex flex-row justify-between my-[10px] mx-[20px]`}>
         <div className="text-black text-base font-normal font-Poppins whitespace-nowrap">
           {hours} Hour{hours > 1 && "s"}

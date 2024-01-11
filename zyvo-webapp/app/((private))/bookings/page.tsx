@@ -22,6 +22,7 @@ import { getReviewsSnapshot } from "@/firebase/reviews";
 import { Review } from "@/types/review";
 import { CustomDialog } from "@/components/Dialog";
 import ReviewModal from "@/collections/ReviewModal";
+import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 
 export default function Bookings() {
   const { user } = useAuthContext();
@@ -29,7 +30,7 @@ export default function Bookings() {
   const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [selectedBooking, setSelectedBooking] = useState<Booking>();
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>();
   const [selectedBookingPlace, setSelectedBookingPlace] = useState<Place>();
   const [selectedBookingPlaceUser, setSelectedBookingPlaceUser] =
     useState<User>();
@@ -189,334 +190,438 @@ export default function Bookings() {
     },
   ];
   return (
-    <div className="flex justify-between space-x-4">
-      <div className="w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-[80vh] space-y-2`">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="text-lg">All Bookings</div>
-            <Image src={"/icons/down.svg"} alt="down" width={13} height={13} />
-          </div>
-          <div className="me-1">
-            <Image
-              src={"/icons/search.svg"}
-              alt="search"
-              width={18}
-              height={18}
-            />
-          </div>
+    <>
+      <div
+        className={`xl:hidden lg:hidden md:hidden sm:hidden flex justify-between items-center border-t border-b py-3 ${
+          !selectedBooking ? "space-x-0" : "space-x-2"
+        }`}
+      >
+        <Image
+          role="button"
+          src={"/icons/white-back-arrow.svg"}
+          alt="tick"
+          width={35}
+          height={35}
+          className={`${!selectedBooking ? "hidden" : "block"}`}
+          onClick={() => {
+            setSelectedBooking(null);
+          }}
+        />
+        <div className={`w-full`}>
+          <MobileSearchAndFilter />
         </div>
-        {bookings.map((booking) => {
-          return (
-            <div
-              key={booking.bookingId}
-              className={`flex mt-4 border px-2 py-2 rounded-xl ${
-                selectedBooking?.bookingId === booking.bookingId
-                  ? "border-2 border-black"
-                  : ""
-              }`}
-              role="button"
-              onClick={() => setSelectedBooking(booking)}
-            >
-              <Image
-                src={getPlaceImage(booking.place)}
-                alt="image"
-                width={95}
-                height={95}
-                className="rounded-xl object-cover"
-              />
-              <div className="ml-4">
-                <div className="text-lg">
-                  {getPlace(places, booking.place?.id ?? "")?.description}
-                </div>
-                <div className="text-[#A4A4A4]">
-                  {formatDate(booking.date.toISOString())}
-                </div>
-                <span
-                  className={`inline-block mt-0.5 text-black px-2.5 py-2 text-sm leading-none ${getStatusColor(
-                    "Confirmed"
-                  )} rounded-full`}
-                >
-                  {"Confirmed"}
-                </span>
-              </div>
-              <div
-                className="h-[30px] flex items-center justify-center ml-6"
-                role="button"
-              >
-                <Image
-                  src={"/icons/dots.svg"}
-                  alt="dots"
-                  width={4}
-                  height={4}
-                />
-              </div>
-            </div>
-          );
-        })}
       </div>
 
-      {/******Booking Details*******/}
-      <div className="w-[100%] sm:w-[60%] lg:w-[50%] sm:flex flex-col border rounded-lg">
-        {selectedBooking ? (
-          <div>
-            <div className="flex justify-between items-center p-4">
-              <div className="flex items-center space-x-3">
-                <div>
-                  {getPlace(places, selectedBooking.place?.id ?? "")
-                    ?.description ?? "-"}
-                </div>
-                <span className="bg-[#4AEAB1] text-black px-2 py-1 rounded-full text-sm">
-                  Finished
-                </span>
-              </div>
-              <div className="flex items-center">
-                <div>
-                  <div className="flex space-x-2 text-sm">
-                    <Image
-                      src={"/icons/Share.svg"}
-                      alt="share-icon"
-                      width={17}
-                      height={17}
-                    />
-                    <span>Share</span>
-                    <Image
-                      src={"/icons/heart.png"}
-                      alt="favourite-icon"
-                      width={25.59}
-                      height={25}
-                    />
-                    <span>Favorite</span>
-                  </div>
-                </div>
-              </div>
+      <div className="sm:flex justify-between sm:space-x-4">
+        <div
+          className={`${
+            selectedBooking ? "hidden" : "block"
+          } w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-[80vh] space-y-2`}
+        >
+          <div className="sm:flex hidden justify-between items-center">
+            <div className="flex items-center space-x-2">
+              <div className="text-lg">All Bookings</div>
+              <Image
+                src={"/icons/down.svg"}
+                alt="down"
+                width={13}
+                height={13}
+              />
             </div>
-            <div className=" gap-2 px-4">
-              <div className="flex space-x-4 w-full">
-                <Image
-                  src={getImagesOnIndex(0)}
-                  alt="detail-image"
-                  className=" w-3/5 md:w-1/2 h-auto rounded-tl-[20px] rounded-bl-[20px]"
-                  width={200}
-                  height={470}
-                />
-                <div className="hidden md:flex md:flex-col md:w-1/4 md:gap-4">
-                  <Image
-                    src={getImagesOnIndex(1)}
-                    alt="detail-image"
-                    className="w-full h-1/2"
-                    width={200}
-                    height={470}
-                  />
-                  <Image
-                    src={getImagesOnIndex(2)}
-                    alt="detail-image"
-                    className="w-full h-1/2"
-                    width={200}
-                    height={470}
-                  />
-                </div>
-                <div className="flex flex-col  w-2/5 md:w-1/4 gap-4">
-                  <Image
-                    src={getImagesOnIndex(3)}
-                    alt="detail-image"
-                    className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
-                    width={200}
-                    height={470}
-                  />
-                  <Image
-                    src={getImagesOnIndex(4)}
-                    alt="detail-image"
-                    className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
-                    width={200}
-                    height={470}
-                  />
-                </div>
-              </div>
+            <div className="me-1">
+              <Image
+                src={"/icons/search.svg"}
+                alt="search"
+                width={18}
+                height={18}
+              />
             </div>
-            <hr className="my-9" />
-            <div className="px-5">
-              <label>Booking Details</label>
-              <div className="flex flex-wrap gap-2 sm:gap-3 mt-1">
-                {bookingDetails.map((tag) => (
-                  <div
-                    className={`border border-neutral-200 rounded-full py-2 px-3 gap-3 w-fit flex items-center`}
-                    key={tag.id}
-                  >
-                    <Image
-                      src={tag.icon}
-                      alt={tag.iconAlt}
-                      width={20}
-                      height={20}
-                      className="w-[15px]"
-                    />
-                    <div className="text-black text-[13px] sm:text-md font-normal whitespace-nowrap">
-                      {tag.label}
-                    </div>
-                    {tag.edit && (
-                      <div role="button" onClick={() => {}}>
-                        <Image
-                          src="/icons/pen-icon.svg"
-                          alt="pen-icon"
-                          width={30}
-                          height={30}
-                          className="cursor-pointer w-[20px]"
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <hr className="my-9" />
-            <div className="px-5">
-              <label>Included in your booking</label>
-              <div className="flex flex-wrap items-center gap-2 mt-2">
-                {selectedBookingPlace?.ameneties.map((am) => {
-                  return (
-                    <div
-                      className={`flex items-center py-2 border rounded-full bg-[#fff] px-4`}
-                    >
-                      <div className="capitalize">{am.toLowerCase()}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            <hr className="my-9" />
-            <div className="px-5">
-              <label>Rules</label>
-              <div className="w-full">
-                <Accordion items={accordionItems} />
-              </div>
-            </div>
-            <hr className="my-9" />
-            <div className="px-5">
-              <label>Address & Location</label>
-              <div>
-                <u>Midtown Manhattan, New York, NY</u>
-              </div>
-              <div className="mt-3">
-                <Image
-                  src={"/images/mapImage.png"}
-                  alt="favourite-icon"
-                  width={200}
-                  height={200}
-                  className="object-contain w-full h-full rounded-l-xl"
-                />
-              </div>
-            </div>
-            <hr className="my-9" />
-            <div className="px-5">
-              <label>Reviews</label>
-              <div className="flex items-center justify-between mb-3">
+          </div>
+          {bookings.map((booking) => {
+            return (
+              <div
+                key={booking.bookingId}
+                className={`flex mt-4 border justify-between px-2 py-2 rounded-xl ${
+                  selectedBooking?.bookingId === booking.bookingId
+                    ? "border-2 border-black"
+                    : ""
+                }`}
+                role="button"
+                onClick={() => setSelectedBooking(booking)}
+              >
                 <div className="flex">
                   <Image
-                    src={"/icons/starIcon.svg"}
-                    alt="star-icon"
-                    width={15}
-                    height={15}
+                    src={getPlaceImage(booking.place)}
+                    alt="image"
+                    width={95}
+                    height={95}
+                    className="rounded-xl object-cover"
                   />
-                  <div className="ml-1">
-                    <span className="text-[#FCA800]">
-                      4.9 <span className="text-black"> 30 reviews</span>
+                  <div className="ml-4">
+                    <div className="text-lg">
+                      {getPlace(places, booking.place?.id ?? "")?.description}
+                    </div>
+                    <div className="text-[#A4A4A4]">
+                      {formatDate(booking.date.toISOString())}
+                    </div>
+                    <span
+                      className={`inline-block mt-0.5 text-black px-2.5 py-2 text-sm leading-none ${getStatusColor(
+                        "Confirmed"
+                      )} rounded-full`}
+                    >
+                      {"Confirmed"}
                     </span>
                   </div>
                 </div>
-                <div>Sort by: Recent Reviews</div>
+                <div
+                  className="h-[30px] flex items-center justify-center mr-2"
+                  role="button"
+                >
+                  <Image
+                    src={"/icons/dots.svg"}
+                    alt="dots"
+                    width={4}
+                    height={4}
+                  />
+                </div>
               </div>
-              {reviews.map((review) => (
-                <React.Fragment key={review.reviewId}>
-                  <div className="flex justify-between py-2">
-                    <div className="flex px-2 space-x-2">
-                      <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
-                        <Image
-                          src={
-                            review.user?.photoURL
-                              ? review.user.photoURL
-                              : "/icons/profile-icon.png"
-                          }
-                          alt="profile-pic"
-                          width={40}
-                          height={40}
-                          className="rounded-full"
-                        />
-                      </div>
-                      <div>
-                        <label>{getFullName(review.user)}</label>
-                        <div>{review.comment}</div>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <div className="flex">
-                        {Array.from(
-                          { length: review.placeRating },
-                          (_, index) => (
-                            <Image
-                              key={index}
-                              src={"/icons/starIcon.svg"}
-                              alt="star-icon"
-                              width={15}
-                              height={15}
-                            />
-                          )
-                        )}
-                      </div>
-                      <div>{formatDate(review.createdAt.toISOString())}</div>
+            );
+          })}
+        </div>
+
+        {/******Booking Details*******/}
+        <div className="flex sm:hidden justify-between items-center my-2">
+          <div className="w-[48%]">
+            <Button
+              type="gray"
+              text="Review Booking"
+              bordered
+              rounded
+              full
+              className="border-gray-700 my-2"
+              onClick={() => setIsReviewModalOpen(true)}
+            />
+          </div>
+          <div className="w-[48%]">
+            <Button
+              type="white"
+              text="Message the host"
+              bordered
+              rounded
+              full
+              className="border-gray-700"
+              onClick={() => {
+                router.push(
+                  "/messages?userId=" + selectedBookingPlaceUser?.userId
+                );
+              }}
+            />
+          </div>
+        </div>
+
+        {selectedBookingPlace && selectedBooking && (
+          <div className={`sm:hidden`}>
+            <PropertySideDetails
+              imageURL={getImagesOnIndex(0)}
+              price={selectedBookingPlace.pricePerHour * selectedBooking.hours}
+              description={selectedBookingPlace.description}
+              hours={selectedBooking.hours}
+            />
+          </div>
+        )}
+
+        <div
+          className={`${
+            !selectedBooking ? "hidden" : "block"
+          } w-[100%] sm:w-[60%] w-full lg:w-[50%] sm:flex flex-col sm:border rounded-lg`}
+        >
+          {selectedBooking ? (
+            <div>
+              <div className="sm:flex justify-between items-center p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="sm:text-base text-lg font-semibold">
+                    {getPlace(places, selectedBooking.place?.id ?? "")
+                      ?.description ?? "-"}
+                  </div>
+                  <span className="bg-[#4AEAB1] text-black px-2 py-1 rounded-full text-sm">
+                    Finished
+                  </span>
+                </div>
+                <div className="flex items-center my-[5px] sm:my-0">
+                  <div>
+                    <div className="flex space-x-2 text-sm">
+                      <Image
+                        src={"/icons/Share.svg"}
+                        alt="share-icon"
+                        width={17}
+                        height={17}
+                      />
+                      <span>Share</span>
+                      <Image
+                        src={"/icons/heart.png"}
+                        alt="favourite-icon"
+                        width={25.59}
+                        height={25}
+                      />
+                      <span>Favorite</span>
                     </div>
                   </div>
-                  <hr className="my-3" />
-                </React.Fragment>
-              ))}
-              <div className="text-center my-5">
-                <Button
-                  roundedfull
-                  className="border-gray-700"
-                  bordered
-                  type="white"
-                  text="Show More Reviews"
-                />
+                </div>
+              </div>
+              <div className="gap-2 px-2 lg:px-4 md:px-4 sm:px-3">
+                <div className="flex space-x-2 w-full">
+                  <Image
+                    src={getImagesOnIndex(0)}
+                    alt="detail-image"
+                    className=" w-3/5 md:w-1/2 h-auto rounded-tl-[20px] rounded-bl-[20px]"
+                    width={200}
+                    height={470}
+                  />
+                  <div className="hidden md:flex md:flex-col md:w-1/4 gap-2">
+                    <Image
+                      src={getImagesOnIndex(1)}
+                      alt="detail-image"
+                      className="w-full h-1/2"
+                      width={200}
+                      height={470}
+                    />
+                    <Image
+                      src={getImagesOnIndex(2)}
+                      alt="detail-image"
+                      className="w-full h-1/2"
+                      width={200}
+                      height={470}
+                    />
+                  </div>
+                  <div className="flex flex-col  w-2/5 md:w-1/4 gap-2">
+                    <Image
+                      src={getImagesOnIndex(3)}
+                      alt="detail-image"
+                      className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
+                      width={200}
+                      height={470}
+                    />
+                    <Image
+                      src={getImagesOnIndex(4)}
+                      alt="detail-image"
+                      className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
+                      width={200}
+                      height={470}
+                    />
+                  </div>
+                </div>
+              </div>
+              <hr className="my-9" />
+              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+                <label>Booking Details</label>
+                <div className="flex flex-wrap gap-2 sm:gap-3 mt-1">
+                  {bookingDetails.map((tag) => (
+                    <div
+                      className={`border border-neutral-200 rounded-full py-2 px-3 gap-3 w-fit flex items-center`}
+                      key={tag.id}
+                    >
+                      <Image
+                        src={tag.icon}
+                        alt={tag.iconAlt}
+                        width={20}
+                        height={20}
+                        className="w-[15px]"
+                      />
+                      <div className="text-black text-[13px] sm:text-md font-normal whitespace-nowrap">
+                        {tag.label}
+                      </div>
+                      {tag.edit && (
+                        <div role="button" onClick={() => {}}>
+                          <Image
+                            src="/icons/pen-icon.svg"
+                            alt="pen-icon"
+                            width={30}
+                            height={30}
+                            className="cursor-pointer w-[20px]"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <hr className="my-9" />
+              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+                <label>Included in your booking</label>
+                <div className="flex flex-wrap items-center gap-2 mt-2">
+                  {selectedBookingPlace?.ameneties.map((am) => {
+                    return (
+                      <div
+                        className={`flex items-center py-2 border rounded-full bg-[#fff] px-4`}
+                      >
+                        <div className="capitalize">{am.toLowerCase()}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <hr className="my-9" />
+              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+                <label>Rules</label>
+                <div className="w-full">
+                  <Accordion items={accordionItems} />
+                </div>
+              </div>
+              <hr className="my-9" />
+              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+                <label>Address & Location</label>
+                <div>
+                  <u>Midtown Manhattan, New York, NY</u>
+                </div>
+                <div className="mt-3">
+                  <Image
+                    src={"/images/mapImage.png"}
+                    alt="favourite-icon"
+                    width={200}
+                    height={200}
+                    className="object-contain w-full h-full rounded-l-xl"
+                  />
+                </div>
+              </div>
+              <hr className="my-9" />
+              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+                <label>Reviews</label>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex">
+                    <Image
+                      src={"/icons/starIcon.svg"}
+                      alt="star-icon"
+                      width={15}
+                      height={15}
+                    />
+                    <div className="ml-1">
+                      <span className="text-[#FCA800]">
+                        4.9 <span className="text-black"> 30 reviews</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div>Sort by: Recent Reviews</div>
+                </div>
+                {reviews.map((review) => (
+                  <React.Fragment key={review.reviewId}>
+                    <div className="flex justify-between py-2">
+                      <div className="flex sm:px-2 space-x-2 sm:w-max w-full">
+                        <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
+                          <Image
+                            src={
+                              review.user?.photoURL
+                                ? review.user.photoURL
+                                : "/icons/profile-icon.png"
+                            }
+                            alt="profile-pic"
+                            width={40}
+                            height={40}
+                            className="rounded-full"
+                          />
+                        </div>
+                        <div className="sm:w-max w-full">
+                          <div className="flex justify-between">
+                            <div className="text-sm md:text-md lg:text-base font-semibold">
+                              {getFullName(review.user)}
+                            </div>
+                            <div className="xl:hidden space-y-2 text-sm md:text-md lg:text-base xl:text-base">
+                              <div className="flex">
+                                {Array.from(
+                                  { length: review.placeRating },
+                                  (_, index) => (
+                                    <Image
+                                      src={"/icons/starIcon.svg"}
+                                      alt="star-icon"
+                                      className="sm:w-[15px]"
+                                      width={12}
+                                      height={12}
+                                    />
+                                  )
+                                )}
+                                <div className="ml-2">
+                                  {formatDate(review.createdAt.toISOString())}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-sm md:text-md lg:text-base xl:text-base w-max">
+                            {review.comment}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="hidden xl:block space-y-2">
+                        <div className="flex justify-end">
+                          {Array.from(
+                            { length: review.placeRating },
+                            (_, index) => (
+                              <Image
+                                key={index}
+                                src={"/icons/starIcon.svg"}
+                                alt="star-icon"
+                                width={12}
+                                height={12}
+                                className="sm:w-[15px]"
+                              />
+                            )
+                          )}
+                        </div>
+                        <div>{formatDate(review.createdAt.toISOString())}</div>
+                      </div>
+                    </div>
+                    <hr className="my-3" />
+                  </React.Fragment>
+                ))}
+                <div className="text-center flex justify-center my-5">
+                  <Button
+                    roundedfull
+                    className="border-gray-700"
+                    bordered
+                    type="white"
+                    text="Show More Reviews"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className="flex justify-center items-center h-[100%]">
-            No Booking!
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="flex justify-center items-center h-[100%]">
+              No Booking!
+            </div>
+          )}
+        </div>
 
-      {/****** Right side details ******/}
-      <div className="hidden lg:block lg:w-[25%] space-y-4">
-        {selectedBookingPlaceUser && (
-          <HostProperties
-            photoURL={selectedBookingPlaceUser?.photoURL ?? ""}
-            fullName={
-              selectedBookingPlaceUser
-                ? getFullName(selectedBookingPlaceUser) ?? ""
-                : ""
-            }
-            showReviewButton={true}
-            buttonText="Message the host"
-            onReviewClick={() => setIsReviewModalOpen(true)}
-            onClick={() => {
-              router.push(
-                "/messages?userId=" + selectedBookingPlaceUser?.userId
-              );
-            }}
-          />
-        )}
-        {selectedBookingPlace && selectedBooking && (
-          <PropertySideDetails
-            imageURL={getImagesOnIndex(0)}
-            price={selectedBookingPlace.pricePerHour * selectedBooking.hours}
-            description={selectedBookingPlace.description}
-            hours={selectedBooking.hours}
-          />
-        )}
+        {/****** Right side details ******/}
+        <div className="hidden lg:block lg:w-[25%] space-y-4">
+          {selectedBookingPlaceUser && (
+            <HostProperties
+              photoURL={selectedBookingPlaceUser?.photoURL ?? ""}
+              fullName={
+                selectedBookingPlaceUser
+                  ? getFullName(selectedBookingPlaceUser) ?? ""
+                  : ""
+              }
+              showReviewButton={true}
+              buttonText="Message the host"
+              onReviewClick={() => setIsReviewModalOpen(true)}
+              onClick={() => {
+                router.push(
+                  "/messages?userId=" + selectedBookingPlaceUser?.userId
+                );
+              }}
+            />
+          )}
+          {selectedBookingPlace && selectedBooking && (
+            <PropertySideDetails
+              imageURL={getImagesOnIndex(0)}
+              price={selectedBookingPlace.pricePerHour * selectedBooking.hours}
+              description={selectedBookingPlace.description}
+              hours={selectedBooking.hours}
+            />
+          )}
+        </div>
+        <CustomDialog open={isReviewModalOpen} onClose={setIsReviewModalOpen}>
+          <ReviewModal />
+        </CustomDialog>
       </div>
-      <CustomDialog open={isReviewModalOpen} onClose={setIsReviewModalOpen}>
-        <ReviewModal />
-      </CustomDialog>
-    </div>
+    </>
   );
 }
