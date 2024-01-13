@@ -5,15 +5,15 @@ import { Place } from "@/types/place";
 // import { Pagination } from "@/components/Pagination/Pagination";
 
 export const PropertyList = ({
-  propertyListing,
+  places,
 }: {
-  propertyListing: Place[];
+  places: Place[];
 }) => {
   return (
     <div>
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-        {propertyListing.map((property, index) => (
-          <PropertyCard key={index} propertyItem={property} />
+        {places.map((place, index) => (
+          <PropertyCard key={index} place={place} />
         ))}
       </div>
 

@@ -128,7 +128,9 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             />
             {place?.rating?.toFixed(1)}
           </p>
-          <p className=" sm:text-[16px] text-[13px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${place?.reviewsCount} reviews)`}</p>
+          <p className=" sm:text-[16px] text-[13px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${
+            place?.reviewsCount ?? 0
+          } reviews)`}</p>
         </div>
       </div>
 
@@ -147,7 +149,9 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               />
               {place?.rating?.toFixed(1)}
             </p>
-            <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins text-lg">{`(${place?.reviewsCount} reviews)`}</p>
+            <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins text-lg">{`(${
+              place?.reviewsCount ?? 0
+            } reviews)`}</p>
           </div>
           <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-lg">
             <Image

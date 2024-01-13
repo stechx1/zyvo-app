@@ -6,12 +6,12 @@ import { User } from "@/types/profile";
 import { DocumentReference } from "firebase/firestore";
 import { getUserByRef } from "@/firebase/user";
 import { useRouter } from "next/navigation";
-export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
+export const PropertyCard = ({ place }: { place: Place }) => {
   const router = useRouter();
   const [placeUser, setPlaceUser] = useState<null | User>();
 
   useEffect(() => {
-    if (propertyItem.userRef) getUser(propertyItem.userRef);
+    if (place.userRef) getUser(place.userRef);
   }, []);
 
   const getUser = async (sender: DocumentReference) => {
@@ -25,15 +25,15 @@ export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
       className="rounded-xl relative overflow-hidden mb-6"
       role="button"
       onClick={() => {
-        router.push("/property-details/" + propertyItem.placeId);
+        router.push("/property-details/" + place.placeId);
       }}
     >
       <div
         className="bg-cover bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
         style={{
           backgroundImage: `url(${
-            propertyItem.images.length > 0
-              ? propertyItem.images[0]
+            place.images.length > 0
+              ? place.images[0]
               : "images/no-image.jpg"
           })`,
           paddingBottom: "75%",
@@ -61,7 +61,7 @@ export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
               Host By {placeUser ? getFullName(placeUser) : "-"}
             </p>
             <p className="text-sm">
-              {propertyItem.country + " " + propertyItem.state}
+              {place.country + " " + place.state}
             </p>
           </div>
         </div>
@@ -69,7 +69,7 @@ export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
       <div className="flex flex-col gap-1 px-0 md:px-3">
         <div className="justify-between flex">
           <p className="sm:text-lg lg:text-md text-[14px] font-medium md:font-normal  line-clamp-1">
-            {propertyItem.description}
+            {place.description}
           </p>
           <p className="items-center hidden md:flex text-[16px] whitespace-nowrap">
             <Image
@@ -79,7 +79,7 @@ export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
               height={18}
               className="mr-2"
             />
-            ${propertyItem.pricePerHour} / h
+            ${place.pricePerHour} / h
           </p>
         </div>
         <div className="items-center flex gap-[0.3rem] sm:gap-1">
@@ -91,9 +91,9 @@ export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
               height={14}
               className="mr-1"
             />
-            {4}
+            {place.rating?.toFixed(1)}
           </p>
-          <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2">{`(${200})`}</p>
+          <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2">{`(${place.reviewsCount})`}</p>
           <p className="flex items-center  text-[10px] sm:text-[16px] text-secondary-neutral-400">
             <Image
               src={"/icons/gray-location-icon.svg"}
@@ -114,7 +114,7 @@ export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
               height={16}
               className="mr-2"
             />
-            ${propertyItem.pricePerHour} / h
+            ${place.pricePerHour} / h
           </p>
         </div>
       </div>
