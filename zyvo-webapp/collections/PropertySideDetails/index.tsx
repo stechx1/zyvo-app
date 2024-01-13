@@ -6,11 +6,15 @@ export default function PropertySideDetails({
   description,
   hours,
   price,
+  rating,
+  reviewsCount,
 }: {
   imageURL: string;
   description: string;
   hours: number;
   price: number;
+  rating: number;
+  reviewsCount: number;
 }) {
   return (
     <div className=" sm:order-1 border rounded-[6%] sm:rounded-lg w-full">
@@ -35,9 +39,9 @@ export default function PropertySideDetails({
                 height={14}
                 className="mr-1"
               />
-              {"5.0"}
+              {rating?.toFixed(1) ?? 0}
             </p>
-            <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${1}k+)`}</p>
+            <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${reviewsCount??0})`}</p>
           </div>
           <div className="flex space-x-1">
             <Image

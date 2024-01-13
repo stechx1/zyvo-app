@@ -41,23 +41,26 @@ export const Navbar = () => {
             <div className="hidden items-center space-x-6 md:flex">
               {mode === "HOST" && (
                 <BadgeIcon
+                  onClick={() => router.push("/my-places")}
                   src="/icons/home-icon.svg"
                   alt="Clock Icon"
                   width={28}
                   height={28}
-                  badgeCount={1}
+                  badgeCount={0}
+                  title="My Places"
                 />
               )}
               <BadgeIcon
-                onClick={() => router.push("bookings")}
+                onClick={() => router.push("/bookings")}
                 src="/icons/clock-icon.svg"
                 alt="Clock Icon"
                 width={28}
                 height={28}
-                badgeCount={1}
+                badgeCount={0}
+                title={"Bookings"}
               />
               <BadgeIcon
-                onClick={() => router.push("messages")}
+                onClick={() => router.push("/messages")}
                 src="/icons/chat-icon.svg"
                 alt="Chat Icon"
                 width={28}
@@ -68,13 +71,15 @@ export const Navbar = () => {
                     ? conversation.unreadCount
                     : 0;
                 }, 0)}
+                title={"Messages"}
               />
               <BadgeIcon
                 src="/icons/bell-icon.svg"
                 alt="Bell Icon"
                 width={26}
                 height={26}
-                badgeCount={4}
+                badgeCount={0}
+                title={"Notifications"}
               />
               <ProfileDropdown
                 photoURL={user.photoURL ?? "/icons/profile-icon.png"}
@@ -86,14 +91,14 @@ export const Navbar = () => {
             <Button
               text="About Us"
               onClick={() => {
-                router.push("about");
+                router.push("/about");
               }}
               type="white"
             />
             <Button
               text="Register"
               onClick={() => {
-                router.push("signup");
+                router.push("/signup");
               }}
               type="green"
               roundedfull

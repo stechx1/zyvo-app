@@ -45,7 +45,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
       params.id,
       (place) => {
         setPlace(place);
-        if (place.sender) getUser(place.sender);
+        if (place.userRef) getUser(place.userRef);
       },
       (e) => {
         console.log(e);
@@ -110,13 +110,12 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
     }
     return "/images/no-image.jpg";
   };
-  console.log(place);
 
   return (
     <div className="flex sm:container sm:mx-auto my-5 sm:px-14 md:px-10 gap-2 flex-col">
       <div className="flex flex-row ">
         <div className="text-black text-[18px] sm:text-4xl font-normal font-Poppins">
-          Cabin in Peshastin
+          {place?.description}
         </div>
         <div className="sm:hidden flex space-x-2 ml-2 items-center">
           <p className="flex items-center text-[13px] sm:text-[16px] text-primary-amber-500 mr-0 font-Poppins">
@@ -127,9 +126,9 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               height={14}
               className="mr-1"
             />
-            {"5.0"}
+            {place?.rating?.toFixed(1)}
           </p>
-          <p className=" sm:text-[16px] text-[13px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${30} reviews)`}</p>
+          <p className=" sm:text-[16px] text-[13px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${place?.reviewsCount} reviews)`}</p>
         </div>
       </div>
 
@@ -146,9 +145,9 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                 height={14}
                 className="mr-1"
               />
-              {"5.0"}
+              {place?.rating?.toFixed(1)}
             </p>
-            <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins text-lg">{`(${30} reviews)`}</p>
+            <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins text-lg">{`(${place?.reviewsCount} reviews)`}</p>
           </div>
           <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-lg">
             <Image
@@ -158,9 +157,9 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               height={20}
               className="opacity-70"
             />
-            <div>2 hr min</div>
+            <div>{place?.minHours} hr min</div>
           </div>
-          <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-lg">
+          {/* <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-lg">
             <Image
               src={"/icons/square-fit-icon.svg"}
               alt="square-fit"
@@ -168,13 +167,13 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               height={18}
             />
             <div>323 sqft</div>
-          </div>
+          </div> */}
         </div>
 
         {/* =================================== Right Description =============================  */}
 
         <div className="flex space-x-4">
-          <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-lg">
+          {/* <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-lg">
             <Image
               src={"/icons/gray-share-icon.svg"}
               alt="share-icon"
@@ -182,7 +181,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               height={18}
             />
             <div>Share</div>
-          </div>
+          </div> */}
           <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-lg">
             <Image
               src={"/icons/gray-heart-icon.svg"}
@@ -346,7 +345,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                     className="xl:w-[40] lg:w-[40] md:w-[40] sm:w-[40] w-[2rem] xl:h-[40] "
                   />
 
-                  <div className="text-black text-[14px] sm:text-lg font-normal">
+                  <div className="text-black text-[14px] sm:text-lg font-normal capitalize">
                     {amenety.toLowerCase()}
                   </div>
                 </div>

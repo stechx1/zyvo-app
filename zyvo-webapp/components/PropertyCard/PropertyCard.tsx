@@ -11,7 +11,7 @@ export const PropertyCard = ({ propertyItem }: { propertyItem: Place }) => {
   const [placeUser, setPlaceUser] = useState<null | User>();
 
   useEffect(() => {
-    if (propertyItem.sender) getUser(propertyItem.sender);
+    if (propertyItem.userRef) getUser(propertyItem.userRef);
   }, []);
 
   const getUser = async (sender: DocumentReference) => {

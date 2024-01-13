@@ -37,18 +37,7 @@ export default function Bookings() {
     useState<User>();
   const [places, setPlaces] = useState<Place[]>([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  function getStatusColor(status: string) {
-    switch (status) {
-      case "Finished":
-        return "bg-[#4AEAB1]";
-      case "Confirmed":
-        return "bg-[#85d6ff]";
-      case "Waiting payment":
-        return "bg-[#fff178]";
-      default:
-        return "bg-stone-100";
-    }
-  }
+
   useEffect(() => {
     if (user == null) {
       router.push("/signin");
@@ -74,7 +63,6 @@ export default function Bookings() {
       selectedBookingPlace.placeId,
       (reviews) => {
         setReviews(reviews);
-        console.log(reviews);
       },
       (e) => {
         console.log(e);
@@ -88,8 +76,8 @@ export default function Bookings() {
   useEffect(() => {
     if (bookings.length > 0) {
       bookings.forEach((booking) => {
-        if (booking.place)
-          getPlaceByRef(booking.place).then(({ result }) => {
+        if (booking.placeRef)
+          getPlaceByRef(booking.placeRef).then(({ result }) => {
             if (result) {
               setPlaces((prev) => {
                 if (prev.find((p) => p.placeId === result.placeId)) return prev;
@@ -103,14 +91,19 @@ export default function Bookings() {
   }, [bookings]);
 
   useEffect(() => {
-    if (selectedBooking && places.length > 0) {
-      const place = places.find(
-        (p) => p.placeId === selectedBooking?.place?.id
-      );
-      setSelectedBookingPlace(place);
-      if (place?.sender) getUser(place.sender);
+    if (selectedBooking?.placeRef) {
+      fetchSelectedBookingPlace(selectedBooking.placeRef);
     }
-  }, [places, selectedBooking]);
+  }, [selectedBooking]);
+
+  const fetchSelectedBookingPlace = (placeRef: DocumentReference) => {
+    getPlaceByRef(placeRef).then(({ result }) => {
+      if (result) {
+        setSelectedBookingPlace({ ...result });
+        if (result?.userRef) getUser(result.userRef);
+      }
+    });
+  };
 
   const submitReview = ({
     comment,
@@ -136,6 +129,8 @@ export default function Bookings() {
           toast.error(error.message);
         } else {
           toast.success("Your Review Added successfully!");
+          if (selectedBooking?.placeRef)
+            fetchSelectedBookingPlace(selectedBooking.placeRef);
           setIsReviewModalOpen(false);
         }
       });
@@ -210,17 +205,19 @@ export default function Bookings() {
       value: "parking",
       title: "Parking",
       icon: "/icons/gray-car-icon.svg",
-      content:
-        selectedBookingPlace?.parkingRules ?? "No parking rules defined!",
+      content: selectedBookingPlace?.parkingRules
+        ? selectedBookingPlace?.parkingRules
+        : "No parking rules defined!",
     },
     {
       value: "hostRules",
       title: "Host Rules",
       icon: "/icons/gray-warning-icon.svg",
-      content: selectedBookingPlace?.hostRules ?? "No host rules defined!",
+      content: selectedBookingPlace?.hostRules
+        ? selectedBookingPlace?.hostRules
+        : "No host rules defined!",
     },
   ];
-  console.log(selectedBookingPlace);
 
   return (
     <>
@@ -284,7 +281,7 @@ export default function Bookings() {
               >
                 <div className="flex">
                   <Image
-                    src={getPlaceImage(booking.place)}
+                    src={getPlaceImage(booking.placeRef)}
                     alt="image"
                     width={95}
                     height={95}
@@ -292,18 +289,15 @@ export default function Bookings() {
                   />
                   <div className="ml-4">
                     <div className="text-lg">
-                      {getPlace(places, booking.place?.id ?? "")?.description}
+                      {
+                        getPlace(places, booking.placeRef?.id ?? "")
+                          ?.description
+                      }
                     </div>
                     <div className="text-[#A4A4A4]">
                       {formatDate(booking.date.toISOString())}
                     </div>
-                    <span
-                      className={`inline-block mt-0.5 text-black px-2.5 py-2 text-sm leading-none ${getStatusColor(
-                        "Confirmed"
-                      )} rounded-full`}
-                    >
-                      {"Confirmed"}
-                    </span>
+                    <BookingStatus status={booking.status} />
                   </div>
                 </div>
                 <div
@@ -320,6 +314,11 @@ export default function Bookings() {
               </div>
             );
           })}
+          {bookings.length === 0 && (
+            <div className="flex justify-center items-center h-[100%]">
+              No Bookings!
+            </div>
+          )}
         </div>
 
         {/******Booking Details*******/}
@@ -355,6 +354,8 @@ export default function Bookings() {
         {selectedBookingPlace && selectedBooking && (
           <div className={`sm:hidden`}>
             <PropertySideDetails
+              rating={selectedBookingPlace.rating}
+              reviewsCount={selectedBookingPlace.reviewsCount}
               imageURL={getImagesOnIndex(0)}
               price={selectedBookingPlace.pricePerHour * selectedBooking.hours}
               description={selectedBookingPlace.description}
@@ -366,30 +367,28 @@ export default function Bookings() {
         <div
           className={`${
             !selectedBooking ? "hidden" : "block"
-          } w-[100%] sm:w-[60%] w-full lg:w-[50%] sm:flex flex-col sm:border rounded-lg`}
+          }  sm:w-[60%] w-full lg:w-[50%] sm:flex flex-col sm:border rounded-lg`}
         >
           {selectedBooking ? (
             <div>
               <div className="sm:flex justify-between items-center p-4">
                 <div className="flex items-center space-x-3">
                   <div className="sm:text-base text-lg font-semibold">
-                    {getPlace(places, selectedBooking.place?.id ?? "")
+                    {getPlace(places, selectedBooking.placeRef?.id ?? "")
                       ?.description ?? "-"}
                   </div>
-                  <span className="bg-[#4AEAB1] text-black px-2 py-1 rounded-full text-sm">
-                    Finished
-                  </span>
+                  <BookingStatus status={selectedBooking.status} />
                 </div>
                 <div className="flex items-center my-[5px] sm:my-0">
                   <div>
                     <div className="flex space-x-2 text-sm">
-                      <Image
+                      {/* <Image
                         src={"/icons/Share.svg"}
                         alt="share-icon"
                         width={17}
                         height={17}
                       />
-                      <span>Share</span>
+                      <span>Share</span> */}
                       <Image
                         src={"/icons/heart.png"}
                         alt="favourite-icon"
@@ -501,7 +500,7 @@ export default function Bookings() {
                 </div>
               </div>
               <hr className="my-9" />
-              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+              <div className="px-2 lg:px-5 md:px-5 sm:px-3 my-2">
                 <label>Address & Location</label>
                 <div>
                   <u>Midtown Manhattan, New York, NY</u>
@@ -516,98 +515,105 @@ export default function Bookings() {
                   />
                 </div>
               </div>
-              <hr className="my-9" />
-              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
-                <label>Reviews</label>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex">
-                    <Image
-                      src={"/icons/starIcon.svg"}
-                      alt="star-icon"
-                      width={15}
-                      height={15}
-                    />
-                    <div className="ml-1">
-                      <span className="text-[#FCA800]">
-                        {selectedBookingPlace?.rating.toFixed(2) ?? 0}
-                        <span className="text-black ms-2">
-                          {selectedBookingPlace?.reviewsCount ?? 0} reviews
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                  <div>Sort by: Recent Reviews</div>
-                </div>
-                {reviews.map((review) => (
-                  <React.Fragment key={review.reviewId}>
-                    <div className="flex justify-between py-2">
-                      <div className="flex sm:px-2 space-x-2 sm:w-max w-full">
-                        <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
-                          <Image
-                            src={
-                              review.user?.photoURL
-                                ? review.user.photoURL
-                                : "/icons/profile-icon.png"
-                            }
-                            alt="profile-pic"
-                            width={40}
-                            height={40}
-                            className="rounded-full"
-                          />
+              {reviews.length > 0 && (
+                <>
+                  <hr className="my-9" />
+                  <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+                    <label>Reviews</label>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex">
+                        <Image
+                          src={"/icons/starIcon.svg"}
+                          alt="star-icon"
+                          width={15}
+                          height={15}
+                        />
+                        <div className="ml-1">
+                          <span className="text-[#FCA800]">
+                            {selectedBookingPlace?.rating?.toFixed(2) ?? 0}
+                            <span className="text-black ms-2">
+                              {selectedBookingPlace?.reviewsCount ?? 0} reviews
+                            </span>
+                          </span>
                         </div>
-                        <div className="sm:w-max w-full">
-                          <div className="flex justify-between">
-                            <div className="text-sm md:text-md lg:text-base font-semibold">
-                              {getFullName(review.user)}
+                      </div>
+                      <div>Sort by: Recent Reviews</div>
+                    </div>
+
+                    {reviews.map((review) => (
+                      <React.Fragment key={review.reviewId}>
+                        <div className="flex justify-between py-2">
+                          <div className="flex sm:px-2 space-x-2 sm:w-max w-full">
+                            <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
+                              <Image
+                                src={
+                                  review.user?.photoURL
+                                    ? review.user.photoURL
+                                    : "/icons/profile-icon.png"
+                                }
+                                alt="profile-pic"
+                                width={40}
+                                height={40}
+                                className="rounded-full"
+                              />
                             </div>
-                            <div className="xl:hidden space-y-2 text-sm md:text-md lg:text-base xl:text-base">
-                              <div className="flex">
-                                {Array.from(
-                                  { length: review.placeRating },
-                                  (_, index) => (
-                                    <Image
-                                      src={"/icons/starIcon.svg"}
-                                      alt="star-icon"
-                                      className="sm:w-[15px]"
-                                      width={12}
-                                      height={12}
-                                    />
-                                  )
-                                )}
-                                <div className="ml-2">
-                                  {formatDate(review.createdAt.toISOString())}
+                            <div className="sm:w-max w-full">
+                              <div className="flex justify-between">
+                                <div className="text-sm md:text-md lg:text-base font-semibold">
+                                  {getFullName(review.user)}
                                 </div>
+                                <div className="xl:hidden space-y-2 text-sm md:text-md lg:text-base xl:text-base">
+                                  <div className="flex">
+                                    {Array.from(
+                                      { length: review.placeRating },
+                                      (_, index) => (
+                                        <Image
+                                          src={"/icons/starIcon.svg"}
+                                          alt="star-icon"
+                                          className="sm:w-[15px]"
+                                          width={12}
+                                          height={12}
+                                        />
+                                      )
+                                    )}
+                                    <div className="ml-2">
+                                      {formatDate(
+                                        review.createdAt.toISOString()
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-sm md:text-md lg:text-base xl:text-base w-max">
+                                {review.comment}
                               </div>
                             </div>
                           </div>
-                          <div className="text-sm md:text-md lg:text-base xl:text-base w-max">
-                            {review.comment}
+                          <div className="hidden xl:block space-y-2">
+                            <div className="flex justify-end">
+                              {Array.from(
+                                { length: review.placeRating },
+                                (_, index) => (
+                                  <Image
+                                    key={index}
+                                    src={"/icons/starIcon.svg"}
+                                    alt="star-icon"
+                                    width={12}
+                                    height={12}
+                                    className="sm:w-[15px]"
+                                  />
+                                )
+                              )}
+                            </div>
+                            <div>
+                              {formatDate(review.createdAt.toISOString())}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="hidden xl:block space-y-2">
-                        <div className="flex justify-end">
-                          {Array.from(
-                            { length: review.placeRating },
-                            (_, index) => (
-                              <Image
-                                key={index}
-                                src={"/icons/starIcon.svg"}
-                                alt="star-icon"
-                                width={12}
-                                height={12}
-                                className="sm:w-[15px]"
-                              />
-                            )
-                          )}
-                        </div>
-                        <div>{formatDate(review.createdAt.toISOString())}</div>
-                      </div>
-                    </div>
-                    <hr className="my-3" />
-                  </React.Fragment>
-                ))}
-                <div className="text-center flex justify-center my-5">
+                        <hr className="my-3" />
+                      </React.Fragment>
+                    ))}
+                    {/* <div className="text-center flex justify-center my-5">
                   <Button
                     roundedfull
                     className="border-gray-700"
@@ -615,8 +621,10 @@ export default function Bookings() {
                     type="white"
                     text="Show More Reviews"
                   />
-                </div>
-              </div>
+                </div> */}
+                  </div>
+                </>
+              )}
             </div>
           ) : (
             <div className="flex justify-center items-center h-[100%]">
@@ -635,7 +643,10 @@ export default function Bookings() {
                   ? getFullName(selectedBookingPlaceUser) ?? ""
                   : ""
               }
-              showReviewButton={true}
+              showReviewButton={
+                selectedBooking?.status === "FINISHED" &&
+                !selectedBooking.reviewRef
+              }
               buttonText="Message the host"
               onReviewClick={() => setIsReviewModalOpen(true)}
               onClick={() => {
@@ -647,6 +658,8 @@ export default function Bookings() {
           )}
           {selectedBookingPlace && selectedBooking && (
             <PropertySideDetails
+              rating={selectedBookingPlace.rating}
+              reviewsCount={selectedBookingPlace.reviewsCount}
               imageURL={getImagesOnIndex(0)}
               price={selectedBookingPlace.pricePerHour * selectedBooking.hours}
               description={selectedBookingPlace.description}
@@ -661,3 +674,26 @@ export default function Bookings() {
     </>
   );
 }
+const BookingStatus = ({ status }: { status: string }) => {
+  function getStatusColor(status: string) {
+    switch (status) {
+      case "FINISHED":
+        return "bg-[#4AEAB1]";
+      case "CONFIRMED":
+        return "bg-[#85d6ff]";
+      case "WAITING PAYMENT":
+        return "bg-[#fff178]";
+      default:
+        return "bg-stone-100";
+    }
+  }
+  return (
+    <span
+      className={`inline-block mt-0.5 text-black px-2.5 py-2 text-sm leading-none ${getStatusColor(
+        status
+      )} rounded-full capitalize`}
+    >
+      {status?.toLowerCase()}
+    </span>
+  );
+};

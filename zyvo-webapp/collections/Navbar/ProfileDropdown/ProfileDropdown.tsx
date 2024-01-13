@@ -72,7 +72,10 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
               toggleDropdown();
             }}
           >
-            Switch to <span className="capitalize">{mode.toLowerCase()}</span>
+            Switch to{" "}
+            <span className="capitalize">
+              {mode === "GUEST" ? "Host" : mode === "HOST" ? "Guest" : ""}
+            </span>
           </button>
 
           <ul>

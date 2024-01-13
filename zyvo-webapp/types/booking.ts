@@ -6,7 +6,14 @@ export type Booking = {
   date: Date;
   from: string;
   to: string;
-  place?: DocumentReference;
-  user?: DocumentReference;
-  createdAt?: Date;
+  placeRef: DocumentReference;
+  userRef: DocumentReference;
+  createdAt: Date;
+  status:
+    | "REQUESTED"
+    | "FINISHED"
+    | "WAITING PAYMENT"
+    | "CANCELLED"
+    | "CONFIRMED";
+  reviewRef?: DocumentReference;
 };

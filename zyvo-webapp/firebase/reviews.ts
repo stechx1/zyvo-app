@@ -9,6 +9,7 @@ import {
   getFirestore,
   increment,
   onSnapshot,
+  orderBy,
   query,
   setDoc,
   where,
@@ -27,7 +28,8 @@ export function getReviewsSnapshot(
     unsubscribe = onSnapshot(
       query(
         collection(db, "reviews"),
-        where("placeRef", "==", doc(db, "places", placeId))
+        where("placeRef", "==", doc(db, "places", placeId)),
+        orderBy("createdAt", "desc")
       ),
       async (reviews) => {
         let result: Review[] = [];
@@ -83,8 +85,8 @@ export async function addReview({
       placeRef: doc(collection(db, "places"), placeId),
       userRef: doc(collection(db, "users"), userId),
     };
-    setDoc(reviewRef, review);
-    updatePlaceReviews(
+    await setDoc(reviewRef, review);
+    await updatePlaceReviews(
       placeId,
       (placeRating + responseRating + communicationRating) /
         ((placeRating > 0 ? 1 : 0) +
@@ -103,14 +105,14 @@ async function updatePlaceReviews(docId: string, newRating: number) {
   const place = await (await getDoc(placeRef)).data();
   if (place) {
     let rating = place.rating ?? 0;
-    let reviewCounts = place.reviewCounts ?? 0;
+    let reviewsCount = place.reviewsCount ?? 0;
     let updatedRating =
-      (rating * reviewCounts + newRating) / (reviewCounts + 1);
+      (rating * reviewsCount + newRating) / (reviewsCount + 1);
     setDoc(
       placeRef,
       {
         rating: updatedRating,
-        reviewsCount: reviewCounts + 1,
+        reviewsCount: reviewsCount + 1,
       },
       {
         merge: true,

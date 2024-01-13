@@ -16,15 +16,19 @@ export const MultiTabs = ({
             role="button"
             onClick={() => {
               if (onSelect) {
-                if (!!selected.find((s) => s === item.value)) {
-                  onSelect(selected.filter((s) => s !== item.value));
-                } else {
+                if (
+                  typeof selected.find((s) => s === item.value) === "undefined"
+                ) {
                   onSelect([...selected, item.value]);
+                } else {
+                  onSelect(selected.filter((s) => s !== item.value));
                 }
               }
             }}
             className={`py-1 rounded-full px-1 text-xs md:text-base sm:text-base lg:text-base xl:text-base ${
-              selected.find((d) => d === item.value) ? "bg-white" : ""
+              typeof selected.find((d) => d === item.value) !== "undefined"
+                ? "bg-white"
+                : ""
             }`}
           >
             {item.name}

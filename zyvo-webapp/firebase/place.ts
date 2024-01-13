@@ -18,7 +18,7 @@ const db = getFirestore(firebase_app);
 type errorType = { message: string; code: string };
 
 export async function addPlace(
-  place: Place,
+  placeData: Place,
   userId: string,
   docId: string = ""
 ) {
@@ -29,19 +29,15 @@ export async function addPlace(
     let placeRef;
     if (docId) placeRef = doc(collection(db, "places"), docId);
     else placeRef = doc(collection(db, "places"));
-
-    result = await setDoc(
-      placeRef,
-      {
-        ...place,
-        placeId: placeRef.id,
-        sender: doc(db, "users", userId),
-        createdAt: serverTimestamp(),
-      },
-      {
-        merge: true,
-      }
-    );
+    const place: Place = {
+      ...placeData,
+      placeId: placeRef.id,
+      userRef: doc(db, "users", userId),
+      createdAt: new Date(),
+    };
+    result = await setDoc(placeRef, place, {
+      merge: true,
+    });
   } catch (e) {
     if (typeof e === "object") error = e as errorType;
     console.log(e);
@@ -71,7 +67,7 @@ export function getMyPlacesSnapshot(
     unsubscribe = onSnapshot(
       query(
         collection(db, "places"),
-        where("sender", "==", doc(db, "users", userId))
+        where("userRef", "==", doc(db, "users", userId))
       ),
       async (places) => {
         let result: Place[] = [];
@@ -86,8 +82,8 @@ export function getMyPlacesSnapshot(
               placeId,
             },
           ];
-          onSuccess(result);
         }
+        onSuccess(result);
       }
     );
   } catch (e) {
@@ -118,8 +114,8 @@ export function getAllPlacesSnapshot(
               placeId,
             },
           ];
-          onSuccess(result);
         }
+        onSuccess(result);
       }
     );
   } catch (e) {

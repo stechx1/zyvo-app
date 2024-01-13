@@ -263,7 +263,7 @@ const GallaryAndLocation = ({
         />
         <Input
           type="text"
-          placeholder="City"
+          placeholder="City*"
           value={place.city}
           onChange={(e) =>
             setPlace((prev) => {
@@ -290,7 +290,7 @@ const GallaryAndLocation = ({
           />
           <Input
             type="text"
-            placeholder="Country"
+            placeholder="Country*"
             value={place.country}
             onChange={(e) =>
               setPlace((prev) => {

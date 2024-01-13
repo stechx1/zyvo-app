@@ -4,7 +4,6 @@ import {
   getFirestore,
   onSnapshot,
   query,
-  serverTimestamp,
   setDoc,
   where,
 } from "firebase/firestore";
@@ -15,7 +14,12 @@ const db = getFirestore(firebase_app);
 type errorType = { message: string; code: string };
 
 export async function addUpdateBooking(
-  booking: Booking,
+  data: {
+    date: Date;
+    from: string;
+    to: string;
+    hours: number;
+  },
   userId: string,
   placeId: string,
   docId: string = ""
@@ -27,20 +31,17 @@ export async function addUpdateBooking(
     let bookingRef;
     if (docId) bookingRef = doc(collection(db, "bookings"), docId);
     else bookingRef = doc(collection(db, "bookings"));
-
-    await setDoc(
-      bookingRef,
-      {
-        ...booking,
-        bookingId: bookingRef.id,
-        user: doc(db, "users", userId),
-        place: doc(db, "places", placeId),
-        createdAt: serverTimestamp(),
-      },
-      {
-        merge: true,
-      }
-    );
+    const booking: Booking = {
+      ...data,
+      bookingId: bookingRef.id,
+      userRef: doc(db, "users", userId),
+      placeRef: doc(db, "places", placeId),
+      status: "REQUESTED",
+      createdAt: new Date(),
+    };
+    await setDoc(bookingRef, booking, {
+      merge: true,
+    });
     result = bookingRef.id;
   } catch (e) {
     if (typeof e === "object") error = e as errorType;
@@ -83,7 +84,7 @@ export function getMyBookingsSnapshot(
     unsubscribe = onSnapshot(
       query(
         collection(db, "bookings"),
-        where("user", "==", doc(db, "users", userId))
+        where("userRef", "==", doc(db, "users", userId))
       ),
       async (bookings) => {
         let result: Booking[] = [];

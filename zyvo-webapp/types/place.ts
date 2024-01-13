@@ -43,7 +43,7 @@ export type Place = {
   street: string;
   zipCode: string;
   createdAt?: Date;
-  sender?: DocumentReference;
+  userRef?: DocumentReference;
   reviewsCount: number;
   rating: number;
 };

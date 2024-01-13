@@ -22,26 +22,26 @@ export default function MyPlaces() {
     addOns: [],
     allowPets: false,
     ameneties: [],
-    availableMonths: [1, 2, 3],
-    availableDays: [1, 2, 3, 4, 5, 6, 7],
+    availableMonths: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    availableDays: [0, 1, 2, 3, 4, 5, 6],
     availableHoursFrom: "12:00",
-    availableHoursTo: "12:00",
-    bathrooms: 0,
-    bedrooms: 0,
-    beds: 0,
+    availableHoursTo: "23:30",
+    bathrooms: 1,
+    bedrooms: 1,
+    beds: 1,
     city: "",
-    coordinates: [1.9447, 2.4533],
+    coordinates: [0, 0],
     country: "",
     description: "",
-    discountedMinHours: 2,
-    discountPercentage: 30,
+    discountedMinHours: 4,
+    discountPercentage: 5,
     hostRules: "",
     images: [],
     instantBook: true,
-    minHours: 2,
+    minHours: 1,
     parkingRules: "",
-    pricePerHour: 11,
-    propertyType: "APARTMENT",
+    pricePerHour: 10,
+    propertyType: "HOUSE",
     selfCheckIn: true,
     spaceType: "HOME",
     state: "",
@@ -73,6 +73,7 @@ export default function MyPlaces() {
 
   const onSubmitHandler = () => {
     if (!user) return;
+    if (!validatePlace()) return;
     setIsLoading(true);
     addPlace(place, user?.userId).then(({ result, error }) => {
       if (error) {
@@ -83,6 +84,27 @@ export default function MyPlaces() {
       }
       setIsLoading(false);
     });
+  };
+
+  const validatePlace = () => {
+    let isValid = true;
+    if (place.images.length === 0) {
+      toast.error("Please add at least 1 image of your place!");
+      isValid = false;
+    }
+    if (!place.description) {
+      toast.error("Please add Description of your place!");
+      isValid = false;
+    }
+    if (!place.country) {
+      toast.error("Please add Country of your place!");
+      isValid = false;
+    }
+    if (!place.city) {
+      toast.error("Please add City of your place!");
+      isValid = false;
+    }
+    return isValid;
   };
 
   return (
@@ -161,8 +183,8 @@ export default function MyPlaces() {
                 </div>
               </div>
               <div className="flex text-gray-700 text-base">
-                <span className="text-[#FCA800] mr-1">{5}</span>
-                <span>({200})</span>
+                <span className="text-[#FCA800] mr-1">{place.rating ?? 0}</span>
+                <span>({place.reviewsCount ?? 0})</span>
                 <Image
                   src={"/icons/path0.svg"}
                   alt="star-icon"
@@ -170,7 +192,7 @@ export default function MyPlaces() {
                   height={15}
                   className="ml-2 mr-1"
                 />
-                <span>{2}</span>
+                <span>{1} miles away</span>
               </div>
             </div>
           </div>

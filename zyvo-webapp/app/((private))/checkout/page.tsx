@@ -126,8 +126,7 @@ const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
   const onSubmitHandler = () => {
     if (!user) return;
     setIsLoading(true);
-    const booking: Booking = {
-      bookingId: "",
+    const booking = {
       date: new Date(details.date),
       from: details.from,
       to: details.to,
@@ -166,6 +165,8 @@ const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
               )}
               {place && (
                 <PropertySideDetails
+                  rating={place.rating}
+                  reviewsCount={place.reviewsCount}
                   imageURL={getImagesOnIndex(0)}
                   price={place.pricePerHour * details.hours}
                   description={place.description}

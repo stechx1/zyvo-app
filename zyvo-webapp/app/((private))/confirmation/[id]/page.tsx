@@ -33,7 +33,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
       params.id,
       (booking) => {
         setBooking(booking);
-        if (booking.place) getPlace(booking.place);
+        if (booking.placeRef) getPlace(booking.placeRef);
       },
       (e) => {
         console.log(e);
@@ -53,7 +53,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
     const { result } = await getPlaceByRef(place);
     if (result) {
       setBookingPlace(result);
-      if (result.sender) getUser(result.sender);
+      if (result.userRef) getUser(result.userRef);
     }
   };
   const bookingDetails = booking
@@ -127,6 +127,8 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
               )}
               {bookingPlace && booking && (
                 <PropertySideDetails
+                  rating={bookingPlace.rating}
+                  reviewsCount={bookingPlace.reviewsCount}
                   imageURL={getImagesOnIndex(0)}
                   price={bookingPlace.pricePerHour * booking.hours}
                   description={bookingPlace.description}
@@ -220,7 +222,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
               <Button
                 className="px-8"
                 text="My Bookings"
-                // onClick={}
+                onClick={() => router.push("/bookings")}
                 type="green"
                 roundedfull
               />
