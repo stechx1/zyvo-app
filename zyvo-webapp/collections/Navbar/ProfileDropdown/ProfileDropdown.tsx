@@ -13,8 +13,6 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
   const router = useRouter();
 
   const userProfileDropdownLinks = [
-    { name: "Wishlist", route: "/" },
-    { name: "Language", route: "/" },
     { name: "Help Center", route: "/help" },
     { name: "Settings", route: "/account-settings" },
   ];
