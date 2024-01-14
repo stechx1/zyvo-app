@@ -1,5 +1,5 @@
 import { DocumentReference } from "firebase/firestore";
-import { User } from "./profile";
+import { User } from "./user";
 import { Place } from "./place";
 
 export type Review = {
@@ -11,6 +11,8 @@ export type Review = {
   responseRating: number;
   user?: User;
   place?: Place;
+  host?: User;
   userRef: DocumentReference;
-  placeRef: DocumentReference;
+  placeRef?: DocumentReference;
+  guestRef?: DocumentReference;
 };

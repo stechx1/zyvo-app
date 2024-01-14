@@ -61,11 +61,9 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
             onClick={() => {
               if (mode === "GUEST") {
                 setMode("HOST");
-                router.push("/");
               }
               if (mode === "HOST") {
                 setMode("GUEST");
-                router.push("/my-places");
               }
               toggleDropdown();
             }}

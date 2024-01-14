@@ -7,7 +7,7 @@ import { Navbar } from "@/collections/Navbar/Navbar";
 import { Footer } from "@/collections/Footer/Footer";
 import { usePathname } from "next/navigation";
 import getData from "@/firebase/firestore/getData";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import { conversation } from "@/types/messages";
 import { getConversationsSnapshot } from "@/firebase/messages";
 

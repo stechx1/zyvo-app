@@ -9,7 +9,7 @@ import Input from "@/components/Input";
 import { InputSectionProps } from "@/types";
 import { BookingDetailsType } from "../property-details/[id]/page";
 import { useEffect, useState } from "react";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import { Place } from "@/types/place";
 import { getPlaceSnapshot } from "@/firebase/place";
 import { DocumentReference } from "firebase/firestore";
@@ -18,7 +18,7 @@ import HostProperties from "@/collections/HostProperties";
 import { formatDate, formatTime, getFullName } from "@/lib/utils";
 import { addUpdateBooking } from "@/firebase/booking";
 import toast from "react-hot-toast";
-import { Booking } from "@/types/booking";
+import { Booking, BookingStatusType } from "@/types/booking";
 import PropertySideDetails from "@/collections/PropertySideDetails";
 
 const InputSection: React.FC<InputSectionProps> = ({
@@ -42,7 +42,7 @@ const InputSection: React.FC<InputSectionProps> = ({
 
 const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
   const router = useRouter();
-  const { user } = useAuthContext();
+  const { user, mode } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +60,7 @@ const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
       details.placeId,
       (place) => {
         setPlace(place);
-        if (place.sender) getUser(place.sender);
+        if (place.userRef) getUser(place.userRef);
       },
       (e) => {
         console.log(e);
@@ -124,24 +124,29 @@ const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
     return "/images/no-image.jpg";
   };
   const onSubmitHandler = () => {
-    if (!user) return;
+    if (!user || !place?.userRef) return;
     setIsLoading(true);
     const booking = {
       date: new Date(details.date),
       from: details.from,
       to: details.to,
       hours: details.hours,
+      status: (place.instantBook
+        ? "CONFIRMED"
+        : "REQUESTED") as BookingStatusType,
     };
-    addUpdateBooking(booking, user?.userId, details.placeId).then(
-      ({ result, error }) => {
-        if (error) {
-          toast.error("error booking property!");
-        } else {
-          router.push("confirmation/" + result);
-        }
-        setIsLoading(false);
+    addUpdateBooking(booking, {
+      userId: user?.userId,
+      placeId: details.placeId,
+      hostId: place.userRef.id,
+    }).then(({ result, error }) => {
+      if (error) {
+        toast.error("error booking property!");
+      } else {
+        router.push("confirmation/" + result);
       }
-    );
+      setIsLoading(false);
+    });
   };
   return (
     <>
@@ -155,10 +160,10 @@ const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
             <div className="flex flex-col gap-5">
               {placeUser && (
                 <HostProperties
+                  mode={mode}
                   photoURL={placeUser?.photoURL ?? ""}
                   fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
-                  buttonText="Message the host"
-                  onClick={() => {
+                  onMessageClick={() => {
                     router.push("/messages?userId=" + placeUser?.userId);
                   }}
                 />

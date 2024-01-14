@@ -8,12 +8,17 @@ export type Booking = {
   to: string;
   placeRef: DocumentReference;
   userRef: DocumentReference;
+  hostRef: DocumentReference;
   createdAt: Date;
-  status:
-    | "REQUESTED"
-    | "FINISHED"
-    | "WAITING PAYMENT"
-    | "CANCELLED"
-    | "CONFIRMED";
-  reviewRef?: DocumentReference;
+  status: BookingStatusType;
+  placeReviewRef?: DocumentReference;
+  guestReviewRef?: DocumentReference;
 };
+
+export type BookingStatusType =
+  | "REQUESTED"
+  | "FINISHED"
+  | "WAITING PAYMENT"
+  | "CANCELLED"
+  | "CONFIRMED"
+  | "DECLINED";

@@ -1,5 +1,5 @@
 import firebase_app from "@/config";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import { Review } from "@/types/review";
 import {
   Unsubscribe,
@@ -18,17 +18,25 @@ const db = getFirestore(firebase_app);
 type errorType = { message: string; code: string };
 
 export function getReviewsSnapshot(
-  placeId: string,
   onSuccess: (data: Review[]) => void,
+  placeId?: string,
+  guestId?: string,
   onError?: (error: string) => void
 ) {
+  if (!placeId && !guestId) return;
   let unsubscribe: Unsubscribe = () => {};
+  console.log(placeId);
+  console.log(guestId);
 
   try {
     unsubscribe = onSnapshot(
       query(
         collection(db, "reviews"),
-        where("placeRef", "==", doc(db, "places", placeId)),
+        placeId
+          ? where("placeRef", "==", doc(db, "places", placeId))
+          : guestId
+          ? where("guestRef", "==", doc(db, "users", guestId))
+          : where("", "==", ""),
         orderBy("createdAt", "desc")
       ),
       async (reviews) => {
@@ -62,13 +70,15 @@ export async function addReview({
   responseRating,
   placeId,
   userId,
+  guestId,
 }: {
   comment: string;
   placeRating: number;
   communicationRating: number;
   responseRating: number;
-  placeId: string;
+  placeId?: string;
   userId: string;
+  guestId?: string;
 }) {
   let result = null;
   let error = null;
@@ -82,17 +92,29 @@ export async function addReview({
       createdAt: new Date(),
       placeRating,
       responseRating,
-      placeRef: doc(collection(db, "places"), placeId),
+      [placeId ? "placeRef" : guestId ? "guestRef" : ""]: doc(
+        collection(db, placeId ? "places" : guestId ? "users" : ""),
+        placeId ? placeId : guestId ? guestId : ""
+      ),
       userRef: doc(collection(db, "users"), userId),
     };
     await setDoc(reviewRef, review);
-    await updatePlaceReviews(
-      placeId,
-      (placeRating + responseRating + communicationRating) /
-        ((placeRating > 0 ? 1 : 0) +
-          (communicationRating > 0 ? 1 : 0) +
-          (responseRating > 0 ? 1 : 0))
-    );
+    if (placeId)
+      await updatePlaceReviews(
+        placeId,
+        (placeRating + responseRating + communicationRating) /
+          ((placeRating > 0 ? 1 : 0) +
+            (communicationRating > 0 ? 1 : 0) +
+            (responseRating > 0 ? 1 : 0))
+      );
+    if (guestId)
+      await updateGuestReviews(
+        guestId,
+        (placeRating + responseRating + communicationRating) /
+          ((placeRating > 0 ? 1 : 0) +
+            (communicationRating > 0 ? 1 : 0) +
+            (responseRating > 0 ? 1 : 0))
+      );
   } catch (e) {
     if (typeof e === "object") error = e as errorType;
     console.log(e);
@@ -110,6 +132,26 @@ async function updatePlaceReviews(docId: string, newRating: number) {
       (rating * reviewsCount + newRating) / (reviewsCount + 1);
     setDoc(
       placeRef,
+      {
+        rating: updatedRating,
+        reviewsCount: reviewsCount + 1,
+      },
+      {
+        merge: true,
+      }
+    );
+  }
+}
+async function updateGuestReviews(docId: string, newRating: number) {
+  const guestRef = doc(collection(db, "users"), docId);
+  const guest = await (await getDoc(guestRef)).data();
+  if (guest) {
+    let rating = guest.rating ?? 0;
+    let reviewsCount = guest.reviewsCount ?? 0;
+    let updatedRating =
+      (rating * reviewsCount + newRating) / (reviewsCount + 1);
+    setDoc(
+      guestRef,
       {
         rating: updatedRating,
         reviewsCount: reviewsCount + 1,

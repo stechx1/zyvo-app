@@ -22,4 +22,6 @@ export type User = {
   hobbies?: string[];
   pets?: string[];
   notFirstSignIn?: boolean;
+  reviewsCount: number;
+  rating: number;
 };

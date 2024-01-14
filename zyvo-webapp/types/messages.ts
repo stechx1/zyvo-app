@@ -1,4 +1,4 @@
-import { User } from "./profile";
+import { User } from "./user";
 
 export interface message {
   messageId: string;

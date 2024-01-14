@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import Input from "@/components/Input";
 import { InputSectionProps } from "@/types";
 import Button from "@/components/Button";
@@ -26,7 +26,9 @@ const InputSection: React.FC<InputSectionProps> = ({
 }) => (
   <>
     <div className="flex flex-col gap-3 w-full sm:w-[40%]">
-      <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">{title}</p>
+      <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
+        {title}
+      </p>
       <Input
         name={inputName}
         type={type}
@@ -55,6 +57,8 @@ const AccountSettingPage = () => {
     phoneNumber: "",
     phoneNumberVerified: false,
     isSocialLogin: true,
+    rating: 0,
+    reviewsCount: 0,
   });
   useEffect(() => {
     if (user) setAccountSettings(user);
@@ -133,12 +137,13 @@ const AccountSettingPage = () => {
                   imgPreview
                     ? imgPreview
                     : user?.photoURL
-                      ? user?.photoURL
-                      : "/icons/profile-icon.png"
+                    ? user?.photoURL
+                    : "/icons/profile-icon.png"
                 }
                 alt="Profile Image"
-                className={`sm:w-[156px] sm:h-[156px] rounded-full ${!user?.photoURL && "opacity-10"
-                  }`}
+                className={`sm:w-[156px] sm:h-[156px] rounded-full ${
+                  !user?.photoURL && "opacity-10"
+                }`}
                 width={156}
                 height={156}
               />
@@ -224,7 +229,9 @@ const AccountSettingPage = () => {
         )}
 
         <div className="flex flex-col gap-3 w-[100%]">
-          <p className="font-Poppins text-base md:text-lg font-normal">Address</p>
+          <p className="font-Poppins text-base md:text-lg font-normal">
+            Address
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
             <Input
               name="country"

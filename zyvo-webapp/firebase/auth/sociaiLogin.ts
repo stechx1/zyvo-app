@@ -1,6 +1,6 @@
 import firebase_app from "@/config";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import addData from "../firestore/addData";
 import toast from "react-hot-toast";
 
@@ -23,6 +23,8 @@ export async function googleSignin() {
           phoneNumber: "",
           phoneNumberVerified: false,
           isSocialLogin: true,
+          rating: 0,
+          reviewsCount: 0,
         };
         const splitedDisplayName = user.displayName?.split(" ") ?? [""];
         if (splitedDisplayName?.length > 1) {

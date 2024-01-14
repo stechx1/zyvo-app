@@ -9,39 +9,66 @@ import {
 } from "firebase/firestore";
 import firebase_app from "@/config";
 import { Unsubscribe } from "firebase/auth";
-import { Booking } from "@/types/booking";
+import { Booking, BookingStatusType } from "@/types/booking";
 const db = getFirestore(firebase_app);
 type errorType = { message: string; code: string };
 
 export async function addUpdateBooking(
-  data: {
+  bookingData: {
     date: Date;
     from: string;
     to: string;
     hours: number;
+    status: BookingStatusType;
   },
-  userId: string,
-  placeId: string,
-  docId: string = ""
+  data: {
+    userId: string;
+    placeId: string;
+    hostId: string;
+    bookingId?: string;
+  }
 ) {
   let result = null;
   let error = null;
 
   try {
     let bookingRef;
-    if (docId) bookingRef = doc(collection(db, "bookings"), docId);
+    if (data.bookingId)
+      bookingRef = doc(collection(db, "bookings"), data.bookingId);
     else bookingRef = doc(collection(db, "bookings"));
     const booking: Booking = {
-      ...data,
+      ...bookingData,
       bookingId: bookingRef.id,
-      userRef: doc(db, "users", userId),
-      placeRef: doc(db, "places", placeId),
-      status: "REQUESTED",
+      userRef: doc(db, "users", data.userId),
+      hostRef: doc(db, "users", data.hostId),
+      placeRef: doc(db, "places", data.placeId),
       createdAt: new Date(),
     };
     await setDoc(bookingRef, booking, {
       merge: true,
     });
+    result = bookingRef.id;
+  } catch (e) {
+    if (typeof e === "object") error = e as errorType;
+    console.log(e);
+  }
+  return { result, error };
+}
+export async function updateStatusBooking(
+  bookingId: string,
+  status: BookingStatusType
+) {
+  let result = null;
+  let error = null;
+  try {
+    let bookingRef = doc(collection(db, "bookings"), bookingId);
+    await setDoc(
+      bookingRef,
+      { status },
+      {
+        merge: true,
+      }
+    );
     result = bookingRef.id;
   } catch (e) {
     if (typeof e === "object") error = e as errorType;
@@ -74,6 +101,7 @@ export function getBookingSnapshot(
   return unsubscribe;
 }
 export function getMyBookingsSnapshot(
+  mode: "GUEST" | "HOST",
   userId: string,
   onSuccess: (data: Booking[]) => void,
   onError?: (error: string) => void
@@ -84,7 +112,11 @@ export function getMyBookingsSnapshot(
     unsubscribe = onSnapshot(
       query(
         collection(db, "bookings"),
-        where("userRef", "==", doc(db, "users", userId))
+        where(
+          mode === "GUEST" ? "userRef" : "hostRef",
+          "==",
+          doc(db, "users", userId)
+        )
       ),
       async (bookings) => {
         let result: Booking[] = [];
@@ -97,8 +129,8 @@ export function getMyBookingsSnapshot(
               date: booking.date.toDate(),
             } as Booking,
           ];
-          onSuccess(result);
         }
+        onSuccess(result);
       }
     );
   } catch (e) {

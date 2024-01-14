@@ -10,7 +10,7 @@ import { getBookingSnapshot } from "@/firebase/booking";
 import { Booking } from "@/types/booking";
 import { DocumentReference } from "firebase/firestore";
 import { getUserByRef } from "@/firebase/user";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import HostProperties from "@/collections/HostProperties";
 import { formatDate, formatTime, getFullName } from "@/lib/utils";
 import { Place } from "@/types/place";
@@ -22,7 +22,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [bookingPlace, setBookingPlace] = useState<null | Place>();
 
-  const { user } = useAuthContext();
+  const { user, mode } = useAuthContext();
   const router = useRouter();
   useEffect(() => {
     if (user == null) {
@@ -117,10 +117,10 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
             <div className="flex flex-col gap-5">
               {placeUser && (
                 <HostProperties
+                  mode={mode}
                   photoURL={placeUser?.photoURL ?? ""}
                   fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
-                  buttonText="Message the host"
-                  onClick={() => {
+                  onMessageClick={() => {
                     router.push("/messages?userId=" + placeUser?.userId);
                   }}
                 />

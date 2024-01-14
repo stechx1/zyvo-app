@@ -7,7 +7,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useAuthContext } from "@/context/AuthContext";
 import { googleSignin } from "@/firebase/auth/sociaiLogin";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import toast from "react-hot-toast";
 import addData from "@/firebase/firestore/addData";
 
@@ -91,6 +91,8 @@ function Page() {
           phoneNumber: "",
           phoneNumberVerified: false,
           isSocialLogin: false,
+          rating: 0,
+          reviewsCount: 0,
         };
         User.email = user.email ?? "";
         addData("users", user?.uid, User)

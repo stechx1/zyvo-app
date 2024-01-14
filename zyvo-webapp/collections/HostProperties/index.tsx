@@ -5,21 +5,21 @@ import React from "react";
 export default function HostProperties({
   photoURL,
   fullName,
-  buttonText,
-  onClick,
+  mode,
+  onMessageClick,
   showReviewButton = false,
   onReviewClick,
 }: {
   photoURL: string;
   fullName: string;
-  buttonText: string;
-  onClick?: () => void;
+  mode: "GUEST" | "HOST";
+  onMessageClick?: () => void;
   showReviewButton?: boolean;
   onReviewClick?: () => void;
 }) {
   return (
     <div className="border rounded-lg p-4 text-center space-y-2">
-      <div>Hosted By</div>
+      <div>{`${mode === "GUEST" ? "Hosted" : "Guest"} By`}</div>
       <div className="flex items-center justify-center space-x-2">
         <div>
           <div className="rounded-full border-2 border-gray-200 p-1">
@@ -46,7 +46,7 @@ export default function HostProperties({
       {showReviewButton && (
         <Button
           type="gray"
-          text={"Review Booking"}
+          text={`Review ${mode === "GUEST" ? "Booking" : "Guest"}`}
           bordered
           rounded
           full
@@ -56,12 +56,12 @@ export default function HostProperties({
       )}
       <Button
         type="white"
-        text={buttonText}
+        text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
         bordered
         rounded
         full
         className="border-gray-700"
-        onClick={() => onClick && onClick()}
+        onClick={() => onMessageClick && onMessageClick()}
       />
       <div className="flex items-center justify-center space-x-2">
         <Image src={"/icons/time.svg"} alt="time" width={15} height={15} />

@@ -15,7 +15,7 @@ import {
 } from "firebase/firestore";
 import firebase_app from "@/config";
 import { conversation, message } from "@/types/messages";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import { Unsubscribe } from "firebase/auth";
 
 const db = getFirestore(firebase_app);
@@ -68,8 +68,8 @@ export function getConversationsSnapshot(
               users,
             },
           ];
-          onSuccess(result);
         }
+        onSuccess(result);
       }
     );
   } catch (e) {
@@ -98,9 +98,7 @@ export function getMessagessSnapshot(
           const message = messages.docs[index].data();
           const messageId = messages.docs[index].id;
 
-          const messageSender = (
-            await getDoc(message?.sender)
-          ).data() as User;
+          const messageSender = (await getDoc(message?.sender)).data() as User;
 
           result = [
             ...result,

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getFullName } from "@/lib/utils";
 import { Place } from "@/types/place";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import { DocumentReference } from "firebase/firestore";
 import { getUserByRef } from "@/firebase/user";
 import { useRouter } from "next/navigation";

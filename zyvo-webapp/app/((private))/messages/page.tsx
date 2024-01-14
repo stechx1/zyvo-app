@@ -16,7 +16,7 @@ import firebase_app from "@/config";
 import Badge from "@/components/Badge";
 import HostProperties from "@/collections/HostProperties";
 import { getFullName, getOtherUser } from "@/lib/utils";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import { getUserByPath } from "@/firebase/user";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 const storage = getStorage(firebase_app);
@@ -25,7 +25,7 @@ export default function Messages() {
   const searchParams = useSearchParams();
   let userId = searchParams.get("userId");
 
-  const { user, conversations } = useAuthContext();
+  const { user, conversations, mode } = useAuthContext();
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
@@ -213,20 +213,28 @@ export default function Messages() {
         </div>
         <div className="h-[75vh] overflow-auto space-y-3">
           {conversations.length > 0 &&
-            conversations.map((conversation) => {
-              return (
-                <ConversationBox
-                  key={conversation.conversationId}
-                  user={user}
-                  conversation={conversation}
-                  onSelect={() => {
-                    setSelectedConversation(conversation);
-                  }}
-                  selectedConversation={selectedConversation ?? null}
-                  time={getTimeDifference(conversation.lastMessage?.createdAt)}
-                />
-              );
-            })}
+            conversations
+              .sort(
+                (a, b) =>
+                  (b.lastMessage?.createdAt?.getTime() ?? 0) -
+                  (a.lastMessage?.createdAt?.getTime() ?? 0)
+              )
+              .map((conversation) => {
+                return (
+                  <ConversationBox
+                    key={conversation.conversationId}
+                    user={user}
+                    conversation={conversation}
+                    onSelect={() => {
+                      setSelectedConversation(conversation);
+                    }}
+                    selectedConversation={selectedConversation ?? null}
+                    time={getTimeDifference(
+                      conversation.lastMessage?.createdAt
+                    )}
+                  />
+                );
+              })}
           {!newChatConversation && conversations.length === 0 && (
             <div className="text-center m-auto h-[100%] flex items-center justify-center">
               No Conversations
@@ -281,7 +289,9 @@ export default function Messages() {
                         )
                       : ""}
                   </div>
-                  <div className="text-green-500 text-sm md:text-base lg:text-base xl:text-base">online</div>
+                  <div className="text-green-500 text-sm md:text-base lg:text-base xl:text-base">
+                    online
+                  </div>
                 </div>
               </div>
               <div className="flex justify-between items-center space-x-2">
@@ -325,7 +335,9 @@ export default function Messages() {
                               />
                             </div>
                             <div>
-                              <div className="text-sm md:text-base lg:text-base">{getFullName(message.sender)}</div>
+                              <div className="text-sm md:text-base lg:text-base">
+                                {getFullName(message.sender)}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -335,7 +347,9 @@ export default function Messages() {
                             : "sending..."}
                         </div>
                       </div>
-                      <div className="text-sm md:text-base lg:text-base">{message.message}</div>
+                      <div className="text-sm md:text-base lg:text-base">
+                        {message.message}
+                      </div>
                       <div>
                         {message?.imageURL ? (
                           <Image
@@ -439,6 +453,7 @@ export default function Messages() {
         {selectedConversation && (
           <div className="space-y-2">
             <HostProperties
+              mode={mode}
               photoURL={
                 user
                   ? getOtherUser(selectedConversation.users, user)?.photoURL ??
@@ -452,7 +467,6 @@ export default function Messages() {
                     ) ?? ""
                   : ""
               }
-              buttonText="Host Properties"
             />
             <div className="border rounded-lg p-4 space-y-4">
               <div className="flex justify-between items-center">

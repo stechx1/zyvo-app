@@ -9,11 +9,13 @@ import { getPlaceSnapshot } from "@/firebase/place";
 import { Place } from "@/types/place";
 import HostProperties from "@/collections/HostProperties";
 import { getUserByRef } from "@/firebase/user";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import { getFullName, timeArray } from "@/lib/utils";
 import { DocumentReference } from "firebase/firestore";
 import AvailabilitySelection from "@/collections/AvailabilitySelection";
 import toast from "react-hot-toast";
+import CircularSlider from "@fseehawer/react-circular-slider";
+import { useScreenDimensions } from "@/hooks/useScreenDimension";
 
 export type BookingDetailsType = {
   placeId: string;
@@ -24,7 +26,7 @@ export type BookingDetailsType = {
 };
 
 const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
-  const { user } = useAuthContext();
+  const { user, mode } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
   const [readMore, setReadMore] = useState<boolean>(false);
   const [placeUser, setPlaceUser] = useState<null | User>();
@@ -34,6 +36,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
   const [selectedavailableHoursFrom, setSelectedavailableHoursFrom] =
     useState<string>();
   const [hours, setHours] = useState(1);
+  const [width] = useScreenDimensions();
 
   const router = useRouter();
   useEffect(() => {
@@ -262,31 +265,33 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
       )}
 
-      <div className="sm:hidden md:hidden lg:hidden xl:hidden block border border-gray-700 rounded-xl">
-        <AvailabilitySelection
-          hours={hours}
-          availableHoursFrom={place?.availableHoursFrom}
-          availableHoursTo={place?.availableHoursTo}
-          selectedAvailableHoursFrom={selectedavailableHoursFrom}
-          selectedAvailableHoursTo={selectedavailableHoursTo}
-          setSelectedAvailableHoursTo={setSelectedavailableHoursTo}
-          setSelectedAvailableHoursFrom={setSelectedavailableHoursFrom}
-          setHours={setHours}
-          price={place?.pricePerHour ?? 0}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          availableMonths={place?.availableMonths ?? []}
-          availableDays={place?.availableDays ?? []}
-          onCheckOutClick={onCheckOutClick}
-        />
+      <div className="sm:hidden block border border-gray-700 rounded-xl">
+        {width <= 640 && (
+          <AvailabilitySelection
+            hours={hours}
+            availableHoursFrom={place?.availableHoursFrom}
+            availableHoursTo={place?.availableHoursTo}
+            selectedAvailableHoursFrom={selectedavailableHoursFrom}
+            selectedAvailableHoursTo={selectedavailableHoursTo}
+            setSelectedAvailableHoursTo={setSelectedavailableHoursTo}
+            setSelectedAvailableHoursFrom={setSelectedavailableHoursFrom}
+            setHours={setHours}
+            price={place?.pricePerHour ?? 0}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            availableMonths={place?.availableMonths ?? []}
+            availableDays={place?.availableDays ?? []}
+            onCheckOutClick={onCheckOutClick}
+          />
+        )}
       </div>
 
       <div className="my-8 block sm:hidden md:hidden lg:hidden xl:hidden">
         <HostProperties
+          mode={mode}
           photoURL={placeUser?.photoURL ?? ""}
           fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
-          buttonText="Message the host"
-          onClick={() => {
+          onMessageClick={() => {
             router.push("/messages?userId=" + placeUser?.userId);
           }}
         />
@@ -433,10 +438,10 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             <>
               <div className="my-8 hidden sm:block md:block lg:block xl:block">
                 <HostProperties
+                  mode={mode}
                   photoURL={placeUser?.photoURL ?? ""}
                   fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
-                  buttonText="Message the host"
-                  onClick={() => {
+                  onMessageClick={() => {
                     router.push("/messages?userId=" + placeUser?.userId);
                   }}
                 />

@@ -1,5 +1,5 @@
 import firebase_app from "@/config";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import {
   DocumentReference,
   doc,

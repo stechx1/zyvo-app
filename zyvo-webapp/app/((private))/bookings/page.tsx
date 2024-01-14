@@ -6,15 +6,15 @@ import CustomDetailTag from "@/components/CustomDetailTag";
 import CustomSelect from "@/components/SelectDropDown";
 import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { getMyBookingsSnapshot } from "@/firebase/booking";
-import { Booking } from "@/types/booking";
+import { getMyBookingsSnapshot, updateStatusBooking } from "@/firebase/booking";
+import { Booking, BookingStatusType } from "@/types/booking";
 import { getPlaceByRef } from "@/firebase/place";
 import { DocumentReference } from "firebase/firestore";
 import { Place } from "@/types/place";
 import { formatDate, formatTime, getFullName } from "@/lib/utils";
 import HostProperties from "@/collections/HostProperties";
 import PropertySideDetails from "@/collections/PropertySideDetails";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import { getUserByRef } from "@/firebase/user";
 import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
@@ -26,15 +26,16 @@ import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import toast from "react-hot-toast";
 
 export default function Bookings() {
-  const { user } = useAuthContext();
+  const { user, mode } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [selectedBooking, setSelectedBooking] = useState<Booking | null>();
-  const [selectedBookingPlace, setSelectedBookingPlace] = useState<Place>();
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [selectedBookingPlace, setSelectedBookingPlace] =
+    useState<Place | null>(null);
   const [selectedBookingPlaceUser, setSelectedBookingPlaceUser] =
-    useState<User>();
+    useState<User | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
@@ -43,7 +44,13 @@ export default function Bookings() {
       router.push("/signin");
       return;
     }
+    setBookings([]);
+    setSelectedBooking(null);
+    setSelectedBookingPlace(null);
+    setSelectedBookingPlaceUser(null);
+    setReviews([]);
     const unsubscribe = getMyBookingsSnapshot(
+      mode,
       user.userId,
       (bookings) => {
         setBookings(bookings);
@@ -55,23 +62,24 @@ export default function Bookings() {
     return () => {
       unsubscribe();
     };
-  }, [user]);
+  }, [user, mode]);
 
   useEffect(() => {
-    if (!selectedBookingPlace) return;
+    if (!selectedBookingPlace && !selectedBooking) return;
     const unsubscribe = getReviewsSnapshot(
-      selectedBookingPlace.placeId,
       (reviews) => {
         setReviews(reviews);
       },
+      mode === "GUEST" ? selectedBookingPlace?.placeId : undefined,
+      mode === "HOST" ? selectedBooking?.userRef.id : undefined,
       (e) => {
         console.log(e);
       }
     );
     return () => {
-      unsubscribe();
+      unsubscribe && unsubscribe();
     };
-  }, [selectedBookingPlace]);
+  }, [selectedBookingPlace, mode]);
 
   useEffect(() => {
     if (bookings.length > 0) {
@@ -86,7 +94,7 @@ export default function Bookings() {
             }
           });
       });
-      selectBooking(bookings[0].bookingId);
+      selectBooking();
     }
   }, [bookings]);
 
@@ -120,7 +128,8 @@ export default function Bookings() {
       addReview({
         comment,
         communicationRating,
-        placeId: selectedBookingPlace.placeId,
+        placeId: mode === "GUEST" ? selectedBookingPlace.placeId : undefined,
+        guestId: mode === "HOST" ? selectedBooking?.userRef.id : undefined,
         userId: user.userId,
         placeRating,
         responseRating,
@@ -136,10 +145,35 @@ export default function Bookings() {
       });
     }
   };
+  const submitBookingStatus = (status: BookingStatusType) => {
+    if (selectedBooking && user && mode === "HOST") {
+      updateStatusBooking(selectedBooking.bookingId, status).then(
+        ({ result, error }) => {
+          if (error) {
+            toast.error(error.message);
+          } else {
+            toast.success(
+              `Booking ${
+                status === "DECLINED"
+                  ? "Declind"
+                  : status === "CONFIRMED"
+                  ? "Approved"
+                  : ""
+              } successfully!`
+            );
+          }
+        }
+      );
+    }
+  };
 
-  const selectBooking = (id: string) => {
+  const selectBooking = () => {
     if (!selectedBooking) {
       setSelectedBooking(bookings[0]);
+    } else {
+      setSelectedBooking(
+        bookings.find((b) => b.bookingId === selectedBooking.bookingId) ?? null
+      );
     }
   };
 
@@ -218,7 +252,11 @@ export default function Bookings() {
         : "No host rules defined!",
     },
   ];
-
+  const showReviewButton =
+    selectedBooking?.status === "FINISHED" &&
+    (mode === "GUEST"
+      ? !selectedBooking.placeReviewRef
+      : !selectedBooking.guestReviewRef);
   return (
     <>
       <div
@@ -297,7 +335,28 @@ export default function Bookings() {
                     <div className="text-[#A4A4A4]">
                       {formatDate(booking.date.toISOString())}
                     </div>
-                    <BookingStatus status={booking.status} />
+                    {mode === "HOST" && booking.status === "REQUESTED" ? (
+                      <>
+                        <span
+                          className={`inline-block mt-0.5 text-[#00BF7B] px-2.5 py-2 text-sm leading-none rounded-full capitalize border border-[#00BF7B] me-1`}
+                          onClick={() => {
+                            submitBookingStatus("CONFIRMED");
+                          }}
+                        >
+                          Approve
+                        </span>
+                        <span
+                          className={`inline-block mt-0.5 text-[#FF1A00] px-2.5 py-2 text-sm leading-none  rounded-full capitalize border border-[#FF1A00]`}
+                          onClick={() => {
+                            submitBookingStatus("DECLINED");
+                          }}
+                        >
+                          Decline
+                        </span>
+                      </>
+                    ) : (
+                      <BookingStatus status={booking.status} />
+                    )}
                   </div>
                 </div>
                 <div
@@ -324,20 +383,22 @@ export default function Bookings() {
         {/******Booking Details*******/}
         <div className="flex sm:hidden justify-between items-center my-2">
           <div className="w-[48%]">
-            <Button
-              type="gray"
-              text="Review Booking"
-              bordered
-              rounded
-              full
-              className="border-gray-700 my-2"
-              onClick={() => setIsReviewModalOpen(true)}
-            />
+            {showReviewButton && (
+              <Button
+                type="gray"
+                text="Review Booking"
+                bordered
+                rounded
+                full
+                className="border-gray-700 my-2"
+                onClick={() => setIsReviewModalOpen(true)}
+              />
+            )}
           </div>
           <div className="w-[48%]">
             <Button
               type="white"
-              text="Message the host"
+              text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
               bordered
               rounded
               full
@@ -530,9 +591,16 @@ export default function Bookings() {
                         />
                         <div className="ml-1">
                           <span className="text-[#FCA800]">
-                            {selectedBookingPlace?.rating?.toFixed(2) ?? 0}
+                            {mode === "GUEST"
+                              ? selectedBookingPlace?.rating?.toFixed(2) ?? 0
+                              : selectedBookingPlaceUser?.rating?.toFixed(2) ??
+                                0}
                             <span className="text-black ms-2">
-                              {selectedBookingPlace?.reviewsCount ?? 0} reviews
+                              {mode === "GUEST"
+                                ? selectedBookingPlace?.reviewsCount ?? 0
+                                : selectedBookingPlaceUser?.reviewsCount ??
+                                  0}{" "}
+                              reviews
                             </span>
                           </span>
                         </div>
@@ -637,19 +705,16 @@ export default function Bookings() {
         <div className="hidden lg:block lg:w-[25%] space-y-4">
           {selectedBookingPlaceUser && (
             <HostProperties
+              mode={mode}
               photoURL={selectedBookingPlaceUser?.photoURL ?? ""}
               fullName={
                 selectedBookingPlaceUser
                   ? getFullName(selectedBookingPlaceUser) ?? ""
                   : ""
               }
-              showReviewButton={
-                selectedBooking?.status === "FINISHED" &&
-                !selectedBooking.reviewRef
-              }
-              buttonText="Message the host"
+              showReviewButton={showReviewButton}
               onReviewClick={() => setIsReviewModalOpen(true)}
-              onClick={() => {
+              onMessageClick={() => {
                 router.push(
                   "/messages?userId=" + selectedBookingPlaceUser?.userId
                 );
@@ -674,7 +739,7 @@ export default function Bookings() {
     </>
   );
 }
-const BookingStatus = ({ status }: { status: string }) => {
+const BookingStatus = ({ status }: { status: BookingStatusType }) => {
   function getStatusColor(status: string) {
     switch (status) {
       case "FINISHED":
@@ -683,6 +748,8 @@ const BookingStatus = ({ status }: { status: string }) => {
         return "bg-[#85d6ff]";
       case "WAITING PAYMENT":
         return "bg-[#fff178]";
+      case "DECLINED":
+        return "bg-[#FF1A00]";
       default:
         return "bg-stone-100";
     }

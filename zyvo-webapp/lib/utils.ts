@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Poppins, Roboto } from "next/font/google";
-import { User } from "@/types/profile";
+import { User } from "@/types/user";
 import { format, parse, parseISO } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
