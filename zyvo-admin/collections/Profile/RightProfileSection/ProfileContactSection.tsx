@@ -13,7 +13,7 @@ export const ProfileContactSection = ({}) => {
     {
       title: "Phone Number",
       iconSrc: "/icons/white-phone-icon.svg",
-      isVerified: !!user?.phoneNumberVerified,
+      isVerified: false,
     },
     {
       title: "Verify Identity",
@@ -28,10 +28,14 @@ export const ProfileContactSection = ({}) => {
           <Image src={item.iconSrc} alt={"icon"} width={30} height={30} />
         </div>
         <div className="mt-2 sm:mt-0 sm:ml-3">
-          <p className="text-white text-[12px] sm:text-lg font-medium">{item.title}</p>
+          <p className="text-white text-[12px] sm:text-lg font-medium">
+            {item.title}
+          </p>
           {item.isVerified ? (
             <div className="flex gap-2">
-              <p className={`text-white text-[12px] sm:text-[18px] `}>Verified</p>
+              <p className={`text-white text-[12px] sm:text-[18px] `}>
+                Verified
+              </p>
               <Image
                 src={"/icons/check-mark-white-background.svg"}
                 alt={"icon"}

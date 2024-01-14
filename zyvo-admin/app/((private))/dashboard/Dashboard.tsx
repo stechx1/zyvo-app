@@ -178,8 +178,8 @@ export default function Dashboard() {
             },
             options: {
               responsive: true,
-              cutout: "75%",
-              radius: width > 768 ? 80 : 70,
+              // cutout: "75%",
+              // radius: width > 768 ? 80 : 70,
             },
           };
           chartInstance.current = new Chart(ctx, config);
