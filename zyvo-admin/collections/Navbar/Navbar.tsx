@@ -32,26 +32,32 @@ export const Navbar = () => {
             alt="Clock Icon"
             width={30}
             height={30}
+            badgeCount={0}
+            onClick={() => router.push("/")}
           />
           <BadgeIcon
+            onClick={() => router.push("/manage-users")}
             src="/icons/white-background-info-icon.svg"
             alt="Clock Icon"
             width={28}
             height={28}
-            badgeCount={2}
+            badgeCount={0}
           />
           <BadgeIcon
+            onClick={() => router.push("/reports")}
             src="/icons/gray-checklist-icon.svg"
             alt="Chat Icon"
             width={27}
             height={27}
+            badgeCount={0}
+            title="Reports"
           />
           <BadgeIcon
             src="/icons/bell-icon.svg"
             alt="Bell Icon"
             width={25}
             height={25}
-            badgeCount={4}
+            badgeCount={0}
           />
           <ProfileDropdown
             photoURL={user?.photoURL ?? "/icons/profile-icon.png"}

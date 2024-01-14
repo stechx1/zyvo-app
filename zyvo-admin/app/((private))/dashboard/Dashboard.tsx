@@ -5,9 +5,19 @@ import React, { useEffect, useRef } from "react";
 import Chart, { ChartConfiguration, DoughnutController } from "chart.js/auto";
 import PluginServiceGlobalRegistration from "chart.js/auto";
 import { useScreenDimensions } from "@/hooks/useScreenDimension";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/context/AuthContext";
 
-export default function AdminDashboard() {
+export default function Dashboard() {
+  const { user } = useAuthContext();
+  const router = useRouter();
   const [width] = useScreenDimensions();
+  useEffect(() => {
+    if (user == null) {
+      router.push("/signin");
+      return;
+    }
+  }, [user]);
   interface BarChartProps {
     data: {
       labels: string[];

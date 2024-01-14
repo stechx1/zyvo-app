@@ -1,16 +1,26 @@
 "use client";
 import CustomDetailTag from "@/components/CustomDetailTag";
 import CustomSelect from "@/components/SelectDropDown";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "./Components/UsersTable";
 import Image from "next/image";
 import Input from "@/components/Input";
 import { useScreenDimensions } from "@/hooks/useScreenDimension";
 import Button from "@/components/Button";
 import { CustomDialog } from "@/components/Dialog";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/context/AuthContext";
 
 export default function ManageUsers() {
+  const { user } = useAuthContext();
+  const router = useRouter();
   const [width] = useScreenDimensions();
+  useEffect(() => {
+    if (user == null) {
+      router.push("/signin");
+      return;
+    }
+  }, [user]);
   const tableData = [
     {
       user: "John Doe",
