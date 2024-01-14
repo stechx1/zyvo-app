@@ -542,9 +542,10 @@ export default function Bookings() {
               <div className="px-2 lg:px-5 md:px-5 sm:px-3">
                 <label>Included in your booking</label>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
-                  {selectedBookingPlace?.ameneties.map((am) => {
+                  {selectedBookingPlace?.ameneties.map((am, i) => {
                     return (
                       <div
+                        key={i}
                         className={`flex items-center py-2 border rounded-full bg-[#fff] px-4`}
                       >
                         <div className="capitalize">{am.toLowerCase()}</div>
@@ -636,6 +637,7 @@ export default function Bookings() {
                                       { length: review.placeRating },
                                       (_, index) => (
                                         <Image
+                                          key={index}
                                           src={"/icons/starIcon.svg"}
                                           alt="star-icon"
                                           className="sm:w-[15px]"

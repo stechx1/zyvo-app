@@ -333,11 +333,7 @@ const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
               </div>
               <div className={` rounded-3xl `}>
                 <div className="text-black text-sm sm:text-lg font-normal">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry's
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only...
+                  Description of refund policies...
                 </div>
               </div>
             </div>

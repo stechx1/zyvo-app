@@ -206,9 +206,10 @@ export default function Reports() {
                 />
               </div>
             </div>
-            {bookings.map((res) => {
+            {bookings.map((res, i) => {
               return (
                 <div
+                  key={i}
                   className={`flex mt-4 border px-2 justify-between py-2 rounded-xl ${
                     selectedReport?.id === res.id && "border-[#3A4B4C]"
                   } `}
@@ -405,6 +406,7 @@ export default function Reports() {
                             <div className="flex">
                               {Array.from({ length: 5 }, (_, index) => (
                                 <Image
+                                  key={index}
                                   src={"/icons/starIcon.svg"}
                                   alt="star-icon"
                                   width={width > 640 ? 15 : 12}
@@ -424,6 +426,7 @@ export default function Reports() {
                       <div className="flex">
                         {Array.from({ length: 5 }, (_, index) => (
                           <Image
+                            key={index}
                             src={"/icons/starIcon.svg"}
                             alt="star-icon"
                             width={15}

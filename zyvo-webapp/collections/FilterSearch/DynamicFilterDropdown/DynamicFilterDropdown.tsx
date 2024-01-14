@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { PriceFilter } from "../PriceFilter/PriceFilter";
 import { PlaceFilter } from "../PlaceFilter/PlaceFilter";
 import { DynamicFilterDropdownProps } from "@/types";
-import DateTimePicker from "@/collections/AvailabilitySelection";
 
 export const DynamicFilterDropdown: React.FC<DynamicFilterDropdownProps> = ({
   label,
@@ -38,7 +37,7 @@ export const DynamicFilterDropdown: React.FC<DynamicFilterDropdownProps> = ({
       content = <PlaceFilter/>;
       break;
     case "Time":
-      content = <DateTimePicker/>;
+      content = <></>;
       break;
     case "Price":
       content = <PriceFilter />;
