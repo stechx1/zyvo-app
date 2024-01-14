@@ -9,8 +9,19 @@ import OrderAmountBox from "./components/orderAmountBox";
 import CustomMenu from "@/components/Menu";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import { CustomDialog } from "@/components/Dialog";
+import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/context/AuthContext";
 
 export default function Reports() {
+  const { user } = useAuthContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user == null) {
+      router.push("/signin");
+      return;
+    }
+  }, [user]);
   interface bookings {
     id: number;
     title: string;

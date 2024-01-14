@@ -3,10 +3,8 @@ import React, { useEffect, useState } from "react";
 import signIn from "@/firebase/auth/signin";
 import { useRouter } from "next/navigation";
 import Input from "@/components/Input";
-import Image from "next/image";
 import Button from "@/components/Button";
 import { useAuthContext } from "@/context/AuthContext";
-import { googleSignin } from "@/firebase/auth/sociaiLogin";
 import toast from "react-hot-toast";
 
 function Page() {
@@ -23,7 +21,7 @@ function Page() {
 
   useEffect(() => {
     if (user) router.push("/");
-  }, [user]);
+  }, [user]);  
 
   useEffect(() => {
     const data = localStorage.getItem("zyvo-data");
@@ -148,59 +146,8 @@ function Page() {
               />
               <label className="ml-2 text-gray-600">Keep me logged</label>
             </div>
-            <div className="underline">Forgot Password?</div>
           </div>
           <hr className="my-5" />
-          <div className="flex flex-col items-center justify-center my-2">
-            <div className="my-1">OR LOGIN WITH</div>
-            <div className="flex space-x-3">
-              <div className="w-10 h-10 rounded-full border border-black flex items-center justify-center text-black text-2xl bg-transparent">
-                <Image
-                  src={"/icons/facebook-icon.svg"}
-                  alt={"facebook"}
-                  width={13}
-                  height={13}
-                  className="cursor-pointer"
-                />
-              </div>
-              <div
-                className="w-10 h-10 rounded-full border border-black flex items-center justify-center text-black text-2xl bg-transparent"
-                onClick={googleSignin}
-              >
-                <Image
-                  src={"/icons/google-icon.svg"}
-                  alt={"google"}
-                  width={17}
-                  height={17}
-                  className="cursor-pointer"
-                />
-              </div>
-              <div className="w-10 h-10 rounded-full border border-black flex items-center justify-center text-black text-2xl bg-transparent">
-                <Image
-                  src={"/icons/twitter-icon.svg"}
-                  alt={"twitter"}
-                  width={17}
-                  height={17}
-                  className="cursor-pointer"
-                />
-              </div>
-            </div>
-          </div>
-          <hr className="my-5" />
-          <div className="text-center mt-3 mb-2">
-            Don&apos;t have an account?
-          </div>
-
-          <Button
-            text="Register Now"
-            type="white"
-            roundedfull
-            full
-            bordered
-            onClick={() => {
-              router.push("/signup");
-            }}
-          />
         </div>
       </div>
     </div>

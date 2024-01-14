@@ -10,11 +10,17 @@ export const BadgeIcon: React.FC<BadgeIconProps> = ({
   height,
   badgeCount,
   onClick,
+  title,
 }) => {
   const showBadge = badgeCount > 0;
 
   return (
-    <div className="relative inline-block" role="button" onClick={onClick}>
+    <div
+      className="relative inline-block"
+      role="button"
+      onClick={onClick}
+      title={title}
+    >
       <div className="relative">
         <Image src={src} alt={alt} width={width} height={height} />
         {showBadge && (
