@@ -104,8 +104,8 @@ function Page() {
   };
 
   return (
-    <div className='bg-[url("/images/banner-bg.png")] bg-cover bg-center py-8 flex flex-col justify-center items-center'>
-      <div className="sm:w-[30rem] w-[25rem] mx-auto rounded-xl shadow-2xl my-10">
+    <div className='bg-gray-800 sm:bg-white h-[100vh] sm:h-[90dvh] sm:bg-[url("/images/banner-bg.png")] bg-cover bg-center py-8 flex flex-col justify-center items-center'>
+      <div className="sm:w-[30rem] w-[90%] mx-auto rounded-xl shadow-2xl my-10">
         <div className="bg-white rounded-3xl px-8 py-10">
           <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
             <h2 className="leading-relaxed text-center">Login</h2>
@@ -146,9 +146,9 @@ function Page() {
                 onChange={() => {}}
                 onClick={(e) => setIsKeepLoggedIn((state) => !state)}
               />
-              <label className="ml-2 text-gray-600">Keep me logged</label>
+              <label className="ml-2 text-sm sm:text-base text-gray-600">Keep me logged</label>
             </div>
-            <div className="underline">Forgot Password?</div>
+            <div className="underline text-sm sm:text-base">Forgot Password?</div>
           </div>
           <hr className="my-5" />
           <div className="flex flex-col items-center justify-center my-2">
