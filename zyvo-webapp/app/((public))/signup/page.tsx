@@ -107,9 +107,9 @@ function Page() {
     });
   };
   return (
-    <div className='bg-[url("/images/banner-bg.png")] bg-cover bg-center py-8 flex flex-col justify-center items-center'>
-      <div className="sm:w-[30rem] w-[25rem] mx-auto rounded-xl shadow-2xl my-10">
-        <div className="bg-white rounded-3xl px-8 py-10">
+    <div className='bg-gray-800 sm:bg-white h-[100vh] sm:h-[90dvh] sm:bg-[url("/images/banner-bg.png")] bg-cover bg-center flex flex-col justify-center items-center'>
+      <div className="sm:w-[30rem] w-[90%] mx-auto rounded-xl shadow-2xl">
+        <div className="bg-white rounded-3xl p-6 sm:px-8 sm:py-10">
           <div className="block pl-2 font-semibold text-xl self-start text-gray-700">
             <h2 className="leading-relaxed text-center">Register</h2>
           </div>

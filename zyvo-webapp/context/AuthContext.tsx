@@ -101,7 +101,7 @@ export const AuthContextProvider = ({
     >
       <Navbar />
       {children}
-      {pathname !== "/messages" && <Footer />}
+      {(pathname !== "/messages" && pathname !== "/signup" && pathname !== "/signin") && <Footer />}
     </AuthContext.Provider>
   );
 };

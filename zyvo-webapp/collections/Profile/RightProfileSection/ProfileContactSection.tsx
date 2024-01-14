@@ -23,25 +23,26 @@ export const ProfileContactSection = ({}) => {
   ];
   return profileInfo.map((item, index) => (
     <div key={index}>
-      <div className="flex items-center">
-        <div className="rounded-2xl bg-secondary-gray-600 w-16 h-16 flex items-center justify-center mr-4">
+      <div className="flex items-center w-full justify-center sm:justify-start sm:space-x-3 flex-wrap">
+        <div className="rounded-2xl bg-secondary-gray-600 text-center space-x-2 w-[90%] sm:w-16 h-16 flex items-center justify-center">
           <Image src={item.iconSrc} alt={"icon"} width={30} height={30} />
         </div>
         <div>
-          <p className="text-white text-lg font-medium">{item.title}</p>
+          <p className="text-white text-[12.5px] sm:text-lg font-medium">{item.title}</p>
           {item.isVerified ? (
             <div className="flex gap-2">
-              <p className={`text-white text-[18px] `}>Verified</p>
+              <p className={`text-white text-xs sm:text-[18px] `}>Verified</p>
               <Image
                 src={"/icons/check-mark-white-background.svg"}
                 alt={"icon"}
                 width={18}
                 height={18}
+                className="sm:w-[18px] w-[14px]"
               />
             </div>
           ) : (
             <p
-              className={`text-white text-[18px]  opacity-[0.40] underline cursor-pointer`}
+              className={`text-white text-xs sm:text-[18px]  opacity-[0.40] underline cursor-pointer`}
             >
               Confirm Now
             </p>
@@ -50,7 +51,7 @@ export const ProfileContactSection = ({}) => {
       </div>
 
       {index !== profileInfo.length - 1 && (
-        <div className="h-[0.5px] my-5 opacity-[0.20] bg-secondary-neutral-200"></div>
+        <div className="h-[0.5px] hidden sm:block my-5 opacity-[0.20] bg-secondary-neutral-200"></div>
       )}
     </div>
   ));

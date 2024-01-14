@@ -207,7 +207,7 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-        <div className="rounded-3xl bg-secondary-gray-700 p-3 sm:p-5 flex sm:flex-col object-contain">
+        <div className="rounded-3xl bg-secondary-gray-700 p-3 sm:p-5 flex justify-around sm:flex-col">
           <ProfileContactSection />
         </div>
       </div>

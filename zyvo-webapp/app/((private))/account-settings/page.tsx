@@ -26,7 +26,7 @@ const InputSection: React.FC<InputSectionProps> = ({
 }) => (
   <>
     <div className="flex flex-col gap-3 w-full sm:w-[40%]">
-      <p className="font-Poppins text-[18px] sm:text-lg font-normal">{title}</p>
+      <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">{title}</p>
       <Input
         name={inputName}
         type={type}
@@ -116,11 +116,11 @@ const AccountSettingPage = () => {
     <div className="flex flex-col sm:container sm:flex-row lg:gap-20 gap-10">
       <div className="w-full sm:w-[30%] flex flex-col gap-10 sm:order-2">
         <div className="sm:hidden flex flex-col gap-3">
-          <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
+          <div className="text-black text-base md:text-[18px] sm:text-2xl font-normal font-Poppins">
             Account Settings
           </div>
           <div className={` rounded-3xl `}>
-            <div className="text-black text-[15px] sm:text-lg font-normal">
+            <div className="text-black text-sm sm:text-[15px] sm:text-lg font-normal">
               Change your account settings here
             </div>
           </div>
@@ -176,15 +176,15 @@ const AccountSettingPage = () => {
               className="bg-secondary-gray-700 text-white text-[14px] sm:text-[18px] py-2 px-2 sm:px-10 rounded-md flex h-9 sm:h-auto w-fit
                sm:w-full items-center justify-center"
             >
-              Edit my Profile
+              Edit My Profile
             </Link>
           </div>
         </div>
-        <div className=" rounded-3xl bg-secondary-gray-700 p-3 sm:p-5 flex sm:flex-col object-contain">
+        <div className="w-full rounded-3xl bg-secondary-gray-700 p-3 sm:p-5 flex justify-around sm:flex-col">
           <ProfileContactSection />
         </div>
       </div>
-      <div className="w-full sm:w-[70%] flex flex-col gap-12 sm:order-1">
+      <div className="w-full sm:w-[70%] flex flex-col gap-7 md:gap-10 sm:order-1">
         <div className="hidden sm:flex flex-col gap-3">
           <div className="text-black text-2xl font-normal font-Poppins">
             Account Settings
@@ -224,7 +224,7 @@ const AccountSettingPage = () => {
         )}
 
         <div className="flex flex-col gap-3 w-[100%]">
-          <p className="font-Poppins text-lg font-normal">Address</p>
+          <p className="font-Poppins text-base md:text-lg font-normal">Address</p>
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
             <Input
               name="country"
