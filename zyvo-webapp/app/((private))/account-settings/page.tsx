@@ -180,7 +180,7 @@ const AccountSettingPage = () => {
             </Link>
           </div>
         </div>
-        <div className="w-full rounded-3xl bg-secondary-gray-700 p-3 sm:p-5 flex justify-between sm:flex-col">
+        <div className="w-full rounded-3xl bg-secondary-gray-700 p-3 sm:p-5 flex justify-around sm:flex-col">
           <ProfileContactSection />
         </div>
       </div>
