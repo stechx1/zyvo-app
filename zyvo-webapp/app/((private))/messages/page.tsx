@@ -246,7 +246,7 @@ export default function Messages() {
       <div
         className={`${
           !selectedConversation ? "hidden" : "flex"
-        } w-[100%] sm:w-[60%] lg:w-[50%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[97vh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-lg`}
+        } w-[100%] sm:w-[60%] lg:w-[50%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[91vh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-lg`}
       >
         {selectedConversation ? (
           <div className="flex flex-col h-[100%]">

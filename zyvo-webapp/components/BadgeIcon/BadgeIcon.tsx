@@ -24,7 +24,7 @@ export const BadgeIcon: React.FC<BadgeIconProps> = ({
       <div className="relative">
         <Image src={src} alt={alt} width={width} height={height} />
         {showBadge && (
-          <div className="absolute bottom-4 left-4">
+          <div className="absolute bottom-3 sm:bottom-4 left-4">
             <Badge text={badgeCount} />
           </div>
         )}

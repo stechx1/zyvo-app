@@ -6,4 +6,5 @@ export type BadgeIconProps = {
   badgeCount: number;
   onClick?: () => void;
   title?: string;
+  color?: string
 };

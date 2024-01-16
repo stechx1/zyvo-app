@@ -10,6 +10,7 @@ import getData from "@/firebase/firestore/getData";
 import { User } from "@/types/user";
 import { conversation } from "@/types/messages";
 import { getConversationsSnapshot } from "@/firebase/messages";
+import BottomTabNav from "@/collections/Footer/bottomTabNav/bottomTabNav";
 
 const auth = getAuth(firebase_app);
 
@@ -101,7 +102,10 @@ export const AuthContextProvider = ({
     >
       <Navbar />
       {children}
-      {(pathname !== "/messages" && pathname !== "/signup" && pathname !== "/signin") && <Footer />}
+      {pathname !== "/signup" && pathname !== "/signin" && <BottomTabNav />}
+      {pathname !== "/messages" &&
+        pathname !== "/signup" &&
+        pathname !== "/signin" && <Footer />}
     </AuthContext.Provider>
   );
 };
