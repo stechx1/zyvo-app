@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/Button";
 import { useAuthContext } from "@/context/AuthContext";
 import Image from "next/image";
@@ -40,22 +40,24 @@ const InputSection: React.FC<InputSectionProps> = ({
   </>
 );
 
-const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
+const CheckoutPage = () => {
   const router = useRouter();
   const { user, mode } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [isLoading, setIsLoading] = useState(false);
-  console.log(searchParams);
-  const details = JSON.parse(searchParams?.data ?? "null") as BookingDetailsType;
+  const searchParams = useSearchParams();
   
+  const details = JSON.parse(
+    searchParams.get("data") ?? "null"
+  ) as BookingDetailsType;
 
   useEffect(() => {
     if (user == null) {
       router.push("/signin");
       return;
     }
-    if (!searchParams.data) {
+    if (!details) {
       router.back();
     }
     const unsubscribe = getPlaceSnapshot(
