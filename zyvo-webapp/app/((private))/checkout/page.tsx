@@ -46,7 +46,9 @@ const CheckoutPage = ({ searchParams }: { searchParams: { data: string } }) => {
   const [place, setPlace] = useState<Place | null>(null);
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [isLoading, setIsLoading] = useState(false);
-  const details = JSON.parse(searchParams.data) as BookingDetailsType;
+  const details = JSON.parse(searchParams?.data ?? "") as BookingDetailsType;
+  console.log(searchParams);
+  
 
   useEffect(() => {
     if (user == null) {

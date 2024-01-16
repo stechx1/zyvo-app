@@ -89,6 +89,8 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         to: selectedavailableHoursTo,
       };
       router.push("/checkout?data=" + JSON.stringify(data));
+      console.log("/checkout?data=" + JSON.stringify(data));
+      
     }
   };
 
