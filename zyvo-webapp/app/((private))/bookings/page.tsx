@@ -381,8 +381,7 @@ export default function Bookings() {
         </div>
 
         {/******Booking Details*******/}
-        <div className="flex sm:hidden justify-between items-center my-2">
-          <div className="w-[48%]">
+        <div className="flex sm:hidden justify-between space-x-3 items-center my-2">
             {showReviewButton && (
               <Button
                 type="gray"
@@ -394,8 +393,6 @@ export default function Bookings() {
                 onClick={() => setIsReviewModalOpen(true)}
               />
             )}
-          </div>
-          <div className="w-[48%]">
             <Button
               type="white"
               text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
@@ -409,7 +406,6 @@ export default function Bookings() {
                 );
               }}
             />
-          </div>
         </div>
 
         {selectedBookingPlace && selectedBooking && (

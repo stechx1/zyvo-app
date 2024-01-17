@@ -335,19 +335,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                   key={amenety}
                 >
                   <Image
-                    src={
-                      amenety.toLowerCase() === "wifi"
-                        ? "/icons/gray-wifi-icon.svg"
-                        : amenety.toLowerCase() === "parking"
-                        ? "/icons/gray-parking-icon.svg"
-                        : amenety.toLowerCase() === "kitchen"
-                        ? "/icons/gray-kitchen-icon.svg"
-                        : amenety.toLowerCase() === "chairs"
-                        ? "/icons/gray-chair-icon.svg"
-                        : amenety.toLowerCase() === "tables"
-                        ? "/icons/gray-table-icon.svg"
-                        : "/icons/amenety-icon.png"
-                    }
+                    src={"/icons/amenety-icon.png"}
                     alt={"icon"}
                     width={40}
                     height={40}

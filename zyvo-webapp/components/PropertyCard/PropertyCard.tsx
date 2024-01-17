@@ -10,6 +10,8 @@ export const PropertyCard = ({ place }: { place: Place }) => {
   const router = useRouter();
   const [placeUser, setPlaceUser] = useState<null | User>();
 
+  console.log(placeUser);
+
   useEffect(() => {
     if (place.userRef) getUser(place.userRef);
   }, []);
@@ -32,9 +34,7 @@ export const PropertyCard = ({ place }: { place: Place }) => {
         className="bg-cover bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
         style={{
           backgroundImage: `url(${
-            place.images.length > 0
-              ? place.images[0]
-              : "images/no-image.jpg"
+            place.images.length > 0 ? place.images[0] : "images/no-image.jpg"
           })`,
           paddingBottom: "75%",
         }}
@@ -50,7 +50,11 @@ export const PropertyCard = ({ place }: { place: Place }) => {
         </div>
         <div className="bg-opacity-80 bg-white text-black p-3 rounded-xl items-center gap-4 mt-[225px] hidden md:flex">
           <Image
-            src={placeUser?.photoURL ?? "/icons/profile-icon.png"}
+            src={
+              placeUser?.photoURL && placeUser?.photoURL?.length > 0
+                ? placeUser?.photoURL
+                : "/icons/profile-icon.png"
+            }
             alt={"host-image"}
             width={60}
             height={60}
@@ -60,9 +64,7 @@ export const PropertyCard = ({ place }: { place: Place }) => {
             <p className="text-md line-clamp-1">
               Host By {placeUser ? getFullName(placeUser) : "-"}
             </p>
-            <p className="text-sm">
-              {place.country + " " + place.state}
-            </p>
+            <p className="text-sm">{place.country + " " + place.state}</p>
           </div>
         </div>
       </div>

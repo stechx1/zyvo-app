@@ -246,7 +246,7 @@ export default function Messages() {
       <div
         className={`${
           !selectedConversation ? "hidden" : "flex"
-        } w-[100%] sm:w-[60%] lg:w-[50%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[91vh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-lg`}
+        } w-[100%] sm:w-[60%] lg:w-[50%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[92dvh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-lg pb-5`}
       >
         {selectedConversation ? (
           <div className="flex flex-col h-[100%]">
@@ -325,8 +325,9 @@ export default function Messages() {
                             <div className="rounded-full border border-gray-200">
                               <Image
                                 src={
-                                  message.sender?.photoURL ??
-                                  "/icons/profile-icon.png"
+                                  message.sender?.photoURL?.length
+                                    ? message.sender?.photoURL
+                                    : "/icons/profile-icon.png"
                                 }
                                 alt="profile-pic"
                                 width={35}

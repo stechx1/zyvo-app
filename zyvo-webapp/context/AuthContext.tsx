@@ -102,7 +102,7 @@ export const AuthContextProvider = ({
     >
       <Navbar />
       {children}
-      {pathname !== "/signup" && pathname !== "/signin" && <BottomTabNav />}
+      {pathname !== "/signup" && pathname !== "/signin" && user && <BottomTabNav />}
       {pathname !== "/messages" &&
         pathname !== "/signup" &&
         pathname !== "/signin" && <Footer />}

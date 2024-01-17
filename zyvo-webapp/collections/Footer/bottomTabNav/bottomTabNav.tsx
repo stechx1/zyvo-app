@@ -1,12 +1,14 @@
 import { BadgeIcon } from "@/components/BadgeIcon/BadgeIcon";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useAuthContext } from "@/context/AuthContext";
 
 interface Props {}
 
 function BottomTabNav(props: Props) {
   const {} = props;
   const router = useRouter();
+  const { user, conversations, mode } = useAuthContext();
   const [selectedRoute, setSelectedRoute] = useState("/");
 
   const Navigations = [
@@ -22,7 +24,11 @@ function BottomTabNav(props: Props) {
       title: "Inbox",
       icon: "/icons/gray-border-chat-icon.svg",
       selectedicon: "/icons/chat-icon.svg",
-      count: 2,
+      count: conversations.reduce((total, conversation) => {
+        return total + conversation.lastMessage.sender.userId !== user?.userId
+          ? conversation.unreadCount
+          : 0;
+      }, 0),
       id: 1,
       route: "/messages",
     },
