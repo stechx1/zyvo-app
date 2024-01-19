@@ -2,7 +2,7 @@
 import { poppins } from "@/lib/utils";
 const PrivacyPage = () => {
   return (
-    <div className="flex flex-col my-8  justify-center items-center">
+    <div className="container flex mx-auto flex-col my-8  justify-center items-center">
       <h2
         className={`text-center font-bold text-4xl my-4 ${poppins.className}`}
       >
