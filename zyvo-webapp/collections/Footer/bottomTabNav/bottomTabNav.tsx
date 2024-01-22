@@ -2,14 +2,16 @@ import { BadgeIcon } from "@/components/BadgeIcon/BadgeIcon";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
+import { usePathname } from "next/navigation";
 
 interface Props {}
 
 function BottomTabNav(props: Props) {
   const {} = props;
   const router = useRouter();
+  const pathname = usePathname();
   const { user, conversations, mode } = useAuthContext();
-  const [selectedRoute, setSelectedRoute] = useState("/");
+  
 
   const Navigations = [
     {
@@ -64,11 +66,11 @@ function BottomTabNav(props: Props) {
         return (
           <div
             className={`${
-              selectedRoute === res.route && "text-gray-900 "
+              pathname === res.route && "text-gray-900 "
             } text-center space-y-1 flex flex-col items-center`}
           >
             <BadgeIcon
-              src={selectedRoute === res.route ? res.selectedicon : res.icon}
+              src={pathname === res.route ? res.selectedicon : res.icon}
               height={25}
               width={25}
               alt=""
@@ -78,7 +80,6 @@ function BottomTabNav(props: Props) {
                 console.log("route", res.route);
                 if (res.route) {
                   router.push(res.route);
-                  setSelectedRoute(res.route);
                 }
               }}
             />

@@ -130,7 +130,7 @@ export const AuthContextProvider = ({
       )}
       {pathname !== "/messages" &&
         pathname !== "/signup" &&
-        pathname !== "/signin" && <Footer />}
+        pathname !== "/signin" && <div className="p-1"><Footer /></div> }
     </AuthContext.Provider>
   );
 };
