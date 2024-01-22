@@ -10,12 +10,15 @@ import { Place } from "@/types/place";
 import HostProperties from "@/collections/HostProperties";
 import { getUserByRef } from "@/firebase/user";
 import { User } from "@/types/user";
-import { getFullName, timeArray } from "@/lib/utils";
+import { formatDate, getFullName, timeArray } from "@/lib/utils";
 import { DocumentReference } from "firebase/firestore";
 import AvailabilitySelection from "@/collections/AvailabilitySelection";
 import toast from "react-hot-toast";
 import CircularSlider from "@fseehawer/react-circular-slider";
 import { useScreenDimensions } from "@/hooks/useScreenDimension";
+import Map from "@/components/Maps";
+import { Review } from "@/types/review";
+import { getReviewsSnapshot } from "@/firebase/reviews";
 
 export type BookingDetailsType = {
   placeId: string;
@@ -31,6 +34,8 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
   const [readMore, setReadMore] = useState<boolean>(false);
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [selectedDate, setSelectedDate] = useState<Date>();
+  const [reviews, setReviews] = useState<Review[]>([]);
+
   const [selectedavailableHoursTo, setSelectedavailableHoursTo] =
     useState<string>();
   const [selectedavailableHoursFrom, setSelectedavailableHoursFrom] =
@@ -58,6 +63,22 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
       unsubscribe();
     };
   }, [user]);
+  useEffect(() => {
+    if (!place) return;
+    const unsubscribe = getReviewsSnapshot(
+      (reviews) => {
+        setReviews(reviews);
+      },
+      place.placeId,
+      undefined,
+      (e) => {
+        console.log(e);
+      }
+    );
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, [place]);
 
   const getUser = async (sender: DocumentReference) => {
     const { result } = await getUserByRef(sender);
@@ -88,7 +109,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         from: selectedavailableHoursFrom,
         to: selectedavailableHoursTo,
       };
-      router.push("/checkout?data=" + JSON.stringify(data));      
+      router.push("/checkout?data=" + JSON.stringify(data));
     }
   };
 
@@ -400,6 +421,136 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
+          <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-2">
+            <div className="flex flex-col xl:gap-2 lg:gap-2 md:gap-2">
+              <p className="font-Poppins text-[18px] sm:text-2xl font-medium">
+                Address & Location
+              </p>
+              {place && (
+                <p className="text-[14px] sm:text-lg">
+                  {`${place?.street ?? ""} ${place?.city ?? ""} ${
+                    place?.state ?? ""
+                  } ${place?.country ?? ""}`}
+                </p>
+              )}
+            </div>
+            {place?.coordinates && (
+              <div className="mt-3">
+                <Map coords={place.coordinates} />
+              </div>
+            )}
+          </div>
+          <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
+          <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-2">
+            {reviews.length > 0 && (
+              <>
+                <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+                  <label>Reviews</label>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex">
+                      <Image
+                        src={"/icons/starIcon.svg"}
+                        alt="star-icon"
+                        width={15}
+                        height={15}
+                      />
+                      <div className="ml-1">
+                        <span className="text-[#FCA800]">
+                          {place?.rating?.toFixed(2) ?? 0}
+                          <span className="text-black ms-2">
+                            {place?.reviewsCount ?? 0} reviews
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <div>Sort by: Recent Reviews</div>
+                  </div>
+
+                  {reviews.map((review) => (
+                    <React.Fragment key={review.reviewId}>
+                      <div className="flex justify-between py-2">
+                        <div className="flex sm:px-2 space-x-2 sm:w-max w-full">
+                          <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
+                            <Image
+                              src={
+                                review.user?.photoURL
+                                  ? review.user.photoURL
+                                  : "/icons/profile-icon.png"
+                              }
+                              alt="profile-pic"
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
+                          </div>
+                          <div className="sm:w-max w-full">
+                            <div className="flex justify-between">
+                              <div className="text-sm md:text-md lg:text-base font-semibold">
+                                {getFullName(review.user)}
+                              </div>
+                              <div className="xl:hidden space-y-2 text-sm md:text-md lg:text-base xl:text-base">
+                                <div className="flex">
+                                  {Array.from(
+                                    { length: review.placeRating },
+                                    (_, index) => (
+                                      <Image
+                                        key={index}
+                                        src={"/icons/starIcon.svg"}
+                                        alt="star-icon"
+                                        className="sm:w-[15px]"
+                                        width={12}
+                                        height={12}
+                                      />
+                                    )
+                                  )}
+                                  <div className="ml-2">
+                                    {formatDate(review.createdAt.toISOString())}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-sm md:text-md lg:text-base xl:text-base w-max">
+                              {review.comment}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="hidden xl:block space-y-2">
+                          <div className="flex justify-end">
+                            {Array.from(
+                              { length: review.placeRating },
+                              (_, index) => (
+                                <Image
+                                  key={index}
+                                  src={"/icons/starIcon.svg"}
+                                  alt="star-icon"
+                                  width={12}
+                                  height={12}
+                                  className="sm:w-[15px]"
+                                />
+                              )
+                            )}
+                          </div>
+                          <div>
+                            {formatDate(review.createdAt.toISOString())}
+                          </div>
+                        </div>
+                      </div>
+                      <hr className="my-3" />
+                    </React.Fragment>
+                  ))}
+                  {/* <div className="text-center flex justify-center my-5">
+                  <Button
+                    roundedfull
+                    className="border-gray-700"
+                    bordered
+                    type="white"
+                    text="Show More Reviews"
+                  />
+                </div> */}
+                </div>
+              </>
+            )}
+          </div>
         </div>
         <div className="w-full sm:w-[30%] hidden sm:block md:block lg:block xl:block">
           {place && (

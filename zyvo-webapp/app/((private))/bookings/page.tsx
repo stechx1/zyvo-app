@@ -24,6 +24,7 @@ import { CustomDialog } from "@/components/Dialog";
 import ReviewModal from "@/collections/ReviewModal";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import toast from "react-hot-toast";
+import Map from "@/components/Maps";
 
 export default function Bookings() {
   const { user, mode } = useAuthContext();
@@ -382,30 +383,30 @@ export default function Bookings() {
 
         {/******Booking Details*******/}
         <div className="flex sm:hidden justify-between space-x-3 items-center my-2">
-            {showReviewButton && (
-              <Button
-                type="gray"
-                text="Review Booking"
-                bordered
-                rounded
-                full
-                className="border-gray-700 my-2"
-                onClick={() => setIsReviewModalOpen(true)}
-              />
-            )}
+          {showReviewButton && (
             <Button
-              type="white"
-              text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
+              type="gray"
+              text="Review Booking"
               bordered
               rounded
               full
-              className="border-gray-700"
-              onClick={() => {
-                router.push(
-                  "/messages?userId=" + selectedBookingPlaceUser?.userId
-                );
-              }}
+              className="border-gray-700 my-2"
+              onClick={() => setIsReviewModalOpen(true)}
             />
+          )}
+          <Button
+            type="white"
+            text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
+            bordered
+            rounded
+            full
+            className="border-gray-700"
+            onClick={() => {
+              router.push(
+                "/messages?userId=" + selectedBookingPlaceUser?.userId
+              );
+            }}
+          />
         </div>
 
         {selectedBookingPlace && selectedBooking && (
@@ -564,13 +565,7 @@ export default function Bookings() {
                   <u>Midtown Manhattan, New York, NY</u>
                 </div>
                 <div className="mt-3">
-                  <Image
-                    src={"/images/mapImage.png"}
-                    alt="favourite-icon"
-                    width={200}
-                    height={200}
-                    className="object-contain w-full h-full rounded-l-xl"
-                  />
+                  <Map coords={selectedBookingPlace?.coordinates} />
                 </div>
               </div>
               {reviews.length > 0 && (

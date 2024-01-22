@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   getFirestore,
   onSnapshot,
   query,
@@ -49,7 +50,16 @@ export async function deletePlace(placeId: string) {
   let error = null;
 
   try {
-    await deleteDoc(doc(db, "places", placeId));
+    const placeRef = doc(db, "places", placeId);
+    const result = await getDocs(
+      query(collection(db, "bookings"), where("userRef", "==", placeRef))
+    );
+    if (result.size > 0) await deleteDoc(placeRef);
+    else
+      throw {
+        message: "Cannot delete this Place. Place has bookings!",
+        code: "400",
+      } as errorType;
   } catch (e) {
     if (typeof e === "object") error = e as errorType;
     console.log(e);

@@ -1,6 +1,7 @@
 import Button from "@/components/Button";
 import { CustomToggleBtn } from "@/components/CustomToggle";
 import Input from "@/components/Input";
+import Map from "@/components/Maps";
 import { MultiTabs } from "@/components/MultiTabs";
 import CustomSelect from "@/components/SelectDropDown";
 import { Tabs } from "@/components/Tabs";
@@ -162,7 +163,7 @@ const GallaryAndLocation = ({
           {file ? (
             <div className="w-[100px] h-[100px] border-2 border-dashed justify-center flex flex-col items-center border-gray-200 space-y-1">
               <div className="text-sm text-center"> uploading..</div>
-              <div className="text-sm text-center"> {progress}%</div>
+              <div className="text-sm text-center"> {progress?.toFixed(2)}%</div>
             </div>
           ) : (
             <div className="w-[100px] h-[100px] border-2 border-dashed justify-center flex items-center border-gray-200 cursor-pointer">
@@ -315,12 +316,16 @@ const GallaryAndLocation = ({
             }
           />
         </div>
-        <Image
-          src={"/images/mapImage.png"}
-          alt="favourite-icon"
-          width={200}
-          height={200}
-          className="object-contain w-full h-full rounded-l-xl"
+        <Map
+          getCoordinates={(coords) => {
+            setPlace((prev) => {
+              return {
+                ...prev,
+                coordinates: coords,
+              };
+            });
+          }}
+          coords={place.coordinates}
         />
       </div>
     </div>

@@ -12,6 +12,8 @@ type addOn = {
   name: string;
   price: number;
 };
+export type CoordinatesType = { lat: number; lng: number };
+
 export type Place = {
   placeId: string;
   addOns: addOn[];
@@ -25,7 +27,7 @@ export type Place = {
   bedrooms: number;
   beds: number;
   city: string;
-  coordinates: number[];
+  coordinates?: CoordinatesType;
   country: string;
   description: string;
   discountedMinHours: number;
