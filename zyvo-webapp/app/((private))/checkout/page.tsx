@@ -164,6 +164,8 @@ const CheckoutPage = () => {
             <div className="flex flex-col gap-5">
               {placeUser && (
                 <HostProperties
+                bottomText="Typically responds within 1 hr"
+                  bottomTextIcon="/icons/time.svg"
                   mode={mode}
                   photoURL={placeUser?.photoURL ?? ""}
                   fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
@@ -224,9 +226,9 @@ const CheckoutPage = () => {
                       alt={tag.iconAlt}
                       width={20}
                       height={20}
-                      className="w-[15px]"
+                      className="w-[15px] sm:w-[19px]"
                     />
-                    <div className="text-black text-[13px] sm:text-lg font-normal whitespace-nowrap">
+                    <div className="text-black text-[13px] sm:text-[15px] font-normal whitespace-nowrap">
                       {tag.label}
                     </div>
                     {tag.edit && (

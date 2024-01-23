@@ -203,7 +203,7 @@ const AccountSettingPage = () => {
         <InputSection
           title="Email"
           inputName="email"
-          type="text"
+          type="edit"
           value={accountSettings?.email ?? ""}
           placeholder="Email..."
           onChange={handleChange}
@@ -212,7 +212,7 @@ const AccountSettingPage = () => {
         <InputSection
           title="Phone Number"
           inputName="phone"
-          type="text"
+          type="edit"
           value={accountSettings?.phone ?? ""}
           placeholder="Phone Number..."
           onChange={handleChange}
@@ -235,7 +235,7 @@ const AccountSettingPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
             <Input
               name="country"
-              type="text"
+              type="edit"
               onChange={handleChange}
               value={accountSettings?.country ?? ""}
               placeholder="Country..."
@@ -243,7 +243,7 @@ const AccountSettingPage = () => {
 
             <Input
               name="state"
-              type="text"
+              type="edit"
               onChange={handleChange}
               value={accountSettings?.state ?? ""}
               placeholder="State..."
@@ -252,14 +252,14 @@ const AccountSettingPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
             <Input
               name="city"
-              type="text"
+              type="edit"
               onChange={handleChange}
               value={accountSettings?.city ?? ""}
               placeholder="City..."
             />
             <Input
               name="street"
-              type="text"
+              type="edit"
               onChange={handleChange}
               value={accountSettings?.street ?? ""}
               placeholder="Street..."

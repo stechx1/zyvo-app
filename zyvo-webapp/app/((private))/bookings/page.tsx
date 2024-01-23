@@ -257,6 +257,12 @@ export default function Bookings() {
     (mode === "GUEST"
       ? !selectedBooking.placeReviewRef
       : !selectedBooking.guestReviewRef);
+
+  function getAmenetiesIcon(val:string){
+    return val === "wifi" ? "/icons/gray-wifi-icon.svg" : 
+    val === "kitchen" ? "/icons/gray-kitchen-icon.svg" :""
+  }
+
   return (
     <>
       <div
@@ -382,30 +388,30 @@ export default function Bookings() {
 
         {/******Booking Details*******/}
         <div className="flex sm:hidden justify-between space-x-3 items-center my-2">
-            {showReviewButton && (
-              <Button
-                type="gray"
-                text="Review Booking"
-                bordered
-                rounded
-                full
-                className="border-gray-700 my-2"
-                onClick={() => setIsReviewModalOpen(true)}
-              />
-            )}
+          {showReviewButton && (
             <Button
-              type="white"
-              text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
+              type="gray"
+              text="Review Booking"
               bordered
               rounded
               full
-              className="border-gray-700"
-              onClick={() => {
-                router.push(
-                  "/messages?userId=" + selectedBookingPlaceUser?.userId
-                );
-              }}
+              className="border-gray-700 my-2"
+              onClick={() => setIsReviewModalOpen(true)}
             />
+          )}
+          <Button
+            type="white"
+            text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
+            bordered
+            rounded
+            full
+            className="border-gray-700"
+            onClick={() => {
+              router.push(
+                "/messages?userId=" + selectedBookingPlaceUser?.userId
+              );
+            }}
+          />
         </div>
 
         {selectedBookingPlace && selectedBooking && (
@@ -506,7 +512,7 @@ export default function Bookings() {
                 <div className="flex flex-wrap gap-2 sm:gap-3 mt-1">
                   {bookingDetails.map((tag) => (
                     <div
-                      className={`border border-neutral-200 rounded-full py-2 px-3 gap-3 w-fit flex items-center`}
+                      className={`border border-neutral-200 rounded-full py-1.5 px-3 gap-3 w-fit flex items-center`}
                       key={tag.id}
                     >
                       <Image
@@ -516,7 +522,7 @@ export default function Bookings() {
                         height={20}
                         className="w-[15px]"
                       />
-                      <div className="text-black text-[13px] sm:text-md font-normal whitespace-nowrap">
+                      <div className="text-black contents text-[13px] sm:text-md font-normal whitespace-nowrap">
                         {tag.label}
                       </div>
                       {tag.edit && (
@@ -542,9 +548,9 @@ export default function Bookings() {
                     return (
                       <div
                         key={i}
-                        className={`flex items-center py-2 border rounded-full bg-[#fff] px-4`}
+                        className={`flex items-center py-2 border rounded-xl bg-[#fff] px-3`}
                       >
-                        <div className="capitalize">{am.toLowerCase()}</div>
+                        <div className="capitalize sm:text-[15px]">{am.toLowerCase()}</div>
                       </div>
                     );
                   })}
@@ -553,14 +559,14 @@ export default function Bookings() {
               <hr className="my-9" />
               <div className="px-2 lg:px-5 md:px-5 sm:px-3">
                 <label>Rules</label>
-                <div className="w-full">
+                <div className="w-full mt-2">
                   <Accordion items={accordionItems} />
                 </div>
               </div>
               <hr className="my-9" />
               <div className="px-2 lg:px-5 md:px-5 sm:px-3 my-2">
-                <label>Address & Location</label>
-                <div>
+                <label className="text-[16px]">Address & Location</label>
+                <div className="text-sm">
                   <u>Midtown Manhattan, New York, NY</u>
                 </div>
                 <div className="mt-3">
@@ -704,6 +710,8 @@ export default function Bookings() {
           {selectedBookingPlaceUser && (
             <HostProperties
               mode={mode}
+              bottomTextIcon="/icons/information-button.png"
+              bottomText="i need help"
               photoURL={selectedBookingPlaceUser?.photoURL ?? ""}
               fullName={
                 selectedBookingPlaceUser

@@ -16,7 +16,7 @@ export const Tabs = ({
             onClick={() => {
               onSelect && onSelect(item);
             }}
-            className={`w-[45%] py-2 xl:py-1 lg:py-1 md:py-1 sm:py-1 rounded-full text-xs md:text-base sm:text-base lg:text-base xl:text-base ${
+            className={`w-[45%] py-2 xl:py-1 lg:py-1 md:py-1 sm:py-1 rounded-full text-sm md:text-base sm:text-base lg:text-[13.5px] xl:text-[13.5px] ${
               item.value === selected
                 ? "bg-white pointer-events-none"
                 : "cursor-pointer"

@@ -9,6 +9,8 @@ export default function HostProperties({
   onMessageClick,
   showReviewButton = false,
   onReviewClick,
+  bottomText,
+  bottomTextIcon
 }: {
   photoURL: string;
   fullName: string;
@@ -16,6 +18,8 @@ export default function HostProperties({
   onMessageClick?: () => void;
   showReviewButton?: boolean;
   onReviewClick?: () => void;
+  bottomText: string,
+  bottomTextIcon: string
 }) {
   return (
     <div className="border rounded-lg p-4 text-center space-y-2">
@@ -64,8 +68,8 @@ export default function HostProperties({
         onClick={() => onMessageClick && onMessageClick()}
       />
       <div className="flex items-center justify-center space-x-2">
-        <Image src={"/icons/time.svg"} alt="time" width={15} height={15} />
-        <div>Typically responds within 1 hr</div>
+        <Image src={bottomTextIcon} alt="time" width={15} height={15} />
+        <div>{bottomText}</div>
       </div>
     </div>
   );

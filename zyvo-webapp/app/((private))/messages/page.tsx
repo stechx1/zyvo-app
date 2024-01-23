@@ -454,6 +454,8 @@ export default function Messages() {
         {selectedConversation && (
           <div className="space-y-2">
             <HostProperties
+              bottomText="Typically responds within 1 hr"
+              bottomTextIcon="/icons/time.svg"
               mode={mode}
               photoURL={
                 user

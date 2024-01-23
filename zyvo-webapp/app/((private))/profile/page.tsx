@@ -230,7 +230,7 @@ const ProfilePage = () => {
             <div className="text-black text-[14px] sm:text-lg font-normal">
               <textarea
                 className="focus:outline-none w-full"
-                rows={5}
+                rows={Math.min(5, aboutMe.split('\n').length + 1)}
                 value={aboutMe}
                 onChange={(e) => setAboutMe(e.target.value)}
               />

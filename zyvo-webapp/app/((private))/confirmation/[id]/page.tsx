@@ -118,6 +118,8 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
               {placeUser && (
                 <HostProperties
                   mode={mode}
+                  bottomText="Typically responds within 1 hr"
+                  bottomTextIcon="/icons/time.svg"
                   photoURL={placeUser?.photoURL ?? ""}
                   fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
                   onMessageClick={() => {

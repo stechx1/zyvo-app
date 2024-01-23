@@ -156,7 +156,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               place?.reviewsCount ?? 0
             } reviews)`}</p>
           </div>
-          <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-lg">
+          <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-base">
             <Image
               src={"/icons/time.svg"}
               alt="time"
@@ -166,7 +166,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             />
             <div>{place?.minHours} hr min</div>
           </div>
-          {/* <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-lg">
+          <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-base">
             <Image
               src={"/icons/square-fit-icon.svg"}
               alt="square-fit"
@@ -174,27 +174,27 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               height={18}
             />
             <div>323 sqft</div>
-          </div> */}
+          </div>
         </div>
 
         {/* =================================== Right Description =============================  */}
 
         <div className="flex space-x-4">
-          {/* <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-lg">
+          <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-base">
             <Image
               src={"/icons/gray-share-icon.svg"}
               alt="share-icon"
-              width={18}
-              height={18}
+              width={19}
+              height={19}
             />
             <div>Share</div>
-          </div> */}
-          <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-lg">
+          </div>
+          <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-base">
             <Image
               src={"/icons/gray-heart-icon.svg"}
               alt="heart-icon"
-              width={20}
-              height={20}
+              width={22}
+              height={22}
               className="opacity-50"
             />
             <div>Favorite</div>
@@ -289,6 +289,8 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
       <div className="my-8 block sm:hidden md:hidden lg:hidden xl:hidden">
         <HostProperties
           mode={mode}
+          bottomText="Typically responds within 1 hr"
+          bottomTextIcon="/icons/time.svg"
           photoURL={placeUser?.photoURL ?? ""}
           fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
           onMessageClick={() => {
@@ -424,17 +426,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
 
           {user && placeUser && user?.userId !== placeUser?.userId && (
             <>
-              <div className="my-8 hidden sm:block md:block lg:block xl:block">
-                <HostProperties
-                  mode={mode}
-                  photoURL={placeUser?.photoURL ?? ""}
-                  fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
-                  onMessageClick={() => {
-                    router.push("/messages?userId=" + placeUser?.userId);
-                  }}
-                />
-              </div>
-              <div className="sm:block md:block lg:block xl:block hidden">
+              <div className="sm:block md:block lg:block xl:block hidden border border-gray-700 rounded-xl">
                 <AvailabilitySelection
                   hours={hours}
                   availableHoursFrom={place?.availableHoursFrom}
@@ -450,6 +442,18 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                   availableMonths={place?.availableMonths ?? []}
                   availableDays={place?.availableDays ?? []}
                   onCheckOutClick={onCheckOutClick}
+                />
+              </div>
+              <div className="my-8 hidden sm:block md:block lg:block xl:block">
+                <HostProperties
+                  mode={mode}
+                  bottomText="Typically responds within 1 hr"
+                  bottomTextIcon="/icons/time.svg"
+                  photoURL={placeUser?.photoURL ?? ""}
+                  fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
+                  onMessageClick={() => {
+                    router.push("/messages?userId=" + placeUser?.userId);
+                  }}
                 />
               </div>
             </>
