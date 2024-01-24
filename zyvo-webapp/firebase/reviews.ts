@@ -14,6 +14,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
+import { updateReviewsBooking } from "./booking";
 const db = getFirestore(firebase_app);
 type errorType = { message: string; code: string };
 
@@ -25,8 +26,6 @@ export function getReviewsSnapshot(
 ) {
   if (!placeId && !guestId) return;
   let unsubscribe: Unsubscribe = () => {};
-  console.log(placeId);
-  console.log(guestId);
 
   try {
     unsubscribe = onSnapshot(
@@ -71,6 +70,7 @@ export async function addReview({
   placeId,
   userId,
   guestId,
+  bookingId,
 }: {
   comment: string;
   placeRating: number;
@@ -79,6 +79,7 @@ export async function addReview({
   placeId?: string;
   userId: string;
   guestId?: string;
+  bookingId: string;
 }) {
   let result = null;
   let error = null;
@@ -99,7 +100,7 @@ export async function addReview({
       userRef: doc(collection(db, "users"), userId),
     };
     await setDoc(reviewRef, review);
-    if (placeId)
+    if (placeId) {
       await updatePlaceReviews(
         placeId,
         (placeRating + responseRating + communicationRating) /
@@ -107,7 +108,9 @@ export async function addReview({
             (communicationRating > 0 ? 1 : 0) +
             (responseRating > 0 ? 1 : 0))
       );
-    if (guestId)
+      await updateReviewsBooking(bookingId, reviewRef, undefined);
+    }
+    if (guestId) {
       await updateGuestReviews(
         guestId,
         (placeRating + responseRating + communicationRating) /
@@ -115,6 +118,8 @@ export async function addReview({
             (communicationRating > 0 ? 1 : 0) +
             (responseRating > 0 ? 1 : 0))
       );
+      await updateReviewsBooking(bookingId, undefined, reviewRef);
+    }
   } catch (e) {
     if (typeof e === "object") error = e as errorType;
     console.log(e);

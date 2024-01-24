@@ -11,7 +11,6 @@ function BottomTabNav(props: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, conversations, mode } = useAuthContext();
-  
 
   const Navigations = [
     {
@@ -62,9 +61,10 @@ function BottomTabNav(props: Props) {
 
   return (
     <div className="sm:hidden w-full fixed bottom-0 bg-white border-t-2 flex justify-around p-3 text-xs text-[#B0B7B7]">
-      {Navigations.map((res) => {
+      {Navigations.map((res, i) => {
         return (
           <div
+            key={i}
             className={`${
               pathname === res.route && "text-gray-900 "
             } text-center space-y-1 flex flex-col items-center`}

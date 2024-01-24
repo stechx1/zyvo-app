@@ -2,8 +2,6 @@
 import Button from "@/components/Button";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import CustomDetailTag from "@/components/CustomDetailTag";
-import CustomSelect from "@/components/SelectDropDown";
 import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { getMyBookingsSnapshot, updateStatusBooking } from "@/firebase/booking";
@@ -24,9 +22,11 @@ import { CustomDialog } from "@/components/Dialog";
 import ReviewModal from "@/collections/ReviewModal";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import toast from "react-hot-toast";
+import Map from "@/components/Maps";
+import { getRouteDetails } from "@/lib/actions";
 
 export default function Bookings() {
-  const { user, mode } = useAuthContext();
+  const { user, mode, currentCoordinates } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -38,6 +38,7 @@ export default function Bookings() {
     useState<User | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [placeDistance, setPlaceDistance] = useState<number | null>(null);
 
   useEffect(() => {
     if (user == null) {
@@ -53,7 +54,7 @@ export default function Bookings() {
       mode,
       user.userId,
       (bookings) => {
-        setBookings(bookings);
+        setBookings([...bookings]);
       },
       (e) => {
         console.log(e);
@@ -76,39 +77,72 @@ export default function Bookings() {
         console.log(e);
       }
     );
+    getDistance();
+    async function getDistance() {
+      if (currentCoordinates && selectedBookingPlace?.coordinates) {
+        const routes = await getRouteDetails(
+          currentCoordinates,
+          selectedBookingPlace?.coordinates
+        );
+        if (routes) setPlaceDistance(routes.distance);
+        else setPlaceDistance(null);
+      } else setPlaceDistance(null);
+    }
+
     return () => {
       unsubscribe && unsubscribe();
     };
-  }, [selectedBookingPlace, mode]);
+  }, [selectedBookingPlace, selectedBooking, mode]);
 
   useEffect(() => {
-    if (bookings.length > 0) {
-      bookings.forEach((booking) => {
-        if (booking.placeRef)
-          getPlaceByRef(booking.placeRef).then(({ result }) => {
+    getPlaces();
+    async function getPlaces() {
+      if (bookings.length > 0) {
+        let newPlaces: Place[] = [];
+        for (let index = 0; index < bookings.length; index++) {
+          if (bookings[index].placeRef) {
+            const { result } = await getPlaceByRef(bookings[index].placeRef);
             if (result) {
-              setPlaces((prev) => {
-                if (prev.find((p) => p.placeId === result.placeId)) return prev;
-                return [...prev, result];
-              });
+              if (!newPlaces.find((p) => p.placeId === result.placeId)) {
+                newPlaces = [...newPlaces, result];
+              }
             }
-          });
-      });
-      selectBooking();
+          }
+        }
+        setPlaces(newPlaces);
+        const selectBooking = () => {
+          if (!selectedBooking) {
+            setSelectedBooking(bookings[0]);
+          } else {
+            setSelectedBooking(
+              bookings.find((b) => b.bookingId === selectedBooking.bookingId) ??
+                null
+            );
+          }
+        };
+        selectBooking();
+      }
     }
   }, [bookings]);
 
   useEffect(() => {
+    const getUser = async (sender: DocumentReference) => {
+      const { result } = await getUserByRef(sender);
+      if (result) {
+        setSelectedBookingPlaceUser(result);
+      }
+    };
     if (selectedBooking?.placeRef) {
       fetchSelectedBookingPlace(selectedBooking.placeRef);
+      if (mode === "HOST") getUser(selectedBooking.userRef);
+      else getUser(selectedBooking.hostRef);
     }
-  }, [selectedBooking]);
+  }, [selectedBooking, mode]);
 
   const fetchSelectedBookingPlace = (placeRef: DocumentReference) => {
     getPlaceByRef(placeRef).then(({ result }) => {
       if (result) {
         setSelectedBookingPlace({ ...result });
-        if (result?.userRef) getUser(result.userRef);
       }
     });
   };
@@ -124,7 +158,7 @@ export default function Bookings() {
     communicationRating: number;
     responseRating: number;
   }) => {
-    if (selectedBookingPlace && user) {
+    if (selectedBooking && selectedBookingPlace && user) {
       addReview({
         comment,
         communicationRating,
@@ -133,6 +167,7 @@ export default function Bookings() {
         userId: user.userId,
         placeRating,
         responseRating,
+        bookingId: selectedBooking.bookingId,
       }).then(({ result, error }) => {
         if (error) {
           toast.error(error.message);
@@ -167,22 +202,6 @@ export default function Bookings() {
     }
   };
 
-  const selectBooking = () => {
-    if (!selectedBooking) {
-      setSelectedBooking(bookings[0]);
-    } else {
-      setSelectedBooking(
-        bookings.find((b) => b.bookingId === selectedBooking.bookingId) ?? null
-      );
-    }
-  };
-
-  const getUser = async (sender: DocumentReference) => {
-    const { result } = await getUserByRef(sender);
-    if (result) {
-      setSelectedBookingPlaceUser(result);
-    }
-  };
   const getPlace = (places: Place[], id: string) => {
     return places.find((p) => p.placeId === id);
   };
@@ -258,9 +277,12 @@ export default function Bookings() {
       ? !selectedBooking.placeReviewRef
       : !selectedBooking.guestReviewRef);
 
-  function getAmenetiesIcon(val:string){
-    return val === "wifi" ? "/icons/gray-wifi-icon.svg" : 
-    val === "kitchen" ? "/icons/gray-kitchen-icon.svg" :""
+  function getAmenetiesIcon(val: string) {
+    return val === "wifi"
+      ? "/icons/gray-wifi-icon.svg"
+      : val === "kitchen"
+      ? "/icons/gray-kitchen-icon.svg"
+      : "";
   }
 
   return (
@@ -423,6 +445,7 @@ export default function Bookings() {
               price={selectedBookingPlace.pricePerHour * selectedBooking.hours}
               description={selectedBookingPlace.description}
               hours={selectedBooking.hours}
+              distance={placeDistance}
             />
           </div>
         )}
@@ -550,7 +573,9 @@ export default function Bookings() {
                         key={i}
                         className={`flex items-center py-2 border rounded-xl bg-[#fff] px-3`}
                       >
-                        <div className="capitalize sm:text-[15px]">{am.toLowerCase()}</div>
+                        <div className="capitalize sm:text-[15px]">
+                          {am.toLowerCase()}
+                        </div>
                       </div>
                     );
                   })}
@@ -565,19 +590,19 @@ export default function Bookings() {
               </div>
               <hr className="my-9" />
               <div className="px-2 lg:px-5 md:px-5 sm:px-3 my-2">
-                <label className="text-[16px]">Address & Location</label>
-                <div className="text-sm">
-                  <u>Midtown Manhattan, New York, NY</u>
+                <label>Address & Location</label>
+                <div>
+                  <u>{`${selectedBookingPlace?.street ?? ""} ${
+                    selectedBookingPlace?.city ?? ""
+                  } ${selectedBookingPlace?.state ?? ""} ${
+                    selectedBookingPlace?.country ?? ""
+                  }`}</u>
                 </div>
-                <div className="mt-3">
-                  <Image
-                    src={"/images/mapImage.png"}
-                    alt="favourite-icon"
-                    width={200}
-                    height={200}
-                    className="object-contain w-full h-full rounded-l-xl"
-                  />
-                </div>
+                {selectedBookingPlace?.coordinates && (
+                  <div className="mt-3">
+                    <Map coords={selectedBookingPlace?.coordinates} />
+                  </div>
+                )}
               </div>
               {reviews.length > 0 && (
                 <>
@@ -630,7 +655,7 @@ export default function Bookings() {
                             </div>
                             <div className="sm:w-max w-full">
                               <div className="flex justify-between">
-                                <div className="text-sm md:text-md lg:text-base font-semibold">
+                                <div className="text-sm md:text-md lg:text-base font-semibold me-2">
                                   {getFullName(review.user)}
                                 </div>
                                 <div className="xl:hidden space-y-2 text-sm md:text-md lg:text-base xl:text-base">
@@ -735,6 +760,7 @@ export default function Bookings() {
               price={selectedBookingPlace.pricePerHour * selectedBooking.hours}
               description={selectedBookingPlace.description}
               hours={selectedBooking.hours}
+              distance={placeDistance}
             />
           )}
         </div>
@@ -755,7 +781,7 @@ const BookingStatus = ({ status }: { status: BookingStatusType }) => {
       case "WAITING PAYMENT":
         return "bg-[#fff178]";
       case "DECLINED":
-        return "bg-[#FF1A00]";
+        return "bg-[#FF5F55]";
       default:
         return "bg-stone-100";
     }

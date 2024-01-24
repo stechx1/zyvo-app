@@ -26,7 +26,7 @@ function Page() {
   }, [user]);
 
   useEffect(() => {
-    const data = localStorage.getItem("zyvo-data");
+    const data = localStorage.getItem("zyvo-data:auth");
     if (data) {
       const decodedData = atob(data);
       const parsedData = JSON.parse(decodedData);
@@ -78,7 +78,7 @@ function Page() {
     if (!isFormValid()) return;
     if (iskeepLoggedIn) {
       localStorage.setItem(
-        "zyvo-data",
+        "zyvo-data:auth",
         btoa(
           JSON.stringify({
             email: state.email,
@@ -88,7 +88,7 @@ function Page() {
         )
       );
     } else {
-      localStorage.setItem("zyvo-data", "");
+      localStorage.setItem("zyvo-data:auth", "");
     }
     setIsLoading(true);
     signIn(state.email, state.password).then(({ result, error }) => {

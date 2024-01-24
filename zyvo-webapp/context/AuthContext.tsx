@@ -11,6 +11,7 @@ import { User } from "@/types/user";
 import { conversation } from "@/types/messages";
 import { getConversationsSnapshot } from "@/firebase/messages";
 import BottomTabNav from "@/collections/Footer/bottomTabNav/bottomTabNav";
+import { CoordinatesType } from "@/types/place";
 
 const auth = getAuth(firebase_app);
 
@@ -21,6 +22,7 @@ const defaultValue: {
   setMode: (mode: "GUEST" | "HOST") => void;
   conversations: conversation[];
   setConversations: (conversations: conversation[]) => void;
+  currentCoordinates: CoordinatesType | null;
 } = {
   user: null,
   setUser: () => {},
@@ -28,6 +30,7 @@ const defaultValue: {
   setMode: () => {},
   conversations: [],
   setConversations: () => {},
+  currentCoordinates: null,
 };
 export const AuthContext = createContext(defaultValue);
 
@@ -44,6 +47,8 @@ export const AuthContextProvider = ({
   const [convosSubscribeFN, setConvosSubscribeFN] =
     React.useState<Unsubscribe>();
   const [loading, setLoading] = React.useState(true);
+  const [currentCoordinates, setCurrentCoordinates] =
+    React.useState<CoordinatesType | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -87,6 +92,28 @@ export const AuthContextProvider = ({
     }
   }, [user]);
 
+  useEffect(() => {
+    const data = localStorage.getItem("zyvo-data:mode");
+    if (data) {
+      const decodedData = atob(data);
+      const parsedData = JSON.parse(decodedData);
+      setMode(parsedData.mode);
+    }
+  }, []);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setCurrentCoordinates({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      });
+    } else {
+      console.log("Geolocation is not available in your browser.");
+    }
+  }, []);
+
   if (loading) return <PreLoader />;
 
   return (
@@ -98,14 +125,21 @@ export const AuthContextProvider = ({
         setMode: (mode: "GUEST" | "HOST") => setMode(mode),
         conversations,
         setConversations: (conversations) => setConversations(conversations),
+        currentCoordinates: currentCoordinates,
       }}
     >
       <Navbar />
       {children}
-      {pathname !== "/signup" && pathname !== "/signin" && user && <BottomTabNav />}
+      {pathname !== "/signup" && pathname !== "/signin" && user && (
+        <BottomTabNav />
+      )}
       {pathname !== "/messages" &&
         pathname !== "/signup" &&
-        pathname !== "/signin" && <div className="p-1"><Footer /></div> }
+        pathname !== "/signin" && (
+          <div className="p-1">
+            <Footer />
+          </div>
+        )}
     </AuthContext.Provider>
   );
 };

@@ -42,6 +42,24 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
     };
   }, [isDropdownOpen]);
 
+  const handleModeChange = () => {
+    let newMode: "GUEST" | "HOST";
+    if (mode === "GUEST") {
+      newMode = "HOST";
+    } else {
+      newMode = "GUEST";
+    }
+    setMode(newMode);
+    toggleDropdown();
+    localStorage.setItem(
+      "zyvo-data:mode",
+      btoa(
+        JSON.stringify({
+          mode: newMode,
+        })
+      )
+    );
+  };
   return (
     <div className="relative group cursor-pointer" ref={dropdownRef}>
       <Image
@@ -58,15 +76,7 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
         <div className="absolute py-4 px-4 right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
           <button
             className="py-2 mb-3 w-full border border-secondary-gray-700 rounded-xl bg-white text-secondary-gray-700 hover:bg-secondary-gray-100 hover:text-secondary-gray-700 focus:outline-none"
-            onClick={() => {
-              if (mode === "GUEST") {
-                setMode("HOST");
-              }
-              if (mode === "HOST") {
-                setMode("GUEST");
-              }
-              toggleDropdown();
-            }}
+            onClick={handleModeChange}
           >
             Switch to{" "}
             <span className="capitalize">

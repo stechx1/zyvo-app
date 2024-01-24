@@ -1,8 +1,10 @@
 import {
+  DocumentReference,
   collection,
   doc,
   getFirestore,
   onSnapshot,
+  orderBy,
   query,
   setDoc,
   where,
@@ -76,6 +78,28 @@ export async function updateStatusBooking(
   }
   return { result, error };
 }
+export async function updateReviewsBooking(
+  bookingId: string,
+  placeReviewRef?: DocumentReference,
+  guestReviewRef?: DocumentReference
+) {
+  let result = null;
+  let error = null;
+  let data = {};
+  if (guestReviewRef) data = { guestReviewRef };
+  if (placeReviewRef) data = { placeReviewRef };
+  try {
+    let bookingRef = doc(collection(db, "bookings"), bookingId);
+    await setDoc(bookingRef, data, {
+      merge: true,
+    });
+    result = bookingRef.id;
+  } catch (e) {
+    if (typeof e === "object") error = e as errorType;
+    console.log(e);
+  }
+  return { result, error };
+}
 export function getBookingSnapshot(
   bookingId: string,
   onSuccess: (data: Booking) => void,
@@ -116,7 +140,8 @@ export function getMyBookingsSnapshot(
           mode === "GUEST" ? "userRef" : "hostRef",
           "==",
           doc(db, "users", userId)
-        )
+        ),
+        orderBy("createdAt")
       ),
       async (bookings) => {
         let result: Booking[] = [];

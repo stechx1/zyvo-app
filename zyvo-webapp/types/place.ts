@@ -25,7 +25,7 @@ export type Place = {
   bedrooms: number;
   beds: number;
   city: string;
-  coordinates: number[];
+  coordinates: CoordinatesType;
   country: string;
   description: string;
   discountedMinHours: number;
@@ -46,4 +46,8 @@ export type Place = {
   userRef?: DocumentReference;
   reviewsCount: number;
   rating: number;
+};
+export type CoordinatesType = {
+  lat: number;
+  lng: number;
 };

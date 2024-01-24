@@ -8,6 +8,7 @@ export default function PropertySideDetails({
   price,
   rating,
   reviewsCount,
+  distance,
 }: {
   imageURL: string;
   description: string;
@@ -15,6 +16,7 @@ export default function PropertySideDetails({
   price: number;
   rating: number;
   reviewsCount: number;
+  distance: number | null;
 }) {
   return (
     <div className=" sm:order-1 border rounded-[6%] sm:rounded-lg w-full">
@@ -41,17 +43,21 @@ export default function PropertySideDetails({
               />
               {rating?.toFixed(1) ?? 0}
             </p>
-            <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${reviewsCount??0})`}</p>
+            <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${
+              reviewsCount ?? 0
+            })`}</p>
           </div>
-          <div className="flex space-x-1">
-            <Image
-              src={"/icons/gray-location-icon.svg"}
-              alt="location-icon"
-              width={14}
-              height={14}
-            />
-            <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins whitespace-nowrap">{`37 miles away`}</p>
-          </div>
+          {typeof distance != "undefined" && (
+            <div className="flex space-x-1">
+              <Image
+                src={"/icons/gray-location-icon.svg"}
+                alt="location-icon"
+                width={14}
+                height={14}
+              />
+              <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins whitespace-nowrap">{`${distance} miles away`}</p>
+            </div>
+          )}
         </div>
       </div>
       <div className="hidden sm:block h-[0.5px] m-[20px] opacity-[0.20] bg-secondary-gray-700"></div>
