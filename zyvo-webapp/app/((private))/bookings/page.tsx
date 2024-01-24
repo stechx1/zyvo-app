@@ -77,6 +77,14 @@ export default function Bookings() {
         console.log(e);
       }
     );
+
+    return () => {
+      unsubscribe && unsubscribe();
+    };
+  }, [selectedBookingPlace, selectedBooking, mode]);
+
+  useEffect(() => {
+    if (!selectedBookingPlace && !selectedBooking) return;
     getDistance();
     async function getDistance() {
       if (currentCoordinates && selectedBookingPlace?.coordinates) {
@@ -88,11 +96,7 @@ export default function Bookings() {
         else setPlaceDistance(null);
       } else setPlaceDistance(null);
     }
-
-    return () => {
-      unsubscribe && unsubscribe();
-    };
-  }, [selectedBookingPlace, selectedBooking, mode]);
+  }, [currentCoordinates, selectedBookingPlace]);
 
   useEffect(() => {
     getPlaces();
@@ -748,6 +752,11 @@ export default function Bookings() {
                   "/messages?userId=" + selectedBookingPlaceUser?.userId
                 );
               }}
+              onProfileClick={() =>
+                router.push(
+                  "/profile?userId=" + selectedBookingPlaceUser.userId
+                )
+              }
             />
           )}
           {selectedBookingPlace && selectedBooking && (

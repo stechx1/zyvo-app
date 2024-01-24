@@ -20,6 +20,7 @@ import { addUpdateBooking } from "@/firebase/booking";
 import toast from "react-hot-toast";
 import { Booking, BookingStatusType } from "@/types/booking";
 import PropertySideDetails from "@/collections/PropertySideDetails";
+import { getRouteDetails } from "@/lib/actions";
 
 const InputSection: React.FC<InputSectionProps> = ({
   title,
@@ -42,12 +43,14 @@ const InputSection: React.FC<InputSectionProps> = ({
 
 const CheckoutPage = () => {
   const router = useRouter();
-  const { user, mode } = useAuthContext();
+  const { user, mode, currentCoordinates } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [isLoading, setIsLoading] = useState(false);
+  const [placeDistance, setPlaceDistance] = useState<number | null>(null);
+
   const searchParams = useSearchParams();
-  
+
   const details = JSON.parse(
     searchParams.get("data") ?? "null"
   ) as BookingDetailsType;
@@ -74,6 +77,21 @@ const CheckoutPage = () => {
       unsubscribe();
     };
   }, [user]);
+
+  useEffect(() => {
+    if (!place) return;
+    getDistance();
+    async function getDistance() {
+      if (currentCoordinates && place?.coordinates) {
+        const routes = await getRouteDetails(
+          currentCoordinates,
+          place?.coordinates
+        );
+        if (routes) setPlaceDistance(routes.distance);
+        else setPlaceDistance(null);
+      } else setPlaceDistance(null);
+    }
+  }, [place, currentCoordinates]);
 
   const getUser = async (sender: DocumentReference) => {
     const { result } = await getUserByRef(sender);
@@ -164,7 +182,7 @@ const CheckoutPage = () => {
             <div className="flex flex-col gap-5">
               {placeUser && (
                 <HostProperties
-                bottomText="Typically responds within 1 hr"
+                  bottomText="Typically responds within 1 hr"
                   bottomTextIcon="/icons/time.svg"
                   mode={mode}
                   photoURL={placeUser?.photoURL ?? ""}
@@ -172,6 +190,9 @@ const CheckoutPage = () => {
                   onMessageClick={() => {
                     router.push("/messages?userId=" + placeUser?.userId);
                   }}
+                  onProfileClick={() =>
+                    router.push("/profile?userId=" + placeUser.userId)
+                  }
                 />
               )}
               {place && (
@@ -182,6 +203,7 @@ const CheckoutPage = () => {
                   price={place.pricePerHour * details.hours}
                   description={place.description}
                   hours={details.hours}
+                  distance={placeDistance}
                 />
               )}
             </div>

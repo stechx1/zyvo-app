@@ -49,7 +49,3 @@ export type Place = {
   reviewsCount: number;
   rating: number;
 };
-export type CoordinatesType = {
-  lat: number;
-  lng: number;
-};

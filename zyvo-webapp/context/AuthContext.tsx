@@ -104,8 +104,6 @@ export const AuthContextProvider = ({
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(function (position) {
-        console.log(position);
-
         setCurrentCoordinates({
           lat: position.coords.latitude,
           lng: position.coords.longitude,

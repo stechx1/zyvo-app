@@ -5,7 +5,9 @@ import { profileState } from "@/types";
 export default function ProfileForm({
   state,
   setState,
+  disabled,
 }: {
+  disabled: boolean;
   state: profileState[];
   setState: React.Dispatch<React.SetStateAction<profileState[]>>;
 }) {
@@ -46,7 +48,7 @@ export default function ProfileForm({
                 }}
               />
 
-              {true && (
+              {!disabled && (
                 <Image
                   src="/icons/close-icon-grey-background.svg"
                   alt="close-icon"
@@ -70,34 +72,38 @@ export default function ProfileForm({
               )}
             </div>
           ))}
-          <div className="border border-neutral-200 rounded-full py-2 px-3 sm:py-3 sm:px-5 gap-3 w-fit flex items-center">
-            <div className="text-black text-base sm:text-lg font-normal">Add New</div>
-            <div
-              className="w-[24px] h-[24px] rounded-full bg-secondary-green flex items-center justify-center"
-              role="button"
-              onClick={() => {
-                setState(
-                  state.map((d, i) => {
-                    if (i === di) {
-                      return {
-                        ...d,
-                        values: [...d.values, ""],
-                      };
-                    }
-                    return d;
-                  })
-                );
-              }}
-            >
-              <Image
-                src="/icons/plus-icon.svg"
-                alt="plus-icon"
-                width={13}
-                height={13}
-                className="cursor-pointer"
-              />
+          {!disabled && (
+            <div className="border border-neutral-200 rounded-full py-2 px-3 sm:py-3 sm:px-5 gap-3 w-fit flex items-center">
+              <div className="text-black text-base sm:text-lg font-normal">
+                Add New
+              </div>
+              <div
+                className="w-[24px] h-[24px] rounded-full bg-secondary-green flex items-center justify-center"
+                role="button"
+                onClick={() => {
+                  setState(
+                    state.map((d, i) => {
+                      if (i === di) {
+                        return {
+                          ...d,
+                          values: [...d.values, ""],
+                        };
+                      }
+                      return d;
+                    })
+                  );
+                }}
+              >
+                <Image
+                  src="/icons/plus-icon.svg"
+                  alt="plus-icon"
+                  width={13}
+                  height={13}
+                  className="cursor-pointer"
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="h-[0.5px] mt-[40px] opacity-[0.20] bg-secondary-gray-700"></div>
       </div>
