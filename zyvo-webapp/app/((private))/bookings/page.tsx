@@ -598,11 +598,9 @@ export default function Bookings() {
                     selectedBookingPlace?.country ?? ""
                   }`}</u>
                 </div>
-                {selectedBookingPlace?.coordinates && (
-                  <div className="mt-3">
-                    <Map coords={selectedBookingPlace?.coordinates} />
-                  </div>
-                )}
+                <div className="mt-3">
+                  <Map coords={selectedBookingPlace?.coordinates} />
+                </div>
               </div>
               {reviews.length > 0 && (
                 <>

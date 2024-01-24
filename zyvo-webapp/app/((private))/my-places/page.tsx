@@ -5,10 +5,12 @@ import { CustomDialog } from "@/components/Dialog";
 import Dropdown from "@/components/Dropdown";
 import { useAuthContext } from "@/context/AuthContext";
 import { addPlace, deletePlace, getMyPlacesSnapshot } from "@/firebase/place";
-import { Place } from "@/types/place";
+import { getGooglePlaces } from "@/lib/actions";
+import { debounce } from "@/lib/utils";
+import { CoordinatesType, Place } from "@/types/place";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function MyPlaces() {
@@ -30,7 +32,6 @@ export default function MyPlaces() {
     bedrooms: 1,
     beds: 1,
     city: "",
-    coordinates: [0, 0],
     country: "",
     description: "",
     discountedMinHours: 4,
@@ -106,7 +107,32 @@ export default function MyPlaces() {
     }
     return isValid;
   };
+  const timer = useRef<NodeJS.Timeout>();
+  useEffect(() => {
+    timer.current = debounce(
+      () => {
+        getCoords(
+          `${place.street} ${place.city} ${place.state} ${place.country}`
+        );
+      },
+      2000,
+      timer.current
+    )();
+  }, [place.city, place.country, place.street, place.state, timer]);
 
+  const getCoords = async (query: string) => {
+    const result = await getGooglePlaces(query);
+    let coords: CoordinatesType;
+    if (result.length > 0) {
+      coords = result[0].geometry.location;
+    }
+    setPlace((prev) => {
+      return {
+        ...prev,
+        coordinates: coords,
+      };
+    });
+  };
   return (
     <div>
       <div className="flex justify-between font-medium">
@@ -154,7 +180,7 @@ export default function MyPlaces() {
                       onClick: () => {
                         deletePlace(place.placeId).then(({ error }) => {
                           if (error) {
-                            toast.error("Error deleting place!");
+                            toast.error(error.message);
                           } else {
                             toast.success("Place deleted successfully!");
                           }

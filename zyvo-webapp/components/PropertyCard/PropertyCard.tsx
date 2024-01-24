@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { getFullName } from "@/lib/utils";
-import { Place } from "@/types/place";
+import { getFullName, haversine_distance } from "@/lib/utils";
+import { CoordinatesType, Place } from "@/types/place";
 import { User } from "@/types/user";
 import { DocumentReference } from "firebase/firestore";
 import { getUserByRef } from "@/firebase/user";
 import { useRouter } from "next/navigation";
-export const PropertyCard = ({ place }: { place: Place }) => {
+export const PropertyCard = ({
+  place,
+  currentCoordinates,
+}: {
+  place: Place;
+  currentCoordinates: CoordinatesType | null;
+}) => {
   const router = useRouter();
   const [placeUser, setPlaceUser] = useState<null | User>();
 
-  console.log(placeUser);
-
   useEffect(() => {
     if (place.userRef) getUser(place.userRef);
-  }, []);
+  }, [place.userRef]);
 
   const getUser = async (sender: DocumentReference) => {
     const { result } = await getUserByRef(sender);
@@ -22,6 +26,7 @@ export const PropertyCard = ({ place }: { place: Place }) => {
       setPlaceUser(result);
     }
   };
+  
   return (
     <div
       className="rounded-xl relative overflow-hidden mb-6"
@@ -96,16 +101,19 @@ export const PropertyCard = ({ place }: { place: Place }) => {
             {place.rating?.toFixed(1)}
           </p>
           <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2">{`(${place.reviewsCount})`}</p>
-          <p className="flex items-center  text-[10px] sm:text-[16px] text-secondary-neutral-400">
-            <Image
-              src={"/icons/gray-location-icon.svg"}
-              alt="location-icon"
-              width={14}
-              height={14}
-              className="mr-1"
-            />
-            {1} miles away
-          </p>
+          {currentCoordinates && place.coordinates && (
+            <p className="flex items-center  text-[10px] sm:text-[16px] text-secondary-neutral-400">
+              <Image
+                src={"/icons/gray-location-icon.svg"}
+                alt="location-icon"
+                width={14}
+                height={14}
+                className="mr-1"
+              />
+              {haversine_distance(place.coordinates, currentCoordinates)} miles
+              away
+            </p>
+          )}
         </div>
         <div>
           <p className="items-center md:hidden flex text-[12px] sm:text-lg font-medium">

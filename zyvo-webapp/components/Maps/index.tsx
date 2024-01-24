@@ -31,6 +31,23 @@ export default function Map({
     if (map) onLoad(map);
   }, [position, map]);
 
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setPosition({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      });
+    } else {
+      console.log("Geolocation is not available in your browser.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (coords) setPosition(coords);
+  }, [coords]);
+
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API ?? "",
@@ -43,6 +60,9 @@ export default function Map({
     map.moveCamera({ center: position, zoom: 20 });
   };
 
+  const onUnmount = React.useCallback(function callback(map: google.maps.Map) {
+    setMap(null);
+  }, []);
   const onDragEnd = (e: google.maps.MapMouseEvent) => {
     const lat = e.latLng?.lat();
     const lng = e.latLng?.lng();
