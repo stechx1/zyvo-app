@@ -5,11 +5,11 @@ import { Place } from "@/types/place";
 import { useAuthContext } from "@/context/AuthContext";
 // import { Pagination } from "@/components/Pagination/Pagination";
 
-export const PropertyList = ({ places }: { places: Place[] }) => {
+export const PropertyList = ({ places, grids }: { places: Place[], grids:string }) => {
   const { currentCoordinates } = useAuthContext();
   return (
     <div>
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+      <div className={`grid ${grids} gap-3 md:gap-6`}>
         {places.map((place, index) => (
           <PropertyCard
             key={index}

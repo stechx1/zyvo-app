@@ -1,6 +1,6 @@
 import { time } from "console";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 type props = {
   name?: string;
   type:
@@ -34,12 +34,15 @@ export default function Input({
 
   const handlePenIconClick = () => {
     setIsEdit(true);
-    setTimeout(() => {
+  };
+
+  useEffect(() => {
+    if (isEdit) {
       if (inputRef.current) {
         inputRef?.current.focus();
       }
-    }, 100);
-  };
+    }
+  }, [isEdit]);
 
   return (
     <div className="flex flex-col">

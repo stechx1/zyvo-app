@@ -312,7 +312,7 @@ export default function Bookings() {
         </div>
       </div>
 
-      <div className="sm:flex justify-between sm:space-x-4">
+      <div className="sm:flex justify-between sm:space-x-2 md:space-x-3 xl:space-x-4">
         <div
           className={`${
             selectedBooking ? "hidden" : "block"
@@ -337,74 +337,94 @@ export default function Bookings() {
               />
             </div>
           </div>
-          {bookings.map((booking) => {
-            return (
-              <div
-                key={booking.bookingId}
-                className={`flex mt-4 border justify-between px-2 py-2 rounded-xl ${
-                  selectedBooking?.bookingId === booking.bookingId
-                    ? "border-2 border-black"
-                    : ""
-                }`}
-                role="button"
-                onClick={() => setSelectedBooking(booking)}
-              >
-                <div className="flex">
-                  <Image
-                    src={getPlaceImage(booking.placeRef)}
-                    alt="image"
-                    width={95}
-                    height={95}
-                    className="rounded-xl object-cover"
-                  />
-                  <div className="ml-4">
-                    <div className="text-lg">
-                      {
-                        getPlace(places, booking.placeRef?.id ?? "")
-                          ?.description
-                      }
-                    </div>
-                    <div className="text-[#A4A4A4]">
-                      {formatDate(booking.date.toISOString())}
-                    </div>
-                    {mode === "HOST" && booking.status === "REQUESTED" ? (
-                      <>
-                        <span
-                          className={`inline-block mt-0.5 text-[#00BF7B] px-2.5 py-2 text-sm leading-none rounded-full capitalize border border-[#00BF7B] me-1`}
-                          onClick={() => {
-                            submitBookingStatus("CONFIRMED");
-                          }}
-                        >
-                          Approve
-                        </span>
-                        <span
-                          className={`inline-block mt-0.5 text-[#FF1A00] px-2.5 py-2 text-sm leading-none  rounded-full capitalize border border-[#FF1A00]`}
-                          onClick={() => {
-                            submitBookingStatus("DECLINED");
-                          }}
-                        >
-                          Decline
-                        </span>
-                      </>
+          <div className={`${bookings.length > 5 && "pr-1.5 "} sm:max-h-[100%] sm:overflow-auto`}>
+            {bookings.map((booking) => {
+              return (
+                <div
+                  key={booking.bookingId}
+                  className={`flex mt-4 border justify-between px-2 py-2 rounded-xl ${
+                    selectedBooking?.bookingId === booking.bookingId
+                      ? "border-2 border-black"
+                      : ""
+                  }`}
+                  role="button"
+                  onClick={() => setSelectedBooking(booking)}
+                >
+                  <div className="flex items-center">
+                    {mode === "HOST" ? (
+                      <div className="rounded-full border-2 border-gray-200 p-1 min-w-[50px]">
+                        <Image
+                          className="rounded-full w-[60px] h-[60px]"
+                          src={getPlaceImage(booking.placeRef)}
+                          alt="profile-pic"
+                          width={40}
+                          height={40}
+                        />
+                      </div>
                     ) : (
-                      <BookingStatus status={booking.status} />
+                      <>
+                        <Image
+                          src={getPlaceImage(booking.placeRef)}
+                          alt="image"
+                          width={95}
+                          height={95}
+                          className="rounded-xl object-cover w-[95px] h-[95px]"
+                        />
+                      </>
                     )}
+                    <div
+                      className={`${
+                        mode === "HOST" ? "ml-2" : "xl:ml-4 sm:ml-2 ml-4"
+                      }`}
+                    >
+                      <div className="text-lg">
+                        {
+                          getPlace(places, booking.placeRef?.id ?? "")
+                            ?.description
+                        }
+                      </div>
+                      <div className="text-[#A4A4A4]">
+                        {formatDate(booking.date.toISOString())}
+                      </div>
+                      {mode === "HOST" && booking.status === "REQUESTED" ? (
+                        <div className="flex gap-1 flex-wrap">
+                          <span
+                            className={`inline-block mt-0.5 text-[#00BF7B] px-2 py-2 text-sm leading-none rounded-full capitalize border border-[#00BF7B]`}
+                            onClick={() => {
+                              submitBookingStatus("CONFIRMED");
+                            }}
+                          >
+                            Approve
+                          </span>
+                          <span
+                            className={`inline-block mt-0.5 text-[#FF1A00] px-2 py-2 text-sm leading-none  rounded-full capitalize border border-[#FF1A00]`}
+                            onClick={() => {
+                              submitBookingStatus("DECLINED");
+                            }}
+                          >
+                            Decline
+                          </span>
+                        </div>
+                      ) : (
+                        <BookingStatus status={booking.status} />
+                      )}
+                    </div>
+                  </div>
+                  <div
+                    className="h-[30px] flex items-center justify-center mr-0.5"
+                    role="button"
+                  >
+                    <Image
+                      src={"/icons/dots.svg"}
+                      alt="dots"
+                      width={4}
+                      height={4}
+                    />
                   </div>
                 </div>
-                <div
-                  className="h-[30px] flex items-center justify-center mr-2"
-                  role="button"
-                >
-                  <Image
-                    src={"/icons/dots.svg"}
-                    alt="dots"
-                    width={4}
-                    height={4}
-                  />
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
           {bookings.length === 0 && (
             <div className="flex justify-center items-center h-[100%]">
               No Bookings!
@@ -413,32 +433,34 @@ export default function Bookings() {
         </div>
 
         {/******Booking Details*******/}
-        <div className="flex sm:hidden justify-between space-x-3 items-center my-2">
-          {showReviewButton && (
+        {selectedBooking && (
+          <div className="flex sm:hidden justify-between space-x-3 items-center my-2">
+            {showReviewButton && (
+              <Button
+                type="gray"
+                text="Review Booking"
+                bordered
+                rounded
+                full
+                className="border-gray-700 my-2"
+                onClick={() => setIsReviewModalOpen(true)}
+              />
+            )}
             <Button
-              type="gray"
-              text="Review Booking"
+              type="white"
+              text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
               bordered
               rounded
               full
-              className="border-gray-700 my-2"
-              onClick={() => setIsReviewModalOpen(true)}
+              className="border-gray-700"
+              onClick={() => {
+                router.push(
+                  "/messages?userId=" + selectedBookingPlaceUser?.userId
+                );
+              }}
             />
-          )}
-          <Button
-            type="white"
-            text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
-            bordered
-            rounded
-            full
-            className="border-gray-700"
-            onClick={() => {
-              router.push(
-                "/messages?userId=" + selectedBookingPlaceUser?.userId
-              );
-            }}
-          />
-        </div>
+          </div>
+        )}
 
         {selectedBookingPlace && selectedBooking && (
           <div className={`sm:hidden`}>
