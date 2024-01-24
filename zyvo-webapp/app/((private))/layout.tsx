@@ -4,7 +4,7 @@ export default function PrivateLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="px-3 sm:px-14 md:px-20 lg:px-20 xl:px-32 xl:py-8 lg:py-8 md:py-8 sm:py-8 py-2">
+    <div className="px-3 sm:px-[6%] xl:px-30 xl:py-8 lg:py-8 md:py-8 sm:py-8 py-2">
       {children}
     </div>
   );

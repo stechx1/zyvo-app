@@ -13,7 +13,7 @@ export const Navbar = () => {
   const { user, conversations, mode } = useAuthContext();
 
   return (
-    <nav className="hidden md:block lg:block xl:block sm:block px-8 sm:px-14 md:px-20 lg:px-20 xl:px-32 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
+    <nav className="hidden md:block lg:block xl:block sm:block px-8 sm:px-[6%] xl:px-30 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">
       <div className="flex justify-between items-center">
         <div className="hidden md:flex items-center md:space-x-6">
           <Link href="/">
