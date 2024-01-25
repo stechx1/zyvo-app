@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
 import { User } from "@/types/user";
 import Input from "@/components/Input";
-import { InputSectionProps } from "@/types";
 import Button from "@/components/Button";
 import { ProfileContactSection } from "@/collections/Profile/RightProfileSection/ProfileContactSection";
 import Image from "next/image";
@@ -16,30 +15,6 @@ import firebase_app from "@/config";
 
 const storage = getStorage(firebase_app);
 
-const InputSection: React.FC<InputSectionProps> = ({
-  title,
-  inputName,
-  type,
-  value,
-  placeholder,
-  onChange,
-}) => (
-  <>
-    <div className="flex flex-col gap-3 w-full sm:w-[40%]">
-      <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
-        {title}
-      </p>
-      <Input
-        name={inputName}
-        type={type}
-        onChange={onChange}
-        value={value}
-        placeholder={placeholder}
-      />
-    </div>
-    <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
-  </>
-);
 const AccountSettingPage = () => {
   const { user, setUser } = useAuthContext();
   const auth = getAuth();
@@ -59,6 +34,7 @@ const AccountSettingPage = () => {
     isSocialLogin: true,
     rating: 0,
     reviewsCount: 0,
+    favoritePlaces: [],
   });
   useEffect(() => {
     if (user) setAccountSettings(user);
@@ -101,9 +77,7 @@ const AccountSettingPage = () => {
             toast.error(error?.message);
             return;
           }
-
           toast.success("Profile updated Successfully");
-
           setUser({
             ...accountSettings,
           });
@@ -200,32 +174,49 @@ const AccountSettingPage = () => {
             </div>
           </div>
         </div>
-        <InputSection
-          title="Email"
-          inputName="email"
-          type="edit"
-          value={accountSettings?.email ?? ""}
-          placeholder="Email..."
-          onChange={handleChange}
-        />
-
-        <InputSection
-          title="Phone Number"
-          inputName="phone"
-          type="edit"
-          value={accountSettings?.phone ?? ""}
-          placeholder="Phone Number..."
-          onChange={handleChange}
-        />
-        {!accountSettings?.isSocialLogin && (
-          <InputSection
-            title="Password"
-            inputName="password"
-            type="password"
-            value={accountSettings?.password ?? ""}
-            placeholder="Password..."
+        <div className="flex flex-col gap-3 w-full sm:w-[40%]">
+          <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
+            Email
+          </p>
+          <Input
+            name={"email"}
+            type={"email"}
             onChange={handleChange}
+            value={accountSettings?.email ?? ""}
+            placeholder="Email..."
           />
+        </div>
+        <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
+
+        <div className="flex flex-col gap-3 w-full sm:w-[40%]">
+          <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
+            Phone Number
+          </p>
+          <Input
+            name={"phone"}
+            type={"text"}
+            onChange={handleChange}
+            value={accountSettings?.phone ?? ""}
+            placeholder="Phone Number..."
+          />
+        </div>
+        <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
+        {!accountSettings?.isSocialLogin && (
+          <>
+            <div className="flex flex-col gap-3 w-full sm:w-[40%]">
+              <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
+                Password
+              </p>
+              <Input
+                name={"phone"}
+                type={"password"}
+                onChange={handleChange}
+                value={accountSettings?.password ?? ""}
+                placeholder="Password..."
+              />
+            </div>
+            <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
+          </>
         )}
 
         <div className="flex flex-col gap-3 w-[100%]">
@@ -268,14 +259,19 @@ const AccountSettingPage = () => {
         </div>
         <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
 
-        <InputSection
-          title="Payment Method"
-          inputName="paymentMethod"
-          type="text"
-          value={accountSettings?.paymentMethod ?? ""}
-          placeholder="Payment Method..."
-          onChange={handleChange}
-        />
+        <div className="flex flex-col gap-3 w-full sm:w-[40%]">
+          <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
+            Payment Method
+          </p>
+          <Input
+            name={"paymentMethod"}
+            type={"text"}
+            onChange={handleChange}
+            value={accountSettings?.paymentMethod ?? ""}
+            placeholder="Payment Method..."
+          />
+        </div>
+        <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
 
         <div className="w-fit flex gap-1">
           <Button

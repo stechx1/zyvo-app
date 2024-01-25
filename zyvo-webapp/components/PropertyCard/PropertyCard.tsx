@@ -46,7 +46,7 @@ export const PropertyCard = ({
       >
         <div className="flex justify-end items-start">
           <Image
-            src={"/icons/gray-heart-icon.svg"}
+            src={"/icons/heart-icon-gray.svg"}
             alt={"heart-icon"}
             width={30}
             height={30}

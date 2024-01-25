@@ -25,6 +25,7 @@ export async function googleSignin() {
           isSocialLogin: true,
           rating: 0,
           reviewsCount: 0,
+          favoritePlaces:[]
         };
         const splitedDisplayName = user.displayName?.split(" ") ?? [""];
         if (splitedDisplayName?.length > 1) {

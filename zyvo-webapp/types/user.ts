@@ -24,4 +24,5 @@ export type User = {
   notFirstSignIn?: boolean;
   reviewsCount: number;
   rating: number;
+  favoritePlaces: string[];
 };
