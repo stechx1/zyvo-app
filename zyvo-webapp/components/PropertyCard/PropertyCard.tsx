@@ -17,6 +17,7 @@ export const PropertyCard = ({
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [placeImageIndex, setPlaceImageIndex] = useState<number>(0);
   const [imageOpacity, setImageOpacity] = useState<number>(1);
+  const [showCarouselItems, setShowCarouselItems] = useState(false);
 
   useEffect(() => {
     if (place.userRef) {
@@ -47,6 +48,8 @@ export const PropertyCard = ({
       onClick={() => {
         router.push("/property-details/" + place.placeId);
       }}
+      onMouseEnter={() => setShowCarouselItems(true)}
+      onMouseLeave={() => setShowCarouselItems(false)}
     >
       <div
         className="bg-cover bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
@@ -61,8 +64,9 @@ export const PropertyCard = ({
           opacity: imageOpacity,
         }}
       >
-        <div className="absolute text-center justify-center flex w-full space-x-3">
-          { place.images.length > 1 &&
+        <div className="absolute text-center justify-center flex w-full space-x-2">
+          {place.images.length > 1 &&
+            showCarouselItems &&
             Array.from({ length: place.images.length }, (_, index) => (
               <div
                 className={`drop-shadow-xl rounded-full w-[10px] h-[9px] ${
@@ -85,30 +89,58 @@ export const PropertyCard = ({
           </div>
         </div>
         <div
-          className={`${
-            place.images.length < 2 && "hidden "
-          } flex mt-[7rem] justify-end w-full drop-shadow-lg`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleImageChange(
-              place.images.length - 1 === placeImageIndex
-                ? 0
-                : placeImageIndex + 1
-            );
-          }}
-          role="button"
+          className={`flex mt-[7rem] ${
+            !placeImageIndex ? "justify-end" : "justify-between"
+          } w-full`}
         >
-          <Image
-            src={"/icons/white-carousel-right-arrow.svg"}
-            alt={"heart-icon"}
-            width={30}
-            height={30}
-            className="w-[22px] h-[19px] xs:w-[30px] xs:h-[30px]"
-          />
+          <div
+            className={`${
+              place.images.length < 2 || !showCarouselItems || !placeImageIndex
+                ? "hidden"
+                : "block"
+            } drop-shadow-lg`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleImageChange(placeImageIndex - 1);
+            }}
+            role="button"
+          >
+            <Image
+              src={"/icons/white-carousel-right-arrow.svg"}
+              alt={"heart-icon"}
+              width={30}
+              height={30}
+              className="w-[22px] h-[19px] xs:w-[30px] xs:h-[30px] rotate-180"
+            />
+          </div>
+          <div
+            className={`${
+              place.images.length < 2 ||
+              !showCarouselItems ||
+              place.images.length - 1 === placeImageIndex
+                ? "hidden"
+                : "block"
+            } drop-shadow-lg`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleImageChange(placeImageIndex + 1);
+            }}
+            role="button"
+          >
+            <Image
+              src={"/icons/white-carousel-right-arrow.svg"}
+              alt={"heart-icon"}
+              width={30}
+              height={30}
+              className="w-[22px] h-[19px] xs:w-[30px] xs:h-[30px]"
+            />
+          </div>
         </div>
         <div
           className={`bg-opacity-80 bg-white text-black p-3 rounded-xl items-center gap-4 ${
-            place.images.length > 1 ? "mt-[80px]" : "mt-[220px]"
+            place.images.length > 1 && showCarouselItems
+              ? "mt-[80px]"
+              : "mt-[110px]"
           } hidden md:flex`}
         >
           <Image
