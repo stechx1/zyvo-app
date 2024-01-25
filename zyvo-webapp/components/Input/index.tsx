@@ -16,6 +16,7 @@ type props = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   invalidMessage?: string;
+  prefixIcon?: string;
 };
 export default function Input({
   name,
@@ -24,6 +25,7 @@ export default function Input({
   placeholder,
   onChange,
   invalidMessage = "",
+  prefixIcon,
 }: props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEdit, setIsEdit] = useState(false);
@@ -47,6 +49,15 @@ export default function Input({
   return (
     <div className="flex flex-col">
       <div className="relative flex items-center">
+        {prefixIcon && (
+          <Image
+            src={prefixIcon}
+            className="cursor-pointer absolute my-2 left-[5%]"
+            alt={prefixIcon}
+            width={20}
+            height={20}
+          />
+        )}
         <input
           id="Input"
           ref={inputRef}
@@ -57,7 +68,7 @@ export default function Input({
             type === "lock"
               ? "placeholder-gray-950"
               : type === "year" && "placeholder-gray-950"
-          }`}
+          } ${prefixIcon && "pl-11"} ${type === "edit" && "disabled:bg-[#fff]"} `}
           type={type}
           onChange={onChange}
           value={value}

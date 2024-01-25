@@ -15,9 +15,14 @@ export const PropertyCard = ({
 }) => {
   const router = useRouter();
   const [placeUser, setPlaceUser] = useState<null | User>();
+  const [placeImageIndex, setPlaceImageIndex] = useState<number>(0);
+  const [imageOpacity, setImageOpacity] = useState<number>(1);
 
   useEffect(() => {
-    if (place.userRef) getUser(place.userRef);
+    if (place.userRef) {
+      getUser(place.userRef);
+      setPlaceImageIndex(0);
+    }
   }, [place.userRef]);
 
   const getUser = async (sender: DocumentReference) => {
@@ -26,7 +31,15 @@ export const PropertyCard = ({
       setPlaceUser(result);
     }
   };
-  
+
+  const handleImageChange = (newIndex: number) => {
+    setImageOpacity(0);
+    setTimeout(() => {
+      setPlaceImageIndex(newIndex);
+      setImageOpacity(1);
+    }, 100);
+  };
+
   return (
     <div
       className="rounded-xl relative overflow-hidden mb-6"
@@ -39,21 +52,65 @@ export const PropertyCard = ({
         className="bg-cover bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
         style={{
           backgroundImage: `url(${
-            place.images.length > 0 ? place.images[0] : "images/no-image.jpg"
+            place.images.length > 0
+              ? place.images[placeImageIndex]
+              : "images/no-image.jpg"
           })`,
           paddingBottom: "75%",
+          transition: "opacity 0.3s ease-in-out",
+          opacity: imageOpacity,
         }}
       >
-        <div className="flex justify-end items-start">
+        <div className="absolute text-center justify-center flex w-full space-x-3">
+          { place.images.length > 1 &&
+            Array.from({ length: place.images.length }, (_, index) => (
+              <div
+                className={`drop-shadow-xl rounded-full w-[10px] h-[9px] ${
+                  +index === placeImageIndex
+                    ? "bg-[#fff]"
+                    : "bg-gray-300 opacity-[0.6]"
+                }`}
+              ></div>
+            ))}
+        </div>
+        <div>
+          <div className="flex justify-end items-start">
+            <Image
+              src={"/icons/gray-heart-icon.svg"}
+              alt={"heart-icon"}
+              width={30}
+              height={30}
+              className="w-[22px] h-[19px] xs:w-[30px] xs:h-[30px]"
+            />
+          </div>
+        </div>
+        <div
+          className={`${
+            place.images.length < 2 && "hidden "
+          } flex mt-[7rem] justify-end w-full drop-shadow-lg`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleImageChange(
+              place.images.length - 1 === placeImageIndex
+                ? 0
+                : placeImageIndex + 1
+            );
+          }}
+          role="button"
+        >
           <Image
-            src={"/icons/heart-icon-gray.svg"}
+            src={"/icons/white-carousel-right-arrow.svg"}
             alt={"heart-icon"}
             width={30}
             height={30}
             className="w-[22px] h-[19px] xs:w-[30px] xs:h-[30px]"
           />
         </div>
-        <div className="bg-opacity-80 bg-white text-black p-3 rounded-xl items-center gap-4 mt-[225px] hidden md:flex">
+        <div
+          className={`bg-opacity-80 bg-white text-black p-3 rounded-xl items-center gap-4 ${
+            place.images.length > 1 ? "mt-[80px]" : "mt-[220px]"
+          } hidden md:flex`}
+        >
           <Image
             src={
               placeUser?.photoURL && placeUser?.photoURL?.length > 0
