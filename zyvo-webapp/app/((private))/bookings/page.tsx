@@ -509,7 +509,7 @@ export default function Bookings() {
                   <div className="flex items-center my-[5px] sm:my-0">
                     <div>
                       <div className="flex space-x-2 text-sm">
-                        {user.favoritePlaces.includes(
+                        {!user.favoritePlaces?.includes(
                           selectedBookingPlace.placeId
                         ) ? (
                           <Image

@@ -214,7 +214,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               <div>Share</div>
             </div>
             <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-base">
-              {user.favoritePlaces.includes(place.placeId) ? (
+              {!user.favoritePlaces?.includes(place.placeId) ? (
                 <Image
                   src={"/icons/heart-icon-gray.svg"}
                   alt="heart-icon"
