@@ -451,24 +451,25 @@ export default function Messages() {
           !selectedConversation && "invisible"
         }`}
       >
-        {selectedConversation && (
+        {selectedConversation && user && (
           <div className="space-y-2">
             <HostProperties
               bottomText="Typically responds within 1 hr"
               bottomTextIcon="/icons/time.svg"
               mode={mode}
               photoURL={
-                user
-                  ? getOtherUser(selectedConversation.users, user)?.photoURL ??
-                    "/icons/profile-icon.png"
-                  : "/icons/profile-icon.png"
+                getOtherUser(selectedConversation.users, user)?.photoURL ??
+                "/icons/profile-icon.png"
               }
               fullName={
-                user
-                  ? getFullName(
-                      getOtherUser(selectedConversation.users, user)
-                    ) ?? ""
-                  : ""
+                getFullName(getOtherUser(selectedConversation.users, user)) ??
+                ""
+              }
+              onProfileClick={() =>
+                router.push(
+                  "/profile?userId=" +
+                    getOtherUser(selectedConversation.users, user)?.userId
+                )
               }
             />
             <div className="border rounded-lg p-4 space-y-4">

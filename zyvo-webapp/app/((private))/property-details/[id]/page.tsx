@@ -317,6 +317,9 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           onMessageClick={() => {
             router.push("/messages?userId=" + placeUser?.userId);
           }}
+          onProfileClick={() =>
+            router.push("/profile?userId=" + placeUser?.userId)
+          }
         />
       </div>
 
@@ -605,6 +608,9 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                   onMessageClick={() => {
                     router.push("/messages?userId=" + placeUser?.userId);
                   }}
+                  onProfileClick={() =>
+                    router.push("/profile?userId=" + placeUser?.userId)
+                  }
                 />
               </div>
             </>

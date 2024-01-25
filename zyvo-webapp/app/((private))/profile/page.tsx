@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import ProfileForm from "@/collections/Profile/ProfileForm";
 import { useAuthContext } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { profileState } from "@/types";
 import Button from "@/components/Button";
 import addData from "@/firebase/firestore/addData";
@@ -12,16 +12,22 @@ import { ProfileContactSection } from "@/collections/Profile/RightProfileSection
 import Image from "next/image";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import firebase_app from "@/config";
+import getData from "@/firebase/firestore/getData";
+import { User } from "@/types/user";
 
 const storage = getStorage(firebase_app);
 
 const ProfilePage = () => {
   const auth = getAuth();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setIsLoading] = useState(false);
-  const { user, setUser } = useAuthContext();
+  const { user, setUser, mode } = useAuthContext();
   const [selectedFile, setSelectedFile] = useState<File>();
   const [imgPreview, setImgPreview] = useState<string>();
+
+  const userId = searchParams.get("userId");
+  const isMe = !userId || user?.userId == userId;
 
   const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -65,11 +71,12 @@ const ProfilePage = () => {
       name: "pets",
     },
   ]);
+  const [otherUser, setOtherUser] = useState<User | null>(null);
 
   const [aboutMe, setAboutMe] = useState(``);
 
   useEffect(() => {
-    if (user) {
+    if (user && isMe) {
       setAboutMe(user.aboutMe ?? "");
       setState(
         state.map((data) => {
@@ -91,8 +98,40 @@ const ProfilePage = () => {
           return data;
         })
       );
+    } else {
+      if (userId) {
+        getData("users", userId)
+          .then(({ result, error }) => {
+            const otherUser = result as User;
+            setOtherUser(otherUser);
+            setAboutMe(otherUser.aboutMe ?? "");
+            setState(
+              state.map((data) => {
+                if (data.name === "addresses") {
+                  data.values = otherUser.addresses ?? [];
+                }
+                if (data.name === "works") {
+                  data.values = otherUser.works ?? [];
+                }
+                if (data.name === "languages") {
+                  data.values = otherUser.languages ?? [];
+                }
+                if (data.name === "hobbies") {
+                  data.values = otherUser.hobbies ?? [];
+                }
+                if (data.name === "pets") {
+                  data.values = otherUser.pets ?? [];
+                }
+                return data;
+              })
+            );
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     }
-  }, [user]);
+  }, [user, userId, isMe]);
 
   const submitProfile = async () => {
     if (auth.currentUser && user) {
@@ -151,16 +190,18 @@ const ProfilePage = () => {
   return (
     <div className="flex flex-col sm:container sm:flex-row lg:gap-20 gap-10">
       <div className="sm:w-[30%] flex flex-col gap-6 sm:gap-10 sm:order-2">
-        <div className="flex flex-col gap-3 sm:hidden">
-          <div className="text-black text-2xl font-normal font-Poppins">
-            Complete your profile
-          </div>
-          <div className={` rounded-3xl `}>
-            <div className="text-black text-lg font-normal">
-              Complete your profile here
+        {isMe && (
+          <div className="flex flex-col gap-3 sm:hidden">
+            <div className="text-black text-2xl font-normal font-Poppins">
+              Complete your profile
+            </div>
+            <div className={` rounded-3xl `}>
+              <div className="text-black text-lg font-normal">
+                Complete your profile here
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="h-full sm:h-[380px] w-full rounded-3xl border border-secondary-neutral-200 p-6 items-center sm:justify-center flex-row sm:flex-col flex">
           <div className="relative">
             <div className="w-[59px] h-[59px] sm:w-[188px] sm:h-[188px] border-8 border-secondary-neutral-200 bg-white rounded-full flex items-center justify-center">
@@ -168,28 +209,33 @@ const ProfilePage = () => {
                 src={
                   imgPreview
                     ? imgPreview
-                    : user?.photoURL
-                      ? user?.photoURL
-                      : "/icons/profile-icon.png"
+                    : isMe && user?.photoURL
+                    ? user?.photoURL
+                    : otherUser && otherUser.photoURL
+                    ? otherUser?.photoURL
+                    : "/icons/profile-icon.png"
                 }
                 alt="Profile Image"
-                className={`sm:w-[156px] sm:h-[156px] rounded-full ${!user?.photoURL && "opacity-10"
-                  }`}
+                className={`sm:w-[156px] sm:h-[156px] rounded-full ${
+                  !user?.photoURL && "opacity-10"
+                }`}
                 width={156}
                 height={156}
               />
             </div>
-            <div className="w-[24px] h-[24px] md:w-[30px] md:h-[30px] rounded-full bg-secondary-green flex items-center justify-center absolute left-10 bottom-1 sm:top-36 sm:left-36">
-              <label htmlFor="files">
-                <Image
-                  src="/icons/plus-icon.svg"
-                  alt="plus-icon"
-                  width={13}
-                  height={13}
-                  className="cursor-pointer"
-                />
-              </label>
-            </div>
+            {isMe && (
+              <div className="w-[24px] h-[24px] md:w-[30px] md:h-[30px] rounded-full bg-secondary-green flex items-center justify-center absolute left-10 bottom-1 sm:top-36 sm:left-36">
+                <label htmlFor="files">
+                  <Image
+                    src="/icons/plus-icon.svg"
+                    alt="plus-icon"
+                    width={13}
+                    height={13}
+                    className="cursor-pointer"
+                  />
+                </label>
+              </div>
+            )}
           </div>
           <input
             type="file"
@@ -200,10 +246,14 @@ const ProfilePage = () => {
           />
           <div className="gap-1 flex flex-col ml-4 sm:items-center">
             <div className="text-black text-[18px] sm:text-[28px] font-medium font-Poppins sm:mt-[20px]">
-              {user?.firstName + " " + user?.lastName}
+              {isMe
+                ? user?.firstName + " " + user?.lastName
+                : otherUser
+                ? otherUser?.firstName + " " + otherUser?.lastName
+                : ""}
             </div>
             <div className="text-black text-[13px] sm:text-[20px] font-light font-Poppins">
-              Guest
+              {mode === "GUEST" ? "Host" : "Guest"}
             </div>
           </div>
         </div>
@@ -212,16 +262,18 @@ const ProfilePage = () => {
         </div>
       </div>
       <div className="w-full sm:w-[70%] flex flex-col gap-6 sm:gap-12 sm:order-1">
-        <div className="flex-col gap-3 hidden sm:block">
-          <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
-            Complete your profile
-          </div>
-          <div className={` rounded-3xl `}>
-            <div className="text-black text-[14px] sm:text-lg font-normal">
-              Complete your profile here
+        {isMe && (
+          <div className="flex-col gap-3 hidden sm:block">
+            <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
+              Complete your profile
+            </div>
+            <div className={` rounded-3xl `}>
+              <div className="text-black text-[14px] sm:text-lg font-normal">
+                Complete your profile here
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="flex flex-col gap-3">
           <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
             About Me
@@ -230,26 +282,28 @@ const ProfilePage = () => {
             <div className="text-black text-[14px] sm:text-lg font-normal">
               <textarea
                 className="focus:outline-none w-full"
-                rows={Math.min(5, aboutMe.split('\n').length + 1)}
+                rows={Math.min(5, aboutMe.split("\n").length + 1)}
                 value={aboutMe}
                 onChange={(e) => setAboutMe(e.target.value)}
+                disabled={isMe}
               />
             </div>
           </div>
         </div>
-        <ProfileForm state={state} setState={setState} />
-        <div className="w-fit flex gap-1">
-          <Button
-            text="Save Profile"
-            onClick={submitProfile}
-            type="green"
-            roundedfull
-            isLoading={loading}
-          />
-          {/* <Button text="Skip for now" onClick={() => {}} type="white" /> */}
-        </div>
+        <ProfileForm state={state} setState={setState} disabled={!isMe} />
+        {isMe && (
+          <div className="w-fit flex gap-1">
+            <Button
+              text="Save Profile"
+              onClick={submitProfile}
+              type="green"
+              roundedfull
+              isLoading={loading}
+            />
+            {/* <Button text="Skip for now" onClick={() => {}} type="white" /> */}
+          </div>
+        )}
       </div>
-
     </div>
   );
 };

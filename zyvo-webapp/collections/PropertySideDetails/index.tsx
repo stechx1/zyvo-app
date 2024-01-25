@@ -47,7 +47,7 @@ export default function PropertySideDetails({
               reviewsCount ?? 0
             })`}</p>
           </div>
-          {typeof distance != "undefined" && (
+          {distance && (
             <div className="flex space-x-1">
               <Image
                 src={"/icons/gray-location-icon.svg"}

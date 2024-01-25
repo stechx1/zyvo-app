@@ -16,13 +16,15 @@ import { formatDate, formatTime, getFullName } from "@/lib/utils";
 import { Place } from "@/types/place";
 import { getPlaceByRef } from "@/firebase/place";
 import PropertySideDetails from "@/collections/PropertySideDetails";
+import { getRouteDetails } from "@/lib/actions";
 
 const ConfirmationPage = ({ params }: { params: { id: string } }) => {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [bookingPlace, setBookingPlace] = useState<null | Place>();
+  const [placeDistance, setPlaceDistance] = useState<number | null>(null);
+  const { user, mode, currentCoordinates } = useAuthContext();
 
-  const { user, mode } = useAuthContext();
   const router = useRouter();
   useEffect(() => {
     if (user == null) {
@@ -43,6 +45,21 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
       unsubscribe();
     };
   }, [user]);
+  useEffect(() => {
+    if (!bookingPlace) return;
+    getDistance();
+    async function getDistance() {
+      if (currentCoordinates && bookingPlace?.coordinates) {
+        const routes = await getRouteDetails(
+          currentCoordinates,
+          bookingPlace?.coordinates
+        );
+        if (routes) setPlaceDistance(routes.distance);
+        else setPlaceDistance(null);
+      } else setPlaceDistance(null);
+    }
+  }, [bookingPlace, currentCoordinates]);
+
   const getUser = async (sender: DocumentReference) => {
     const { result } = await getUserByRef(sender);
     if (result) {
@@ -125,6 +142,9 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
                   onMessageClick={() => {
                     router.push("/messages?userId=" + placeUser?.userId);
                   }}
+                  onProfileClick={() =>
+                    router.push("/profile?userId=" + placeUser.userId)
+                  }
                 />
               )}
               {bookingPlace && booking && (
@@ -135,6 +155,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
                   price={bookingPlace.pricePerHour * booking.hours}
                   description={bookingPlace.description}
                   hours={booking.hours}
+                  distance={placeDistance}
                 />
               )}
             </div>

@@ -1,5 +1,6 @@
 import Button from "@/components/Button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function HostProperties({
@@ -9,8 +10,9 @@ export default function HostProperties({
   onMessageClick,
   showReviewButton = false,
   onReviewClick,
+  onProfileClick,
   bottomText,
-  bottomTextIcon
+  bottomTextIcon,
 }: {
   photoURL: string;
   fullName: string;
@@ -18,13 +20,19 @@ export default function HostProperties({
   onMessageClick?: () => void;
   showReviewButton?: boolean;
   onReviewClick?: () => void;
-  bottomText: string,
-  bottomTextIcon: string
+  onProfileClick?: () => void;
+  bottomText: string;
+  bottomTextIcon: string;
 }) {
+  const router = useRouter();
   return (
     <div className="border rounded-lg p-4 text-center space-y-2">
       <div>{`${mode === "GUEST" ? "Hosted" : "Guest"} By`}</div>
-      <div className="flex items-center justify-center space-x-2">
+      <div
+        className="flex items-center justify-center space-x-2"
+        role={onProfileClick ? "button" : ""}
+        onClick={() => onProfileClick && onProfileClick()}
+      >
         <div>
           <div className="rounded-full border-2 border-gray-200 p-1">
             <Image
