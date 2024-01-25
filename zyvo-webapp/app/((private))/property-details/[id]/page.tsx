@@ -1,24 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { AccordionItem } from "@/types";
-import Accordion from "@/components/Accordion/Accordion";
-import { useAuthContext } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
-import { getPlaceSnapshot } from "@/firebase/place";
-import { Place } from "@/types/place";
-import HostProperties from "@/collections/HostProperties";
-import { getUserByRef } from "@/firebase/user";
-import { User } from "@/types/user";
-import { formatDate, getFullName, timeArray } from "@/lib/utils";
 import { DocumentReference } from "firebase/firestore";
-import AvailabilitySelection from "@/collections/AvailabilitySelection";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import CircularSlider from "@fseehawer/react-circular-slider";
-import { useScreenDimensions } from "@/hooks/useScreenDimension";
+import Accordion from "@/components/Accordion/Accordion";
 import Map from "@/components/Maps";
+import { AccordionItem } from "@/types";
+import { User } from "@/types/user";
 import { Review } from "@/types/review";
+import { Place } from "@/types/place";
+import { useAuthContext } from "@/context/AuthContext";
+import { getPlaceSnapshot } from "@/firebase/place";
 import { getReviewsSnapshot } from "@/firebase/reviews";
+import { getUserByRef, updateFavourites } from "@/firebase/user";
+import HostProperties from "@/collections/HostProperties";
+import AvailabilitySelection from "@/collections/AvailabilitySelection";
+import { formatDate, getFullName, timeArray } from "@/lib/utils";
+import { useScreenDimensions } from "@/hooks/useScreenDimension";
 
 export type BookingDetailsType = {
   placeId: string;
@@ -29,7 +28,7 @@ export type BookingDetailsType = {
 };
 
 const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
-  const { user, mode } = useAuthContext();
+  const { user, setUser, mode } = useAuthContext();
   const [place, setPlace] = useState<Place | null>(null);
   const [readMore, setReadMore] = useState<boolean>(false);
   const [placeUser, setPlaceUser] = useState<null | User>();
@@ -134,7 +133,11 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
     }
     return "/images/no-image.jpg";
   };
-
+  const handleFavoriteChange = async () => {
+    if (!user || !place) return;
+    const { result } = await updateFavourites(user?.userId, place?.placeId);
+    if (result) setUser({ ...user, favoritePlaces: result });
+  };
   return (
     <div className="flex sm:container sm:mx-auto my-5 sm:px-14 md:px-10 gap-2 flex-col">
       <div className="flex flex-row ">
@@ -199,28 +202,41 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
 
         {/* =================================== Right Description =============================  */}
-
-        <div className="flex space-x-4">
-          <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-base">
-            <Image
-              src={"/icons/gray-share-icon.svg"}
-              alt="share-icon"
-              width={19}
-              height={19}
-            />
-            <div>Share</div>
+        {place && user && (
+          <div className="flex space-x-4">
+            <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-base">
+              <Image
+                src={"/icons/gray-share-icon.svg"}
+                alt="share-icon"
+                width={19}
+                height={19}
+              />
+              <div>Share</div>
+            </div>
+            <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-base">
+              {!user.favoritePlaces?.includes(place.placeId) ? (
+                <Image
+                  src={"/icons/heart-icon-gray.svg"}
+                  alt="heart-icon"
+                  width={22}
+                  height={22}
+                  className="opacity-50 cursor-pointer"
+                  onClick={handleFavoriteChange}
+                />
+              ) : (
+                <Image
+                  src={"/icons/heart-icon-red.svg"}
+                  alt="heart-icon"
+                  width={22}
+                  height={22}
+                  className="opacity-80 cursor-pointer"
+                  onClick={handleFavoriteChange}
+                />
+              )}
+              <div>Favorite</div>
+            </div>
           </div>
-          <div className="flex items-center justify-center space-x-2 font-Poppins text-[12px] sm:text-base">
-            <Image
-              src={"/icons/gray-heart-icon.svg"}
-              alt="heart-icon"
-              width={22}
-              height={22}
-              className="opacity-50"
-            />
-            <div>Favorite</div>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Pictures of Property*/}

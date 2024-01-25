@@ -93,6 +93,7 @@ function Page() {
           isSocialLogin: false,
           rating: 0,
           reviewsCount: 0,
+          favoritePlaces: [],
         };
         User.email = user.email ?? "";
         addData("users", user?.uid, User)

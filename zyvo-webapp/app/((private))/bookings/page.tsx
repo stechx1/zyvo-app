@@ -13,7 +13,7 @@ import { formatDate, formatTime, getFullName } from "@/lib/utils";
 import HostProperties from "@/collections/HostProperties";
 import PropertySideDetails from "@/collections/PropertySideDetails";
 import { User } from "@/types/user";
-import { getUserByRef } from "@/firebase/user";
+import { getUserByRef, updateFavourites } from "@/firebase/user";
 import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
 import { addReview, getReviewsSnapshot } from "@/firebase/reviews";
@@ -26,7 +26,7 @@ import Map from "@/components/Maps";
 import { getRouteDetails } from "@/lib/actions";
 
 export default function Bookings() {
-  const { user, mode, currentCoordinates } = useAuthContext();
+  const { user, setUser, mode, currentCoordinates } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -45,11 +45,6 @@ export default function Bookings() {
       router.push("/signin");
       return;
     }
-    setBookings([]);
-    setSelectedBooking(null);
-    setSelectedBookingPlace(null);
-    setSelectedBookingPlaceUser(null);
-    setReviews([]);
     const unsubscribe = getMyBookingsSnapshot(
       mode,
       user.userId,
@@ -64,6 +59,14 @@ export default function Bookings() {
       unsubscribe();
     };
   }, [user, mode]);
+
+  useEffect(() => {
+    setBookings([]);
+    setSelectedBooking(null);
+    setSelectedBookingPlace(null);
+    setSelectedBookingPlaceUser(null);
+    setReviews([]);
+  }, [mode]);
 
   useEffect(() => {
     if (!selectedBookingPlace && !selectedBooking) return;
@@ -288,7 +291,14 @@ export default function Bookings() {
       ? "/icons/gray-kitchen-icon.svg"
       : "";
   }
-
+  const handleFavoriteChange = async () => {
+    if (!user || !selectedBookingPlace) return;
+    const { result } = await updateFavourites(
+      user?.userId,
+      selectedBookingPlace?.placeId
+    );
+    if (result) setUser({ ...user, favoritePlaces: result });
+  };
   return (
     <>
       <div
@@ -337,7 +347,11 @@ export default function Bookings() {
               />
             </div>
           </div>
-          <div className={`${bookings.length > 5 && "pr-1.5 "} sm:max-h-[100%] sm:overflow-auto`}>
+          <div
+            className={`${
+              bookings.length > 5 && "pr-1.5 "
+            } sm:max-h-[100%] sm:overflow-auto`}
+          >
             {bookings.map((booking) => {
               return (
                 <div
@@ -491,26 +505,36 @@ export default function Bookings() {
                   </div>
                   <BookingStatus status={selectedBooking.status} />
                 </div>
-                <div className="flex items-center my-[5px] sm:my-0">
-                  <div>
-                    <div className="flex space-x-2 text-sm">
-                      {/* <Image
-                        src={"/icons/Share.svg"}
-                        alt="share-icon"
-                        width={17}
-                        height={17}
-                      />
-                      <span>Share</span> */}
-                      <Image
-                        src={"/icons/heart.png"}
-                        alt="favourite-icon"
-                        width={25.59}
-                        height={25}
-                      />
-                      <span>Favorite</span>
+                {user && selectedBookingPlace && (
+                  <div className="flex items-center my-[5px] sm:my-0">
+                    <div>
+                      <div className="flex space-x-2 text-sm">
+                        {!user.favoritePlaces?.includes(
+                          selectedBookingPlace.placeId
+                        ) ? (
+                          <Image
+                            src={"/icons/heart-icon-gray.svg"}
+                            alt="heart-icon"
+                            width={22}
+                            height={22}
+                            className="opacity-50 cursor-pointer"
+                            onClick={handleFavoriteChange}
+                          />
+                        ) : (
+                          <Image
+                            src={"/icons/heart-icon-red.svg"}
+                            alt="heart-icon"
+                            width={22}
+                            height={22}
+                            className="opacity-80 cursor-pointer"
+                            onClick={handleFavoriteChange}
+                          />
+                        )}
+                        <span>Favorite</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
               <div className="gap-2 px-2 lg:px-4 md:px-4 sm:px-3">
                 <div className="flex space-x-2 w-full">

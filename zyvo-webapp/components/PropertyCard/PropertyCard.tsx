@@ -4,8 +4,9 @@ import { getFullName, haversine_distance } from "@/lib/utils";
 import { CoordinatesType, Place } from "@/types/place";
 import { User } from "@/types/user";
 import { DocumentReference } from "firebase/firestore";
-import { getUserByRef } from "@/firebase/user";
+import { getUserByRef, updateFavourites } from "@/firebase/user";
 import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/context/AuthContext";
 export const PropertyCard = ({
   place,
   currentCoordinates,
@@ -14,6 +15,7 @@ export const PropertyCard = ({
   currentCoordinates: CoordinatesType | null;
 }) => {
   const router = useRouter();
+  const { user, setUser } = useAuthContext();
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [placeImageIndex, setPlaceImageIndex] = useState<number>(0);
   const [imageOpacity, setImageOpacity] = useState<number>(1);
@@ -40,7 +42,12 @@ export const PropertyCard = ({
       setImageOpacity(1);
     }, 100);
   };
-
+  const handleFavoriteChange = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user || !place) return;
+    const { result } = await updateFavourites(user?.userId, place?.placeId);
+    if (result) setUser({ ...user, favoritePlaces: result });
+  };
   return (
     <div
       className="rounded-xl relative overflow-hidden mb-6"
@@ -78,15 +85,29 @@ export const PropertyCard = ({
             ))}
         </div>
         <div>
-          <div className="flex justify-end items-start">
-            <Image
-              src={"/icons/gray-heart-icon.svg"}
-              alt={"heart-icon"}
-              width={30}
-              height={30}
-              className="w-[22px] h-[19px] xs:w-[30px] xs:h-[30px]"
-            />
-          </div>
+          {place && user && (
+            <div className="flex justify-end items-start">
+              {!user.favoritePlaces?.includes(place.placeId) ? (
+                <Image
+                  src={"/icons/heart-icon-gray.svg"}
+                  alt="heart-icon"
+                  width={22}
+                  height={22}
+                  className="opacity-50 cursor-pointer"
+                  onClick={handleFavoriteChange}
+                />
+              ) : (
+                <Image
+                  src={"/icons/heart-icon-red.svg"}
+                  alt="heart-icon"
+                  width={22}
+                  height={22}
+                  className="opacity-80 cursor-pointer"
+                  onClick={handleFavoriteChange}
+                />
+              )}
+            </div>
+          )}
         </div>
         <div
           className={`flex mt-[7rem] ${
