@@ -1,27 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import React, { ReactNode, useEffect, useState } from "react";
+import {
+  GoogleMap,
+  InfoWindow,
+  Marker,
+  useJsApiLoader,
+} from "@react-google-maps/api";
 import { CoordinatesType } from "@/types/place";
 import { useAuthContext } from "@/context/AuthContext";
 
-const containerStyle = {
-  width: "100%",
-  height: "400px",
-};
-const center = {
-  lat: 0,
-  lng: 0,
-};
 export default function Map({
+  multipleCoords,
   coords,
   getCoordinates,
+  height,
 }: {
+  multipleCoords?: { coord: CoordinatesType; text: ReactNode }[];
   coords?: CoordinatesType;
   getCoordinates?: (coords: CoordinatesType) => void;
+  height?: number;
 }) {
   const [position, setPosition] = useState(coords);
   const [map, setMap] = React.useState<google.maps.Map | null>(null);
   const { currentCoordinates } = useAuthContext();
 
+  const containerStyle = {
+    width: "100%",
+    height: height ?? "400px",
+  };
   useEffect(() => {
     if (coords) setPosition(coords);
     else if (currentCoordinates) setPosition(currentCoordinates);
@@ -55,14 +60,22 @@ export default function Map({
 
   const onLoad = (map: google.maps.Map) => {
     setMap(map);
-    const bounds = new window.google.maps.LatLngBounds(center);
+    const bounds = new window.google.maps.LatLngBounds();
+    if (multipleCoords) {
+      multipleCoords?.forEach((c) => {
+        bounds.extend(c.coord);
+      });
+    } else if (coords) {
+      bounds.extend(coords);
+      // map.moveCamera({ center: position, zoom: 15 });
+    } else if (currentCoordinates) {
+      bounds.extend(currentCoordinates);
+    }
     map.fitBounds(bounds);
-    map.moveCamera({ center: position, zoom: 20 });
+    // map.moveCamera({ center: position, zoom: 10 });
+    // map.setZoom(10);
   };
 
-  const onUnmount = React.useCallback(function callback(map: google.maps.Map) {
-    setMap(null);
-  }, []);
   const onDragEnd = (e: google.maps.MapMouseEvent) => {
     const lat = e.latLng?.lat();
     const lng = e.latLng?.lng();
@@ -76,18 +89,26 @@ export default function Map({
     <div className="w-full h-full rounded-l-xl">
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={position}
-        zoom={10}
+        // center={position}
+        // zoom={10}
         onLoad={onLoad}
         onClick={onDragEnd}
       >
-        {position && (
+        {!multipleCoords && position && (
           <Marker
             position={position}
             draggable={!!getCoordinates}
             onDragEnd={onDragEnd}
+            children={<div>hel</div>}
           />
         )}
+        {multipleCoords?.map((c) => {
+          return (
+            <Marker position={c.coord} draggable={false}>
+              {c.text && <InfoWindow>{c.text}</InfoWindow>}
+            </Marker>
+          );
+        })}
       </GoogleMap>
     </div>
   ) : (

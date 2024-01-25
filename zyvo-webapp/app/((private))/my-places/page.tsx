@@ -50,6 +50,7 @@ export default function MyPlaces() {
     zipCode: "",
     reviewsCount: 0,
     rating: 0,
+    coordinates: { lat: 0, lng: 0 },
   });
   const [places, setPlaces] = useState<Place[]>([]);
 

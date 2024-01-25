@@ -3,6 +3,7 @@ import { FilterSearch } from "@/collections/FilterSearch/FilterSearch";
 import HomeFilters from "@/collections/HomeFilters";
 import { PropertyList } from "@/collections/PropertyListing/PropertyListing";
 import Button from "@/components/Button";
+import Map from "@/components/Maps";
 import { getAllPlacesSnapshot } from "@/firebase/place";
 import { Place } from "@/types/place";
 import Image from "next/image";
@@ -52,13 +53,25 @@ export default function Home() {
           />
         </div>
         {showMap && (
-          <div className="">
-            <Image
-              width={655}
-              height={655}
-              alt="map"
-              src={"/images/long-map-image.svg"}
-              className="object-cover"
+          <div className="w-[100%] sm:w-[50%]">
+            <Map
+              multipleCoords={places.map((p) => {
+                return {
+                  coord: p.coordinates,
+                  text: (
+                    <div className="flex">
+                      <Image
+                        src={"/icons/clock-icon.svg"}
+                        alt="icon"
+                        width={15}
+                        height={15}
+                      />
+                      <div className="mx-1">{`$ ${p.pricePerHour} / hr`}</div>
+                    </div>
+                  ),
+                };
+              })}
+              height={650}
             />
           </div>
         )}

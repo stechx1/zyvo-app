@@ -27,7 +27,7 @@ export type Place = {
   bedrooms: number;
   beds: number;
   city: string;
-  coordinates?: CoordinatesType;
+  coordinates: CoordinatesType;
   country: string;
   description: string;
   discountedMinHours: number;
