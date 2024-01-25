@@ -160,8 +160,8 @@ export const PropertyCard = ({
         <div
           className={`bg-opacity-80 bg-white text-black p-3 rounded-xl items-center gap-4 ${
             place.images.length > 1 && showCarouselItems
-              ? "mt-[80px]"
-              : "mt-[110px]"
+              ? "mt-[90px]"
+              : "mt-[120px]"
           } hidden md:flex`}
         >
           <Image
