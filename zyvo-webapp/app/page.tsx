@@ -1,4 +1,5 @@
 "use client";
+import { FilterSearch } from "@/collections/FilterSearch/FilterSearch";
 import HomeFilters from "@/collections/HomeFilters";
 import { PropertyList } from "@/collections/PropertyListing/PropertyListing";
 import Button from "@/components/Button";
@@ -34,10 +35,13 @@ export default function Home() {
   };
 
   return (
-    <div className="px-8 sm:px-14 md:px-20 lg:px-20 xl:px-30 py-8 space-y-7">
+    <div className="px-3 relative sm:px-[6%] md:px-20 lg:px-20 xl:px-30 py-8 space-y-7">
+      <div className="z-10 sm:hidden border border-r-0 border-l-0 py-4 px-4 mt-[-2vh] mx-[-10px]">
+        <FilterSearch />
+      </div>
       <HomeFilters handleShowMap={handleShowMap} mapVisible={showMap} />
-      <div className={`${showMap && "flex space-x-5"}`}>
-        <div className={`${showMap && "w-[50%]"}`}>
+      <div className={`${showMap && "flex sm:space-x-5"}`}>
+        <div className={`${showMap && "sm:w-[50%] hidden sm:block"}`}>
           <PropertyList
             places={places}
             grids={
@@ -64,6 +68,12 @@ export default function Home() {
           text={!showMap ? "Show Map" : "Show List"}
           type="gray"
           roundedfull
+          icon={
+            !showMap
+              ? "/icons/white-showmap-icon.svg"
+              : "/icons/white-filter-icon.svg"
+          }
+          onClick={handleShowMap}
         />
       </div>
       {places.length === 0 && (
