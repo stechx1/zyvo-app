@@ -66,10 +66,12 @@ export const Navbar = () => {
                 width={28}
                 height={28}
                 badgeCount={conversations.reduce((total, conversation) => {
-                  return total + conversation.lastMessage.sender.userId !==
-                    user?.userId
-                    ? conversation.unreadCount
-                    : 0;
+                  return (
+                    total +
+                    (conversation.lastMessage.sender.userId !== user?.userId
+                      ? conversation.unreadCount
+                      : 0)
+                  );
                 }, 0)}
                 title={"Messages"}
               />

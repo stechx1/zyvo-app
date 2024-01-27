@@ -36,6 +36,21 @@ export async function getUserByPath(userPath: string) {
 
   return { result, error };
 }
+export async function getUserById(userId: string) {
+  let result = null;
+  let error = null;
+
+  try {
+    const userRef = doc(collection(db, "users"), userId);
+
+    result = (await getDoc(userRef)).data() as User;
+  } catch (e) {
+    console.log(e);
+    error = e;
+  }
+
+  return { result, error };
+}
 export async function updateFavourites(userId: string, placeId: string) {
   let result = null;
   let error = null;
@@ -53,6 +68,20 @@ export async function updateFavourites(userId: string, placeId: string) {
     }
     result = newFavouritePlaces;
     setDoc(userRef, { favoritePlaces: newFavouritePlaces }, { merge: true });
+  } catch (e) {
+    console.log(e);
+    error = e;
+  }
+
+  return { result, error };
+}
+export async function updateLastActive(userId: string) {
+  let result = null;
+  let error = null;
+
+  try {
+    const userRef = doc(collection(db, "users"), userId);
+    setDoc(userRef, { lastActive: new Date() }, { merge: true });
   } catch (e) {
     console.log(e);
     error = e;

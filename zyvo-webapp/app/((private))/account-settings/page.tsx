@@ -35,6 +35,7 @@ const AccountSettingPage = () => {
     rating: 0,
     reviewsCount: 0,
     favoritePlaces: [],
+    lastActive: new Date(),
   });
   useEffect(() => {
     if (user) setAccountSettings(user);

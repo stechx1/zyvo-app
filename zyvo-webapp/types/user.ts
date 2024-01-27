@@ -25,4 +25,5 @@ export type User = {
   reviewsCount: number;
   rating: number;
   favoritePlaces: string[];
+  lastActive: Date;
 };

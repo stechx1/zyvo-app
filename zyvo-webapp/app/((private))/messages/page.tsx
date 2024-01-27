@@ -55,6 +55,7 @@ export default function Messages() {
       return;
     }
     setIsMessagesLoading(true);
+    setMessages([])
     const unsubscribe = getMessagessSnapshot(
       selectedConversation.conversationId,
       (msgs) => {

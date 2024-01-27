@@ -3,6 +3,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { User } from "@/types/user";
 import addData from "../firestore/addData";
 import toast from "react-hot-toast";
+import { getUserById } from "../user";
 
 const auth = getAuth(firebase_app);
 type errorType = { message: string; code: string };
@@ -25,7 +26,8 @@ export async function googleSignin() {
           isSocialLogin: true,
           rating: 0,
           reviewsCount: 0,
-          favoritePlaces:[]
+          favoritePlaces: [],
+          lastActive: new Date(),
         };
         const splitedDisplayName = user.displayName?.split(" ") ?? [""];
         if (splitedDisplayName?.length > 1) {
@@ -37,8 +39,16 @@ export async function googleSignin() {
         User.photoURL = user.photoURL ?? "";
         User.phoneNumber = user.phoneNumber ?? "";
         User.phoneNumberVerified = !!user.phoneNumber;
-
-        addData("users", user?.uid, User);
+        getUserById(user.uid + "@")
+          .then(({ result, error }) => {
+            if (error) console.log(error);
+            else if (!result) {
+              addData("users", user?.uid, User);
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       })
       .catch(function (error) {
         console.log(error);

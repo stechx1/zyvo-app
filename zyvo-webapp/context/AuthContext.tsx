@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import { onAuthStateChanged, getAuth, Unsubscribe } from "firebase/auth";
 import firebase_app from "@/config";
 import { PreLoader } from "@/components/PreLoader";
@@ -12,6 +12,7 @@ import { conversation } from "@/types/messages";
 import { getConversationsSnapshot } from "@/firebase/messages";
 import BottomTabNav from "@/collections/Footer/bottomTabNav/bottomTabNav";
 import { CoordinatesType } from "@/types/place";
+import { updateLastActive } from "@/firebase/user";
 
 const auth = getAuth(firebase_app);
 
@@ -41,14 +42,15 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [user, setUser] = React.useState<User | null>(null);
-  const [mode, setMode] = React.useState<"GUEST" | "HOST">("GUEST");
-  const [conversations, setConversations] = React.useState<conversation[]>([]);
-  const [convosSubscribeFN, setConvosSubscribeFN] =
-    React.useState<Unsubscribe>();
-  const [loading, setLoading] = React.useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [mode, setMode] = useState<"GUEST" | "HOST">("GUEST");
+  const [conversations, setConversations] = useState<conversation[]>([]);
+  const [convosSubscribeFN, setConvosSubscribeFN] = useState<Unsubscribe>();
+  const [loading, setLoading] = useState(true);
   const [currentCoordinates, setCurrentCoordinates] =
-    React.useState<CoordinatesType | null>(null);
+    useState<CoordinatesType | null>(null);
+  const [isActive, setIsActive] = useState(true);
+
   const pathname = usePathname();
 
   useEffect(() => {
@@ -113,6 +115,31 @@ export const AuthContextProvider = ({
       console.log("Geolocation is not available in your browser.");
     }
   }, []);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsActive(!document.hidden);
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isActive && user) {
+      updateLastActive(user?.userId);
+      interval = setInterval(() => {
+        updateLastActive(user?.userId);
+      }, 60000);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isActive, user]);
 
   if (loading) return <PreLoader />;
 
