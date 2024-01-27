@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthContext } from "@/context/AuthContext";
@@ -9,7 +9,7 @@ import {
   resetUnreadCount,
 } from "@/firebase/messages";
 import { conversation, message } from "@/types/messages";
-import { format, formatDistance } from "date-fns";
+import { differenceInMinutes, format, formatDistance } from "date-fns";
 import toast from "react-hot-toast";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import firebase_app from "@/config";
@@ -17,7 +17,7 @@ import Badge from "@/components/Badge";
 import HostProperties from "@/collections/HostProperties";
 import { getFullName, getOtherUser } from "@/lib/utils";
 import { User } from "@/types/user";
-import { getUserByPath } from "@/firebase/user";
+import { getUserActiveStatus, getUserByPath } from "@/firebase/user";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 const storage = getStorage(firebase_app);
 
@@ -36,6 +36,7 @@ export default function Messages() {
   const [newChatConversation, setNewChatConversation] =
     useState<conversation>();
   const [newChatUser, setNewChatUser] = useState<User | null>(null);
+  const [lastActive, setLastActive] = useState<Date | null>(null);
 
   useEffect(() => {
     if (userId) {
@@ -55,7 +56,7 @@ export default function Messages() {
       return;
     }
     setIsMessagesLoading(true);
-    setMessages([])
+    setMessages([]);
     const unsubscribe = getMessagessSnapshot(
       selectedConversation.conversationId,
       (msgs) => {
@@ -82,6 +83,22 @@ export default function Messages() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    if (!selectedConversation || !user) return;
+    const interval = setInterval(() => {
+      const userId =
+        getOtherUser(selectedConversation.users, user)?.userId ?? null;
+      if (userId) {
+        getUserActiveStatus(userId).then(({ result }) => {
+          setLastActive(result);
+        });
+      }
+    }, 10000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [user, selectedConversation]);
+
   const getNewChatUser = async (sender: string) => {
     const { result } = await getUserByPath(sender);
     if (result) {
@@ -101,6 +118,15 @@ export default function Messages() {
   const getTimeDifference = (date?: Date) => {
     if (!date) return "";
     return formatDistance(date, new Date(), { addSuffix: true });
+  };
+  const getLastSeenTime = (date?: Date) => {
+    if (!date) return null;
+    const diff = differenceInMinutes(new Date(), date);
+    if (diff >= 1)
+      return (
+        "last seen " + formatDistance(date, new Date(), { addSuffix: true })
+      );
+    else return "online";
   };
 
   const submitMessage = () => {
@@ -249,7 +275,7 @@ export default function Messages() {
           !selectedConversation ? "hidden" : "flex"
         } w-[100%] sm:w-[60%] lg:w-[50%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[92dvh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-lg pb-5`}
       >
-        {selectedConversation ? (
+        {selectedConversation && user ? (
           <div className="flex flex-col h-[100%]">
             <div className="px-3 xl:hidden my-4 lg:hidden md:hidden sm:hidden flex justify-between items-center space-x-2">
               <Image
@@ -271,9 +297,9 @@ export default function Messages() {
                 <div className="rounded-full border-2 border-gray-200 p-1">
                   <Image
                     src={
-                      user
+                      getOtherUser(selectedConversation.users, user)?.photoURL
                         ? getOtherUser(selectedConversation.users, user)
-                            ?.photoURL ?? "/icons/profile-icon.png"
+                            ?.photoURL ?? ""
                         : "/icons/profile-icon.png"
                     }
                     alt="profile-pic"
@@ -290,9 +316,17 @@ export default function Messages() {
                         )
                       : ""}
                   </div>
-                  <div className="text-green-500 text-sm md:text-base lg:text-base xl:text-base">
-                    online
-                  </div>
+                  {lastActive && (
+                    <div
+                      className={`${
+                        getLastSeenTime(lastActive) === "online"
+                          ? " text-green-500 "
+                          : ""
+                      }text-sm md:text-base lg:text-base xl:text-base`}
+                    >
+                      {getLastSeenTime(lastActive)}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex justify-between items-center space-x-2">
@@ -511,7 +545,7 @@ const ConversationBox = ({
   user: User | null;
   time: string;
 }) => {
-  return (
+  return user ? (
     <div
       className={`h-[100px] flex justify-between items-center border p-3 rounded-xl me-1 hover:border-gray-600 ${
         selectedConversation?.conversationId === conversation.conversationId
@@ -525,9 +559,8 @@ const ConversationBox = ({
           <Image
             className="rounded-full"
             src={
-              user
-                ? getOtherUser(conversation.users, user)?.photoURL ??
-                  "/icons/profile-icon.png"
+              getOtherUser(conversation.users, user)?.photoURL
+                ? getOtherUser(conversation.users, user)?.photoURL ?? ""
                 : "/icons/profile-icon.png"
             }
             alt="profile-pic"
@@ -562,5 +595,5 @@ const ConversationBox = ({
           )}
       </div>
     </div>
-  );
+  ) : null;
 };

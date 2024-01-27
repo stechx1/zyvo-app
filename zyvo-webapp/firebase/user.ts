@@ -89,3 +89,16 @@ export async function updateLastActive(userId: string) {
 
   return { result, error };
 }
+export async function getUserActiveStatus(userId: string) {
+  let result: Date | null = null;
+  let error = null;
+
+  try {
+    const userRef = doc(collection(db, "users"), userId);
+    result = (await getDoc(userRef))?.data()?.lastActive?.toDate() ?? null;
+  } catch (e) {
+    console.log(e);
+    error = e;
+  }
+  return { result, error };
+}

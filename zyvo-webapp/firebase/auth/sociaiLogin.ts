@@ -39,7 +39,7 @@ export async function googleSignin() {
         User.photoURL = user.photoURL ?? "";
         User.phoneNumber = user.phoneNumber ?? "";
         User.phoneNumberVerified = !!user.phoneNumber;
-        getUserById(user.uid + "@")
+        getUserById(user.uid)
           .then(({ result, error }) => {
             if (error) console.log(error);
             else if (!result) {
