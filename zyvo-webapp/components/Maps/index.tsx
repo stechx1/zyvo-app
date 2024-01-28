@@ -99,12 +99,11 @@ export default function Map({
             position={position}
             draggable={!!getCoordinates}
             onDragEnd={onDragEnd}
-            children={<div>hel</div>}
           />
         )}
-        {multipleCoords?.map((c) => {
+        {multipleCoords?.map((c, i) => {
           return (
-            <Marker position={c.coord} draggable={false}>
+            <Marker key={i} position={c.coord} draggable={false}>
               {c.text && <InfoWindow>{c.text}</InfoWindow>}
             </Marker>
           );

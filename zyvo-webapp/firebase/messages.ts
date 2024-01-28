@@ -65,6 +65,7 @@ export function getConversationsSnapshot(
                 imageURL: lastMessageRef.data()?.imageURL,
                 fileURL: lastMessageRef.data()?.fileURL,
               },
+              createdAt: new Date(),
               users,
             },
           ];

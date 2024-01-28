@@ -95,6 +95,7 @@ function Page() {
           reviewsCount: 0,
           favoritePlaces: [],
           lastActive: new Date(),
+          createdAt: new Date(),
         };
         User.email = user.email ?? "";
         addData("users", user?.uid, User)

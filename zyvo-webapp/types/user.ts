@@ -26,4 +26,5 @@ export type User = {
   rating: number;
   favoritePlaces: string[];
   lastActive: Date;
+  createdAt: Date;
 };

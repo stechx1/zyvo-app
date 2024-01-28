@@ -13,4 +13,5 @@ export interface conversation {
   lastMessage: message;
   users: User[];
   unreadCount: number;
+  createdAt: Date;
 }

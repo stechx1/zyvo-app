@@ -22,21 +22,7 @@ const AccountSettingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File>();
   const [imgPreview, setImgPreview] = useState<string>();
-  const [accountSettings, setAccountSettings] = useState<User>({
-    userId: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    emailVerified: false,
-    photoURL: "",
-    phoneNumber: "",
-    phoneNumberVerified: false,
-    isSocialLogin: true,
-    rating: 0,
-    reviewsCount: 0,
-    favoritePlaces: [],
-    lastActive: new Date(),
-  });
+  const [accountSettings, setAccountSettings] = useState<User | null>();
   useEffect(() => {
     if (user) setAccountSettings(user);
   }, [user]);
@@ -54,11 +40,11 @@ const AccountSettingPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setAccountSettings((prev) => {
-      return { ...prev, [name]: value };
+      if (prev) return { ...prev, [name]: value };
     });
   };
   const submitProfile = async () => {
-    if (auth.currentUser && user) {
+    if (auth.currentUser && user && accountSettings) {
       setIsLoading(true);
       if (selectedFile) {
         const profileImgRef = ref(

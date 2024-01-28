@@ -108,6 +108,7 @@ export default function Messages() {
           lastMessage: { message: "", messageId: "", sender: user },
           unreadCount: 0,
           users: [user, result],
+          createdAt: new Date(),
         };
         setNewChatUser(result);
         setNewChatConversation(newConversation);

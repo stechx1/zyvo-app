@@ -76,6 +76,7 @@ export const PropertyCard = ({
             showCarouselItems &&
             Array.from({ length: place.images.length }, (_, index) => (
               <div
+                key={index}
                 className={`drop-shadow-xl rounded-full w-[10px] h-[9px] ${
                   +index === placeImageIndex
                     ? "bg-[#fff]"

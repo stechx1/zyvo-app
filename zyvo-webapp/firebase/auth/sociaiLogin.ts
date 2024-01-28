@@ -28,6 +28,7 @@ export async function googleSignin() {
           reviewsCount: 0,
           favoritePlaces: [],
           lastActive: new Date(),
+          createdAt: new Date(),
         };
         const splitedDisplayName = user.displayName?.split(" ") ?? [""];
         if (splitedDisplayName?.length > 1) {
