@@ -139,7 +139,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
     if (result) setUser({ ...user, favoritePlaces: result });
   };
   return (
-    <div className="flex sm:container sm:mx-auto my-5 sm:px-14 md:px-10 gap-2 flex-col">
+    <div className="flex sm:container sm:mx-auto my-2 md:my-[3rem] sm:px-14 md:px-0 lg:px-11 gap-2 flex-col">
       <div className="flex flex-row ">
         <div className="text-black text-[18px] sm:text-4xl font-normal font-Poppins">
           {place?.description}
@@ -240,11 +240,11 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
       </div>
 
       {/* Pictures of Property*/}
-      <div className="flex xl:space-x-3 xl:h-[58vh] lg:h-[50vh] md:h-[50vh] sm:h-[45vh] h-[30vh] lg:space-x-3 md:space-x-2 sm:space-x-3 space-x-2 w-full">
+      <div className="flex xl:space-x-3 lg:space-x-3 md:space-x-2 sm:space-x-3 space-x-2 w-full">
         <Image
           src={getImagesOnIndex(0)}
           alt="detail-image"
-          className="w-3/5 bg-gray-100 object-cover rounded-tl-[20px] rounded-bl-[20px]"
+          className="w-[60%] sm:w-[60%] xl:h-[24rem] lg:h-[20rem] md:h-[19.7rem] sm:h-[15rem] h-[14.5rem] md:w-[50%] bg-gray-100 object-cover rounded-tl-[20px] rounded-bl-[20px]"
           width={200}
           height={170}
         />
@@ -252,30 +252,30 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           <Image
             src={getImagesOnIndex(1)}
             alt="detail-image"
-            className="object-cover w-full h-1/2"
+            className="object-cover w-full xl:h-[11.6rem] lg:h-[9.6rem] md:h-[9.6rem] sm:h-[7.6rem]"
             width={200}
             height={470}
           />
           <Image
             src={getImagesOnIndex(2)}
             alt="detail-image"
-            className="object-cover w-full h-1/2"
+            className="object-cover w-full xl:h-[11.6rem] lg:h-[9.6rem] md:h-[9.6rem] sm:h-[7.6rem]"
             width={200}
             height={470}
           />
         </div>
-        <div className="flex flex-col w-2/5 md:w-1/4 gap-2 xl:gap-3 lg:gap-3 md:gap-2 sm:gap-3">
+        <div className="w-[48%] flex flex-col w-2/5 md:w-1/4 gap-2 xl:gap-3 lg:gap-3 md:gap-2 sm:gap-3">
           <Image
             src={getImagesOnIndex(3)}
             alt="detail-image"
-            className="object-cover w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
+            className="object-cover w-full xl:h-[11.6rem] lg:h-[9.6rem] md:h-[9.6rem] sm:h-[7.2rem] h-[7rem] rounded-tr-[20px] rounded-br-[20px]"
             width={200}
             height={470}
           />
           <Image
             src={getImagesOnIndex(4)}
             alt="detail-image"
-            className="object-cover w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
+            className="object-cover w-full lg:h-1/2 xl:h-[11.6rem] lg:h-[9.6rem] md:h-[9.6rem] sm:h-[7.2rem] h-[7rem] rounded-tr-[20px] rounded-br-[20px]"
             width={200}
             height={470}
           />
@@ -283,7 +283,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
       </div>
 
       {place && (
-        <div className="sm:hidden md:hidden lg:hidden xl:hidden block mt-7 border rounded-lg p-4 text-center space-y-2 mb-8">
+        <div className="md:hidden lg:hidden xl:hidden block mt-7 border rounded-lg p-4 text-center space-y-2 mb-8">
           <div className="text-2xl">${place?.pricePerHour}/hr</div>
           <div className="text-sm text-gray-800">
             {place?.minHours} hr minimum
@@ -302,8 +302,8 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
       )}
 
-      <div className="sm:hidden block border border-gray-700 rounded-xl">
-        {width <= 640 && (
+      <div className="md:hidden block border border-gray-700 rounded-xl">
+        {width <= 768 && (
           <AvailabilitySelection
             hours={hours}
             availableHoursFrom={place?.availableHoursFrom}
@@ -323,7 +323,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         )}
       </div>
 
-      <div className="my-8 block sm:hidden md:hidden lg:hidden xl:hidden">
+      <div className="my-8 block md:hidden md:hidden lg:hidden xl:hidden">
         <HostProperties
           mode={mode}
           bottomText="Typically responds within 1 hr"
@@ -342,7 +342,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
       <div className="sm:flex sm:gap-10 my-10 sm:my-20">
         {/* =================================Left Section=================================== */}
 
-        <div className="w-full sm:w-[70%]">
+        <div className="w-full sm:w-[100%] md:w-[60%] lg:w-[70%]">
           <div className="flex flex-col gap-3">
             <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
               About the Space
@@ -573,7 +573,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             )}
           </div>
         </div>
-        <div className="w-full sm:w-[30%] hidden sm:block md:block lg:block xl:block">
+        <div className="w-full sm:w-[50%] md:w-[40%] lg:w-[30%] hidden md:block lg:block xl:block">
           {place && (
             <div className="border rounded-lg p-4 text-center space-y-2 mb-8">
               <div className="text-2xl">${place?.pricePerHour}/hr</div>
@@ -596,7 +596,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
 
           {user && placeUser && user?.userId !== placeUser?.userId && (
             <>
-              <div className="sm:block md:block lg:block xl:block hidden border border-gray-700 rounded-xl">
+              <div className="sm:block md:block lg:block xl:block hidden min-w-max border-2 border-gray-700 rounded-xl">
                 <AvailabilitySelection
                   hours={hours}
                   availableHoursFrom={place?.availableHoursFrom}
