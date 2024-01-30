@@ -25,9 +25,10 @@ export type Place = {
   availableHoursTo: string;
   bathrooms: number;
   bedrooms: number;
-  beds: number;
-  city: string;
+  size?: number;
+  peopleCount: number;
   coordinates: CoordinatesType;
+  city: string;
   country: string;
   description: string;
   discountedMinHours: number;
@@ -38,7 +39,7 @@ export type Place = {
   minHours: number;
   parkingRules: string;
   pricePerHour: number;
-  propertyType: string;
+  activityType: string;
   selfCheckIn: boolean;
   spaceType: string;
   state: string;

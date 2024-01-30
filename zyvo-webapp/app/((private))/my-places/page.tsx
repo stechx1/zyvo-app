@@ -1,8 +1,8 @@
 "use client";
+import PlaceCard from "@/collections/PlaceCard/PlaceCard";
 import PlaceModal from "@/collections/PlaceModal";
 import Button from "@/components/Button";
 import { CustomDialog } from "@/components/Dialog";
-import Dropdown from "@/components/Dropdown";
 import { useAuthContext } from "@/context/AuthContext";
 import { addPlace, deletePlace, getMyPlacesSnapshot } from "@/firebase/place";
 import { getGooglePlaces } from "@/lib/actions";
@@ -18,8 +18,7 @@ export default function MyPlaces() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
-  const [place, setPlace] = useState<Place>({
+  const defaultPlace: Place = {
     placeId: Math.random().toString(),
     addOns: [],
     allowPets: false,
@@ -30,7 +29,7 @@ export default function MyPlaces() {
     availableHoursTo: "23:30",
     bathrooms: 1,
     bedrooms: 1,
-    beds: 1,
+    peopleCount: 0,
     city: "",
     country: "",
     description: "",
@@ -42,7 +41,7 @@ export default function MyPlaces() {
     minHours: 1,
     parkingRules: "",
     pricePerHour: 10,
-    propertyType: "HOUSE",
+    activityType: "STAYS",
     selfCheckIn: true,
     spaceType: "HOME",
     state: "",
@@ -51,7 +50,8 @@ export default function MyPlaces() {
     reviewsCount: 0,
     rating: 0,
     coordinates: { lat: 0, lng: 0 },
-  });
+  };
+  const [place, setPlace] = useState<Place>(defaultPlace);
   const [places, setPlaces] = useState<Place[]>([]);
 
   useEffect(() => {
@@ -152,77 +152,39 @@ export default function MyPlaces() {
         </div>
       </div>
       <div className="flex flex-wrap gap-2 sm:gap-2 md:gap-4 lg:gap-4 xl:gap-4 mt-3">
-        {places.map((place, index) => (
-          <div
-            key={index}
-            className="w-[48%] sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] overflow-hidden"
-          >
-            <div className="relative">
-              <img
-                src={
-                  place.images?.length > 0
-                    ? place.images[0]
-                    : "/images/no-image.jpg"
-                }
-                alt={"title"}
-                className="w-full h-64 object-cover rounded-xl"
-              />
-              <div className="absolute top-0 right-0 p-4 text-white">
-                <Dropdown
-                  items={[
-                    {
-                      title: "View",
-                      onClick: () => {
-                        router.push("/property-details/" + place.placeId);
-                      },
-                    },
-                    {
-                      title: "Delete",
-                      onClick: () => {
-                        deletePlace(place.placeId).then(({ error }) => {
-                          if (error) {
-                            toast.error(error.message);
-                          } else {
-                            toast.success("Place deleted successfully!");
-                          }
-                        });
-                      },
-                    },
-                  ]}
-                >
-                  <div className="text-black border rounded-full bg-white px-1 outline-none cursor-pointer">
-                    &#8226;&#8226;&#8226;
-                  </div>
-                </Dropdown>
-              </div>
-            </div>
-            <div className="py-1 px-0.5">
-              <div className="flex justify-between font-normal">
-                <div className="truncate w-2/3">{place.description}</div>
-                <div className="flex space-x-1">
-                  <Image
-                    width={15}
-                    height={15}
-                    alt="clock-icon"
-                    src={"/icons/dark-gray-clock-icon.svg"}
-                  />
-                  <span>${place.pricePerHour}/h</span>
-                </div>
-              </div>
-              <div className="flex text-gray-700 text-base">
-                <span className="text-[#FCA800] mr-1">{place.rating ?? 0}</span>
-                <span>({place.reviewsCount ?? 0})</span>
-                <Image
-                  src={"/icons/path0.svg"}
-                  alt="star-icon"
-                  width={15}
-                  height={15}
-                  className="ml-2 mr-1"
-                />
-                <span>{1} miles away</span>
-              </div>
-            </div>
-          </div>
+        {places.map((place) => (
+          <PlaceCard
+            key={place.placeId}
+            menuOptions={[
+              {
+                title: "View",
+                onClick: () => {
+                  router.push("/property-details/" + place.placeId);
+                },
+              },
+              {
+                title: "Edit",
+                onClick: () => {
+                  // router.push("/property-details/" + place.placeId);
+                  setIsModalOpen(true);
+                  setPlace(place);
+                },
+              },
+              {
+                title: "Delete",
+                onClick: () => {
+                  deletePlace(place.placeId).then(({ error }) => {
+                    if (error) {
+                      toast.error(error.message);
+                    } else {
+                      toast.success("Place deleted successfully!");
+                    }
+                  });
+                },
+              },
+            ]}
+            place={place}
+          />
         ))}
         <div className="w-[48%] flex-col justify-center flex items-center h-64 sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] relative rounded-xl border-2 border-dashed border-gray-200">
           <Button
@@ -232,6 +194,7 @@ export default function MyPlaces() {
             className="text-xl"
             onClick={() => {
               setIsModalOpen(true);
+              setPlace(defaultPlace);
             }}
           />
           <p className="text-sm mt-2">Add new Place</p>

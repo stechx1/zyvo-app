@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { getFullName, haversine_distance } from "@/lib/utils";
+import { getFullName } from "@/lib/utils";
 import { CoordinatesType, Place } from "@/types/place";
 import { User } from "@/types/user";
 import { DocumentReference } from "firebase/firestore";
 import { getUserByRef, updateFavourites } from "@/firebase/user";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/context/AuthContext";
+import { getRouteDetails } from "@/lib/actions";
 export const PropertyCard = ({
   place,
   currentCoordinates,
@@ -20,6 +21,22 @@ export const PropertyCard = ({
   const [placeImageIndex, setPlaceImageIndex] = useState<number>(0);
   const [imageOpacity, setImageOpacity] = useState<number>(1);
   const [showCarouselItems, setShowCarouselItems] = useState(false);
+  const [placeDistance, setPlaceDistance] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!place) return;
+    getDistance();
+    async function getDistance() {
+      if (currentCoordinates && place?.coordinates) {
+        const routes = await getRouteDetails(
+          currentCoordinates,
+          place?.coordinates
+        );
+        if (routes) setPlaceDistance(routes.distance);
+        else setPlaceDistance(null);
+      } else setPlaceDistance(null);
+    }
+  }, [currentCoordinates, place]);
 
   useEffect(() => {
     if (place.userRef) {
@@ -221,8 +238,7 @@ export const PropertyCard = ({
                 height={14}
                 className="mr-1"
               />
-              {haversine_distance(place.coordinates, currentCoordinates)} miles
-              away
+              {placeDistance} miles away
             </p>
           )}
         </div>
