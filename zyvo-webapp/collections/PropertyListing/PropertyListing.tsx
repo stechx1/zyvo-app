@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { PropertyCard } from "@/components/PropertyCard/PropertyCard";
+import { PropertyCard } from "@/collections/PropertyCard/PropertyCard";
 import { Place } from "@/types/place";
 import { useAuthContext } from "@/context/AuthContext";
 // import { Pagination } from "@/components/Pagination/Pagination";

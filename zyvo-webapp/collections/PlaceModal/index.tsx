@@ -20,7 +20,7 @@ import { timeArray } from "@/lib/utils";
 import { Place, amenety } from "@/types/place";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 export default function PlaceModal({
   place,
   setPlace,
@@ -163,7 +163,10 @@ const GallaryAndLocation = ({
           {file ? (
             <div className="w-[100px] h-[100px] border-2 border-dashed justify-center flex flex-col items-center border-gray-200 space-y-1">
               <div className="text-sm text-center"> uploading..</div>
-              <div className="text-sm text-center"> {progress?.toFixed(2)}%</div>
+              <div className="text-sm text-center">
+                {" "}
+                {progress?.toFixed(2)}%
+              </div>
             </div>
           ) : (
             <div className="w-[100px] h-[100px] border-2 border-dashed justify-center flex items-center border-gray-200 cursor-pointer">
@@ -377,11 +380,30 @@ const HomeSetup = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Rooms and beds</div>
-        <div>Bedrooms</div>
-        <Tabs
+        <div>Availability</div>
+        <div>Property size (sq ft)</div>
+        <CustomSelectionType
           options={[
-            { name: "0", value: 0 },
+            { name: "Any" },
+            { name: "40", value: 40 },
+            { name: "50", value: 50 },
+            { name: "60", value: 60 },
+            { name: "80", value: 80 },
+            { name: "90", value: 90 },
+          ]}
+          selected={place.size}
+          onSelect={(value) => {
+            setPlace((prev) => {
+              return {
+                ...prev,
+                size: typeof value === "number" ? value : undefined,
+              };
+            });
+          }}
+        />
+        <div>No of People</div>
+        <CustomSelectionType
+          options={[
             { name: "1", value: 1 },
             { name: "2", value: 2 },
             { name: "3", value: 3 },
@@ -389,41 +411,41 @@ const HomeSetup = ({
             { name: "5", value: 5 },
             { name: "6", value: 6 },
             { name: "7", value: 7 },
-            { name: "8", value: 8 },
-            { name: "8+", value: 9 },
+          ]}
+          selected={place.peopleCount}
+          onSelect={(value) => {
+            setPlace((prev) => {
+              return {
+                ...prev,
+                peopleCount: typeof value === "number" ? value : 0,
+              };
+            });
+          }}
+        />
+        <div>Bedrooms</div>
+        <CustomSelectionType
+          options={[
+            { name: "1", value: 1 },
+            { name: "2", value: 2 },
+            { name: "3", value: 3 },
+            { name: "4", value: 4 },
+            { name: "5", value: 5 },
+            { name: "6", value: 6 },
+            { name: "7", value: 7 },
           ]}
           selected={place.bedrooms}
-          onSelect={(option) =>
+          onSelect={(value) => {
             setPlace((prev) => {
-              return { ...prev, bedrooms: +option.value };
-            })
-          }
-        />
-        <div>Beds</div>
-        <Tabs
-          options={[
-            { name: "0", value: 0 },
-            { name: "1", value: 1 },
-            { name: "2", value: 2 },
-            { name: "3", value: 3 },
-            { name: "4", value: 4 },
-            { name: "5", value: 5 },
-            { name: "6", value: 6 },
-            { name: "7", value: 7 },
-            { name: "8", value: 8 },
-            { name: "8+", value: 9 },
-          ]}
-          selected={place.beds}
-          onSelect={(option) =>
-            setPlace((prev) => {
-              return { ...prev, beds: +option.value };
-            })
-          }
+              return {
+                ...prev,
+                bedrooms: typeof value === "number" ? value : 0,
+              };
+            });
+          }}
         />
         <div>Bathrooms</div>
-        <Tabs
+        <CustomSelectionType
           options={[
-            { name: "0", value: 0 },
             { name: "1", value: 1 },
             { name: "2", value: 2 },
             { name: "3", value: 3 },
@@ -431,62 +453,63 @@ const HomeSetup = ({
             { name: "5", value: 5 },
             { name: "6", value: 6 },
             { name: "7", value: 7 },
-            { name: "8", value: 8 },
-            { name: "8+", value: 9 },
           ]}
           selected={place.bathrooms}
-          onSelect={(option) =>
+          onSelect={(value) => {
             setPlace((prev) => {
-              return { ...prev, bathrooms: +option.value };
-            })
-          }
+              return {
+                ...prev,
+                bathrooms: typeof value === "number" ? value : 0,
+              };
+            });
+          }}
         />
       </div>
       <hr className="my-8" />
       <div className="xl:px-4 lg:px-4 md:px-4 sm:px-4 px-3 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <label>Property type</label>
+        <label>Activities</label>
         <div className="flex gap-3 flex-wrap">
-          <PropertyType
-            imageUrl="/icons/home-filled-icon.svg"
-            text="House"
-            value="HOUSE"
-            selected={place.propertyType}
+          <ActivityType
+            imageUrl="/icons/stays-icon.svg"
+            text="Stays"
+            value="STAYS"
+            selected={place.activityType}
             onSelect={(value) =>
               setPlace((prev) => {
-                return { ...prev, propertyType: value.toString() };
+                return { ...prev, activityType: value.toString() };
               })
             }
           />
-          <PropertyType
-            imageUrl="/icons/building-icon.svg"
-            text="Apartment"
-            value="APARTMENT"
-            selected={place.propertyType}
+          <ActivityType
+            imageUrl="/icons/event-space-icon.svg"
+            text="Event Space"
+            value="EVENTSPACE"
+            selected={place.activityType}
             onSelect={(value) =>
               setPlace((prev) => {
-                return { ...prev, propertyType: value.toString() };
+                return { ...prev, activityType: value.toString() };
               })
             }
           />
-          <PropertyType
-            imageUrl="/icons/guest-house-icon.svg"
-            text="Guesthouse"
-            value="GUESTHOUSE"
-            selected={place.propertyType}
+          <ActivityType
+            imageUrl="/icons/photoshoot-icon.svg"
+            text="Photo shoot"
+            value="PHOTOSHOOT"
+            selected={place.activityType}
             onSelect={(value) =>
               setPlace((prev) => {
-                return { ...prev, propertyType: value.toString() };
+                return { ...prev, activityType: value.toString() };
               })
             }
           />
-          <PropertyType
-            imageUrl="/icons/hotel-icon.svg"
-            text="Hotel"
-            value="HOTEL"
-            selected={place.propertyType}
+          <ActivityType
+            imageUrl="/icons/meeting-icon.svg"
+            text="Meeting"
+            value="MEETING"
+            selected={place.activityType}
             onSelect={(value) =>
               setPlace((prev) => {
-                return { ...prev, propertyType: value.toString() };
+                return { ...prev, activityType: value.toString() };
               })
             }
           />
@@ -501,94 +524,138 @@ const HomeSetup = ({
               className="font-normal text-sm"
               onClick={() => setShowOtherPropertyTypes((prev) => !prev)}
             >
-              Other property types
+              Other Activites
             </AccordionTrigger>
             <AccordionContent className="flex gap-3 flex-wrap">
-              <PropertyType
-                imageUrl="/icons/home-filled-icon.svg"
-                text="Barn"
-                value="BARN"
-                selected={place.propertyType}
+              <ActivityType
+                imageUrl="/icons/party-icon.svg"
+                text="Party"
+                value="PARTY"
+                selected={place.activityType}
                 onSelect={(value) =>
                   setPlace((prev) => {
-                    return { ...prev, propertyType: value.toString() };
+                    return { ...prev, activityType: value.toString() };
                   })
                 }
               />
-              <PropertyType
-                imageUrl="/icons/building-icon.svg"
-                text="Boat"
-                value="BOAT"
-                selected={place.propertyType}
+              <ActivityType
+                imageUrl="/icons/filmshoot-icon.svg"
+                text="Film Shoot"
+                value="FILMSHOOT"
+                selected={place.activityType}
                 onSelect={(value) =>
                   setPlace((prev) => {
-                    return { ...prev, propertyType: value.toString() };
+                    return { ...prev, activityType: value.toString() };
                   })
                 }
               />
-              <PropertyType
-                imageUrl="/icons/guest-house-icon.svg"
-                text="Camper"
-                value="CAMPER"
-                selected={place.propertyType}
+              <ActivityType
+                imageUrl="/icons/performance-icon.svg"
+                text="Performance"
+                value="PERFORMANCE"
+                selected={place.activityType}
                 onSelect={(value) =>
                   setPlace((prev) => {
-                    return { ...prev, propertyType: value.toString() };
+                    return { ...prev, activityType: value.toString() };
                   })
                 }
               />
-              <PropertyType
-                imageUrl="/icons/hotel-icon.svg"
-                text="Castle"
-                value="CASTLE"
-                selected={place.propertyType}
+              <ActivityType
+                imageUrl="/icons/workshop-icon.svg"
+                text="Workshop"
+                value="WORKSHOP"
+                selected={place.activityType}
                 onSelect={(value) =>
                   setPlace((prev) => {
-                    return { ...prev, propertyType: value.toString() };
+                    return { ...prev, activityType: value.toString() };
                   })
                 }
               />
-              <PropertyType
-                imageUrl="/icons/hotel-icon.svg"
-                text="Cave"
-                value="CAVE"
-                selected={place.propertyType}
+              <ActivityType
+                imageUrl="/icons/corporate-event-icon.svg"
+                text="Corporate Event"
+                value="CORPORATEEVENT"
+                selected={place.activityType}
                 onSelect={(value) =>
                   setPlace((prev) => {
-                    return { ...prev, propertyType: value.toString() };
+                    return { ...prev, activityType: value.toString() };
                   })
                 }
               />
-              <PropertyType
-                imageUrl="/icons/hotel-icon.svg"
-                text="Container"
-                value="CONTAINER"
-                selected={place.propertyType}
+              <ActivityType
+                imageUrl="/icons/wedding-icon.svg"
+                text="Wedding"
+                value="WEDDING"
+                selected={place.activityType}
                 onSelect={(value) =>
                   setPlace((prev) => {
-                    return { ...prev, propertyType: value.toString() };
+                    return { ...prev, activityType: value.toString() };
                   })
                 }
               />
-              <PropertyType
-                imageUrl="/icons/hotel-icon.svg"
-                text="Farm"
-                value="FARM"
-                selected={place.propertyType}
+              <ActivityType
+                imageUrl="/icons/dinner-icon.svg"
+                text="Dinner"
+                value="DINNER"
+                selected={place.activityType}
                 onSelect={(value) =>
                   setPlace((prev) => {
-                    return { ...prev, propertyType: value.toString() };
+                    return { ...prev, activityType: value.toString() };
                   })
                 }
               />
-              <PropertyType
-                imageUrl="/icons/hotel-icon.svg"
-                text="Tent"
-                value="TENT"
-                selected={place.propertyType}
+              <ActivityType
+                imageUrl="/icons/retreat-icon.svg"
+                text="Retreat"
+                value="RETREAT"
+                selected={place.activityType}
                 onSelect={(value) =>
                   setPlace((prev) => {
-                    return { ...prev, propertyType: value.toString() };
+                    return { ...prev, activityType: value.toString() };
+                  })
+                }
+              />
+              <ActivityType
+                imageUrl="/icons/popup-icon.svg"
+                text="Pop-up"
+                value="POPUP"
+                selected={place.activityType}
+                onSelect={(value) =>
+                  setPlace((prev) => {
+                    return { ...prev, activityType: value.toString() };
+                  })
+                }
+              />
+              <ActivityType
+                imageUrl="/icons/networking-icon.svg"
+                text="Networking"
+                value="NETWORKING"
+                selected={place.activityType}
+                onSelect={(value) =>
+                  setPlace((prev) => {
+                    return { ...prev, activityType: value.toString() };
+                  })
+                }
+              />
+              <ActivityType
+                imageUrl="/icons/fitness-class-icon.svg"
+                text="Fitness Class"
+                value="FITNESSCLASS"
+                selected={place.activityType}
+                onSelect={(value) =>
+                  setPlace((prev) => {
+                    return { ...prev, activityType: value.toString() };
+                  })
+                }
+              />
+              <ActivityType
+                imageUrl="/icons/audio-recording-icon.svg"
+                text="Audio Recording"
+                value="AUDIORECORDING"
+                selected={place.activityType}
+                onSelect={(value) =>
+                  setPlace((prev) => {
+                    return { ...prev, activityType: value.toString() };
                   })
                 }
               />
@@ -1024,7 +1091,7 @@ const Availability = ({
     </div>
   );
 };
-const PropertyType = ({
+const ActivityType = ({
   imageUrl,
   text,
   value,
@@ -1048,11 +1115,82 @@ const PropertyType = ({
       onClick={() => onSelect && onSelect(value)}
     >
       <div className="h-6">
-        <img src={imageUrl} height={20} width={20} />
+        <Image src={imageUrl} alt="icon" height={25} width={25} />
       </div>
-      <div className="sm:text-sm md:text-sm lg:text-sm xl:text-sm text-xs">
+      <div className="sm:text-sm md:text-sm lg:text-sm xl:text-sm text-xs text-black">
         {text}
       </div>
+    </div>
+  );
+};
+const CustomSelectionType = ({
+  options,
+  selected,
+  onSelect,
+}: {
+  options: { name: string; value?: number | string }[];
+  selected?: string | number;
+  onSelect?: (value?: string | number) => void;
+}) => {
+  const ref = useRef<HTMLInputElement>(null);
+  const [typedValue, setTypedValue] = useState<string | number>("");
+
+  useEffect(() => {
+    if (typeof selected === "undefined") return;
+    if (!options.find((o) => o.value == selected)) setTypedValue(selected);
+    else setTypedValue("");
+    ref.current?.blur();
+  }, [selected]);
+
+  return (
+    <div className="flex justify-between text-center bg-gray-200 xl:px-2 lg:px-2 md:px-2 sm:px-2 px-1 xl:py-2 lg:py-2 md:py-2 sm:py-2 py-1 rounded-full">
+      {options.map((item, i) => {
+        return (
+          <div
+            key={i}
+            onClick={() => {
+              onSelect && onSelect(item.value);
+            }}
+            className={`w-[45%] py-2 xl:py-1 lg:py-1 md:py-1 sm:py-1 rounded-full text-sm md:text-base sm:text-base lg:text-[13.5px] xl:text-[13.5px] ${
+              item.value === selected
+                ? "bg-white pointer-events-none"
+                : "cursor-pointer"
+            }`}
+          >
+            {item.name}
+          </div>
+        );
+      })}
+      {
+        <input
+          ref={ref}
+          tabIndex={-1}
+          style={{
+            width:
+              (typedValue
+                ? (typedValue?.toString()?.length ?? 0) * 10 + 25
+                : 60) + "px",
+          }}
+          className={`rounded-full outline-none px-3 border border-gray-400 bg-gray-200 focus:bg-white mx-2`}
+          value={typedValue}
+          onKeyUp={(e) => {
+            if ((e.key === "Enter" || e.keyCode === 13) && ref.current) {
+              ref.current?.blur();
+            }
+          }}
+          onChange={(e) => {
+            if (e.target.value.length <= 3) {
+              setTypedValue(e.target.value);
+            }
+          }}
+          onBlur={(e) => {
+            if (e.target.value.length <= 3 && onSelect && typedValue) {
+              onSelect(+typedValue);
+            }
+          }}
+          placeholder="Type"
+        />
+      }
     </div>
   );
 };
