@@ -19,12 +19,12 @@ export default function PropertySideDetails({
   distance: number | null;
 }) {
   return (
-    <div className=" sm:order-1 border rounded-[6%] sm:rounded-lg w-full">
+    <div className=" sm:order-1 border rounded-[6%] sm:rounded-lg lg:rounded-2xl w-full">
       <div className="flex m-3 gap-4">
         <Image
           src={imageURL}
           alt="detail-image"
-          className="rounded-[15px] sm:w-[30%] lg:w-[35%] object-fill"
+          className="rounded-[15px] sm:w-[30%] md:w-[5rem] lg:w-[35%] xl:w-[27%] object-cover"
           width={50}
           height={50}
         />

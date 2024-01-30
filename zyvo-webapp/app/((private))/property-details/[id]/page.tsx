@@ -373,7 +373,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             <div className="flex flex-wrap xl:gap-6 lg:gap-6 md:gap-6 sm:gap-6 gap-2">
               {place?.ameneties.map((amenety) => (
                 <div
-                  className={`border rounded-xl xl:py-3 lg:py-3 md:py-3 sm:py-3 py-1 px-2 xl:px-5 lg:px-5 md:px-5 sm:px-4 xl:gap-3 lg:gap-3 gap-3 w-fit flex items-center`}
+                  className={`border rounded-xl xl:py-2.5 lg:py-3 md:py-3 sm:py-3 py-1 px-2 xl:px-5 lg:px-5 md:px-5 sm:px-4 xl:gap-3 lg:gap-3 gap-3 w-fit md:min-w-[11rem] flex items-center`}
                   key={amenety}
                 >
                   <Image
@@ -577,17 +577,17 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           {place && (
             <div className="border rounded-lg p-4 text-center space-y-2 mb-8">
               <div className="text-2xl">${place?.pricePerHour}/hr</div>
-              <div className="text-sm text-gray-800">
+              <div className="text-sm md:text-base text-gray-800">
                 {place?.minHours} hr minimum
               </div>
 
               <hr />
 
               <div className="flex items-center justify-between space-x-2">
-                <div className="text-sm text-gray-800">
+                <div className="text-sm md:text-base text-gray-800">
                   {place?.discountedMinHours}+ Hrs discount
                 </div>
-                <div className="text-sm text-gray-800">
+                <div className="text-sm md:text-base text-gray-800">
                   {place?.discountPercentage}% off
                 </div>
               </div>
