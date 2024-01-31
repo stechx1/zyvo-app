@@ -95,10 +95,10 @@ export default function HostProperties({
                   alt="profile-pic"
                   width={25}
                   height={25}
-                  className="rounded-full"
+                  className="rounded-full min-w-[25px]"
                 />
               </div>
-              <div className="text-base font-medium mx-1 min-w-max">
+              <div className="text-base font-medium mx-1">
                 {fullName}
               </div>
               <Image
@@ -109,7 +109,7 @@ export default function HostProperties({
               />
             </div>
           </div>
-          <div className="px-4 w-[55%] space-y-2">
+          <div className="px-4 w-[55%] space-y-2 flex flex-col justify-center">
             <div className="flex items-center justify-center text-sm space-x-2">
               <Image src={bottomTextIcon} alt="time" width={15} height={15} />
               <div>{bottomText}</div>

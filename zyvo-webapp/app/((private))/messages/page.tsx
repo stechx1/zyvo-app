@@ -237,7 +237,7 @@ export default function Messages() {
           className="sm:hidden md:hidden lg:hidden xl:hidden border-t border-b py-3"
           style={{ marginBottom: "1.5rem" }}
         >
-          <MobileSearchAndFilter />
+          <MobileSearchAndFilter type="Search" />
         </div>
         <div className="h-[75vh] overflow-auto space-y-3">
           {conversations.length > 0 &&
@@ -290,7 +290,7 @@ export default function Messages() {
                 }}
               />
               <div className="w-full">
-                <MobileSearchAndFilter />
+                <MobileSearchAndFilter type="Search" />
               </div>
             </div>
             <div className="flex justify-between items-center px-4 py-3 border-b border-t sm:border-t-0 md:border-t-0 lg:border-t-0">

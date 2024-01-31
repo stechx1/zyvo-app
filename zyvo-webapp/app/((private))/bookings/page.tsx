@@ -318,7 +318,7 @@ export default function Bookings() {
           }}
         />
         <div className={`w-full`}>
-          <MobileSearchAndFilter />
+          <MobileSearchAndFilter type="Search" />
         </div>
       </div>
 

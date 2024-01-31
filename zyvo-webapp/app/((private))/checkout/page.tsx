@@ -22,6 +22,7 @@ import { Booking, BookingStatusType } from "@/types/booking";
 import PropertySideDetails from "@/collections/PropertySideDetails";
 import { getRouteDetails } from "@/lib/actions";
 import { useScreenDimensions } from "@/hooks/useScreenDimension";
+import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 
 const InputSection: React.FC<InputSectionProps> = ({
   title,
@@ -51,7 +52,7 @@ const CheckoutPage = () => {
   const [placeDistance, setPlaceDistance] = useState<number | null>(null);
 
   const searchParams = useSearchParams();
-  const [width] = useScreenDimensions()
+  const [width] = useScreenDimensions();
 
   const details = JSON.parse(
     searchParams.get("data") ?? "null"
@@ -175,42 +176,50 @@ const CheckoutPage = () => {
   return (
     <>
       <div className="sm:container sm:my-20 sm:px-14 md:px-5 lg:px-16">
+        <div className="sm:hidden block">
+          <MobileSearchAndFilter type="header" />
+        </div>
+        <hr className="mx-[-20px] my-2.5" />
         <div className="md:flex md:gap-12">
-          <div className="text-black text-xl sm:text-4xl md:hidden font-normal font-Poppins">
+          <div className="text-black mt-8 text-xl sm:text-4xl md:hidden font-normal font-Poppins">
             Checkout and Pay
           </div>
           <div className="md:hidden h-[0.5px] mt-[10px] mb-[10px] opacity-[0.20] bg-secondary-gray-700"></div>
           <div className="w-full md:w-[45%] lg:w-[30%] md:order-2">
-            <div className="flex flex-col sm:space-y-8 space-y-4">       
+            <div className="flex flex-col sm:space-y-8 space-y-4">
               {place && (
                 <div className="order-2 md:mt-0 mt-4 md:order-1">
-                <PropertySideDetails
-                  rating={place.rating}
-                  reviewsCount={place.reviewsCount}
-                  imageURL={getImagesOnIndex(0)}
-                  price={place.pricePerHour * details.hours}
-                  description={place.description}
-                  hours={details.hours}
-                  distance={placeDistance}
-                />
+                  <PropertySideDetails
+                    rating={place.rating}
+                    reviewsCount={place.reviewsCount}
+                    imageURL={getImagesOnIndex(0)}
+                    price={place.pricePerHour * details.hours}
+                    description={place.description}
+                    hours={details.hours}
+                    distance={placeDistance}
+                  />
                 </div>
               )}
               {placeUser && (
                 <div className="order-1 md:order-2">
-                <HostProperties
-                  cardStyle={width < 640 ? "mobile" : "desktop"}
-                  bottomText={width < 640 ? "Respond within 1 hr" :"Typically responds within 1 hr"}
-                  bottomTextIcon="/icons/time.svg"
-                  mode={mode}
-                  photoURL={placeUser?.photoURL ?? ""}
-                  fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
-                  onMessageClick={() => {
-                    router.push("/messages?userId=" + placeUser?.userId);
-                  }}
-                  onProfileClick={() =>
-                    router.push("/profile?userId=" + placeUser.userId)
-                  }
-                />
+                  <HostProperties
+                    cardStyle={width < 640 ? "mobile" : "desktop"}
+                    bottomText={
+                      width < 640
+                        ? "Respond within 1 hr"
+                        : "Typically responds within 1 hr"
+                    }
+                    bottomTextIcon="/icons/time.svg"
+                    mode={mode}
+                    photoURL={placeUser?.photoURL ?? ""}
+                    fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
+                    onMessageClick={() => {
+                      router.push("/messages?userId=" + placeUser?.userId);
+                    }}
+                    onProfileClick={() =>
+                      router.push("/profile?userId=" + placeUser.userId)
+                    }
+                  />
                 </div>
               )}
             </div>
@@ -390,14 +399,14 @@ const CheckoutPage = () => {
               </div>
             </div>
             <div className="h-[0.5px] my-[30px] sm:my-[50px] opacity-[0.20] bg-secondary-gray-700"></div>
-              <Button
-                className="sm:mb-0 mb-16 h-[2.5rem] sm:h-auto w-[8rem] sm:w-[12rem] "
-                text="Confirm & Pay"
-                onClick={onSubmitHandler}
-                type="green"
-                roundedfull
-                isLoading={isLoading}
-              />
+            <Button
+              className="sm:mb-0 mb-16 h-[2.5rem] sm:h-auto w-[8rem] sm:w-[12rem] "
+              text="Confirm & Pay"
+              onClick={onSubmitHandler}
+              type="green"
+              roundedfull
+              isLoading={isLoading}
+            />
           </div>
         </div>
       </div>
