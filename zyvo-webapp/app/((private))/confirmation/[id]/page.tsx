@@ -17,6 +17,8 @@ import { Place } from "@/types/place";
 import { getPlaceByRef } from "@/firebase/place";
 import PropertySideDetails from "@/collections/PropertySideDetails";
 import { getRouteDetails } from "@/lib/actions";
+import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
+import { useScreenDimensions } from "@/hooks/useScreenDimension";
 
 const ConfirmationPage = ({ params }: { params: { id: string } }) => {
   const [booking, setBooking] = useState<Booking | null>(null);
@@ -26,6 +28,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
   const { user, mode, currentCoordinates } = useAuthContext();
 
   const router = useRouter();
+  const [width] = useScreenDimensions();
   useEffect(() => {
     if (user == null) {
       router.push("/signin");
@@ -124,45 +127,58 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
   };
   return (
     <>
-      <div className="flex sm:container sm:my-24 sm:px-14 md:px-10 sm:gap-2 flex-col">
-        <div className="sm:flex sm:gap-10">
-          <div className="text-black text-lg sm:hidden font-normal font-Poppins">
+      <div className="flex sm:container md:my-24 sm:px-14 md:px-10 sm:gap-2 flex-col">
+        <div className="sm:hidden block">
+          <MobileSearchAndFilter type="header" />
+        </div>
+        <hr className="sm:hidden block mx-[-20px] my-2.5" />
+        <div className="sm:flex flex-wrap md:flex-nowrap sm:gap-10">
+          <div className="text-black text-xl sm:text-4xl mt-5 md:hidden font-normal font-Poppins">
             New Booking Confirmed
           </div>
           <div className="sm:hidden h-[0.5px] mt-[10px] mb-[25px] opacity-[0.20] bg-secondary-gray-700"></div>
-          <div className=" w-full sm:w-[30%] sm:order-2">
+          <div className=" w-full md:w-[45%] lg:w-[30%] md:order-2">
             <div className="flex flex-col gap-5">
               {placeUser && (
-                <HostProperties
-                  mode={mode}
-                  bottomText="Typically responds within 1 hr"
-                  bottomTextIcon="/icons/time.svg"
-                  photoURL={placeUser?.photoURL ?? ""}
-                  fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
-                  onMessageClick={() => {
-                    router.push("/messages?userId=" + placeUser?.userId);
-                  }}
-                  onProfileClick={() =>
-                    router.push("/profile?userId=" + placeUser.userId)
-                  }
-                />
+                <div className="order-1 md:mt-0 md:order-2">
+                  <HostProperties
+                    mode={mode}
+                    cardStyle={width < 640 ? "mobile" : "desktop"}
+                    bottomText={
+                      width < 640
+                        ? "Respond within 1 hr"
+                        : "Typically responds within 1 hr"
+                    }
+                    bottomTextIcon="/icons/time.svg"
+                    photoURL={placeUser?.photoURL ?? ""}
+                    fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
+                    onMessageClick={() => {
+                      router.push("/messages?userId=" + placeUser?.userId);
+                    }}
+                    onProfileClick={() =>
+                      router.push("/profile?userId=" + placeUser.userId)
+                    }
+                  />
+                </div>
               )}
               {bookingPlace && booking && (
-                <PropertySideDetails
-                  rating={bookingPlace.rating}
-                  reviewsCount={bookingPlace.reviewsCount}
-                  imageURL={getImagesOnIndex(0)}
-                  price={bookingPlace.pricePerHour * booking.hours}
-                  description={bookingPlace.description}
-                  hours={booking.hours}
-                  distance={placeDistance}
-                />
+                <div className="order-2 md:order-1">
+                  <PropertySideDetails
+                    rating={bookingPlace.rating}
+                    reviewsCount={bookingPlace.reviewsCount}
+                    imageURL={getImagesOnIndex(0)}
+                    price={bookingPlace.pricePerHour * booking.hours}
+                    description={bookingPlace.description}
+                    hours={booking.hours}
+                    distance={placeDistance}
+                  />
+                </div>
               )}
             </div>
           </div>
           {/* =================================Left Section=================================== */}
 
-          <div className="w-full sm:w-[70%] sm:order-1">
+          <div className="w-full lg:w-[70%] md:w-[55%] sm:order-1">
             <div className="flex flex-col sm:gap-3">
               <div className="flex flex-row items-center">
                 <div
@@ -170,7 +186,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
                   onClick={() => {
                     router.push("/");
                   }}
-                  className="hidden sm:block"
+                  className="hidden md:block"
                 >
                   <Image
                     src="/icons/back-arrow.svg"
@@ -180,7 +196,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
                     className="cursor-pointer mr-3"
                   />
                 </div>
-                <div className="hidden sm:block text-black text-lg sm:text-4xl font-normal font-Poppins">
+                <div className="hidden md:block text-black text-3xl lg:text-4xl font-normal font-Poppins">
                   New Booking Confirmed
                 </div>
               </div>
@@ -236,10 +252,10 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
                 <Accordion items={accordionItems} />
               </div>
             </div>
-            <div className="h-[0.5px] my-[50px] opacity-[0.20] bg-secondary-gray-700"></div>
+            <div className="h-[0.5px] my-[30px] opacity-[0.20] bg-secondary-gray-700"></div>
             <div className="w-fit flex gap-1">
               <Button
-                className="px-8"
+                className="sm:mb-0 mb-16 h-[2.5rem] sm:h-auto w-[8rem] sm:w-[12rem] "
                 text="My Bookings"
                 onClick={() => router.push("/bookings")}
                 type="green"

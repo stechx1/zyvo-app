@@ -175,11 +175,11 @@ const CheckoutPage = () => {
   };
   return (
     <>
-      <div className="sm:container sm:my-20 sm:px-14 md:px-5 lg:px-16">
+      <div className="sm:container md:my-20 sm:px-14 md:px-5 lg:px-16">
         <div className="sm:hidden block">
           <MobileSearchAndFilter type="header" />
         </div>
-        <hr className="mx-[-20px] my-2.5" />
+        <hr className="sm:hidden block mx-[-20px] my-2.5" />
         <div className="md:flex md:gap-12">
           <div className="text-black mt-8 text-xl sm:text-4xl md:hidden font-normal font-Poppins">
             Checkout and Pay

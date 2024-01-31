@@ -24,7 +24,7 @@ export default function PropertySideDetails({
         <Image
           src={imageURL}
           alt="detail-image"
-          className="rounded-[15px] sm:w-[30%] md:w-[5rem] lg:w-[35%] xl:w-[27%] object-cover"
+          className="rounded-[15px] w-[5rem] sm:w-[30%] md:w-[5rem] lg:w-[35%] xl:w-[27%] object-cover"
           width={50}
           height={50}
         />
