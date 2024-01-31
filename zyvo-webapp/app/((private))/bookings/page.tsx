@@ -39,6 +39,7 @@ export default function Bookings() {
   const [places, setPlaces] = useState<Place[]>([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [placeDistance, setPlaceDistance] = useState<number | null>(null);
+  const [moreReviews, setMoreReviews] = useState(false);
 
   useEffect(() => {
     if (user == null) {
@@ -326,7 +327,7 @@ export default function Bookings() {
         <div
           className={`${
             selectedBooking ? "hidden" : "block"
-          } w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-[80vh] space-y-2`}
+          } w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-auto space-y-2`}
         >
           <div className="sm:flex hidden justify-between items-center">
             <div className="flex items-center space-x-2">
@@ -493,13 +494,13 @@ export default function Bookings() {
         <div
           className={`${
             !selectedBooking ? "hidden" : "block"
-          }  sm:w-[60%] w-full lg:w-[50%] sm:flex flex-col sm:border rounded-lg`}
+          }  sm:w-[60%] w-full lg:w-[50%] sm:flex h-max flex-col sm:border rounded-2xl`}
         >
           {selectedBooking ? (
             <div>
-              <div className="sm:flex justify-between items-center p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="sm:text-base text-lg font-semibold">
+              <div className="sm:flex justify-between items-center py-3 px-2 md:py-4 md:px-6">
+                <div className="flex items-end space-x-3">
+                  <div className="sm:text-xl text-lg font-normal">
                     {getPlace(places, selectedBooking.placeRef?.id ?? "")
                       ?.description ?? "-"}
                   </div>
@@ -509,6 +510,15 @@ export default function Bookings() {
                   <div className="flex items-center my-[5px] sm:my-0">
                     <div>
                       <div className="flex space-x-2 text-sm">
+                        <div className="flex items-center justify-center space-x-2 font-Poppins">
+                          <Image
+                            src={"/icons/gray-share-icon.svg"}
+                            alt="share-icon"
+                            width={19}
+                            height={19}
+                          />
+                          <div>Share</div>
+                        </div>
                         {!user.favoritePlaces?.includes(
                           selectedBookingPlace.placeId
                         ) ? (
@@ -536,12 +546,12 @@ export default function Bookings() {
                   </div>
                 )}
               </div>
-              <div className="gap-2 px-2 lg:px-4 md:px-4 sm:px-3">
+              <div className="gap-2 px-2 lg:px-5 md:px-4 sm:px-3">
                 <div className="flex space-x-2 w-full">
                   <Image
                     src={getImagesOnIndex(0)}
                     alt="detail-image"
-                    className=" w-3/5 md:w-1/2 h-auto rounded-tl-[20px] rounded-bl-[20px]"
+                    className=" w-3/5 md:w-1/2 object-cover h-auto rounded-tl-[20px] rounded-bl-[20px]"
                     width={200}
                     height={470}
                   />
@@ -549,14 +559,14 @@ export default function Bookings() {
                     <Image
                       src={getImagesOnIndex(1)}
                       alt="detail-image"
-                      className="w-full h-1/2"
+                      className="w-full object-cover h-1/2"
                       width={200}
                       height={470}
                     />
                     <Image
                       src={getImagesOnIndex(2)}
                       alt="detail-image"
-                      className="w-full h-1/2"
+                      className="w-full object-cover h-1/2"
                       width={200}
                       height={470}
                     />
@@ -565,14 +575,14 @@ export default function Bookings() {
                     <Image
                       src={getImagesOnIndex(3)}
                       alt="detail-image"
-                      className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
+                      className="w-full h-1/2 object-cover rounded-tr-[20px] rounded-br-[20px]"
                       width={200}
                       height={470}
                     />
                     <Image
                       src={getImagesOnIndex(4)}
                       alt="detail-image"
-                      className="w-full h-1/2 rounded-tr-[20px] rounded-br-[20px]"
+                      className="w-full h-1/2 object-cover rounded-tr-[20px] rounded-br-[20px]"
                       width={200}
                       height={470}
                     />
@@ -581,7 +591,7 @@ export default function Bookings() {
               </div>
               <hr className="my-9" />
               <div className="px-2 lg:px-5 md:px-5 sm:px-3">
-                <label>Booking Details</label>
+                <label className="sm:text-xl text-lg">Booking Details</label>
                 <div className="flex flex-wrap gap-2 sm:gap-3 mt-1">
                   {bookingDetails.map((tag) => (
                     <div
@@ -593,9 +603,9 @@ export default function Bookings() {
                         alt={tag.iconAlt}
                         width={20}
                         height={20}
-                        className="w-[15px]"
+                        className="w-[18px]"
                       />
-                      <div className="text-black contents text-[13px] sm:text-md font-normal whitespace-nowrap">
+                      <div className="text-black contents text-[13px] sm:text-[16px] font-normal whitespace-nowrap">
                         {tag.label}
                       </div>
                       {tag.edit && (
@@ -615,7 +625,9 @@ export default function Bookings() {
               </div>
               <hr className="my-9" />
               <div className="px-2 lg:px-5 md:px-5 sm:px-3">
-                <label>Included in your booking</label>
+                <label className="text-lg sm:text-xl">
+                  Included in your booking
+                </label>
                 <div className="flex flex-wrap items-center gap-2 mt-2">
                   {selectedBookingPlace?.ameneties?.map((am, i) => {
                     return (
@@ -623,7 +635,7 @@ export default function Bookings() {
                         key={i}
                         className={`flex items-center py-2 border rounded-xl bg-[#fff] px-3`}
                       >
-                        <div className="capitalize sm:text-[15px]">
+                        <div className="capitalize sm:text-[16px]">
                           {am.toLowerCase()}
                         </div>
                       </div>
@@ -633,14 +645,16 @@ export default function Bookings() {
               </div>
               <hr className="my-9" />
               <div className="px-2 lg:px-5 md:px-5 sm:px-3">
-                <label>Rules</label>
+                <label className="text-lg sm:text-xl">Rules</label>
                 <div className="w-full mt-2">
                   <Accordion items={accordionItems} />
                 </div>
               </div>
               <hr className="my-9" />
               <div className="px-2 lg:px-5 md:px-5 sm:px-3 my-2">
-                <label>Address & Location</label>
+                <label className="text-lg sm:text-xl font-normal">
+                  Address & Location
+                </label>
                 <div>
                   <u>{`${selectedBookingPlace?.street ?? ""} ${
                     selectedBookingPlace?.city ?? ""
@@ -656,7 +670,7 @@ export default function Bookings() {
                 <>
                   <hr className="my-9" />
                   <div className="px-2 lg:px-5 md:px-5 sm:px-3">
-                    <label>Reviews</label>
+                    <label className="text-lg sm:text-xl">Reviews</label>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex">
                         <Image
@@ -684,89 +698,95 @@ export default function Bookings() {
                       <div>Sort by: Recent Reviews</div>
                     </div>
 
-                    {reviews.map((review) => (
-                      <React.Fragment key={review.reviewId}>
-                        <div className="flex justify-between py-2">
-                          <div className="flex sm:px-2 space-x-2 sm:w-max w-full">
-                            <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
-                              <Image
-                                src={
-                                  review.user?.photoURL
-                                    ? review.user.photoURL
-                                    : "/icons/profile-icon.png"
-                                }
-                                alt="profile-pic"
-                                width={40}
-                                height={40}
-                                className="rounded-full"
-                              />
-                            </div>
-                            <div className="sm:w-max w-full">
-                              <div className="flex justify-between">
-                                <div className="text-sm md:text-md lg:text-base font-semibold me-2">
-                                  {getFullName(review.user)}
+                    {reviews.map((review, index) => {
+                      if (index > 3 && !moreReviews) {
+                        return;
+                      } else
+                        return (
+                          <React.Fragment key={review.reviewId}>
+                            <div className="flex justify-between py-2">
+                              <div className="flex sm:px-2 space-x-2 sm:w-max w-full">
+                                <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
+                                  <Image
+                                    src={
+                                      review.user?.photoURL
+                                        ? review.user.photoURL
+                                        : "/icons/profile-icon.png"
+                                    }
+                                    alt="profile-pic"
+                                    width={40}
+                                    height={40}
+                                    className="rounded-full"
+                                  />
                                 </div>
-                                <div className="xl:hidden space-y-2 text-sm md:text-md lg:text-base xl:text-base">
-                                  <div className="flex">
-                                    {Array.from(
-                                      { length: review.placeRating },
-                                      (_, index) => (
-                                        <Image
-                                          key={index}
-                                          src={"/icons/starIcon.svg"}
-                                          alt="star-icon"
-                                          className="sm:w-[15px]"
-                                          width={12}
-                                          height={12}
-                                        />
-                                      )
-                                    )}
-                                    <div className="ml-2">
-                                      {formatDate(
-                                        review.createdAt.toISOString()
-                                      )}
+                                <div className="sm:w-max w-full">
+                                  <div className="flex justify-between">
+                                    <div className="text-sm md:text-md lg:text-base font-semibold me-2">
+                                      {getFullName(review.user)}
                                     </div>
+                                    <div className="xl:hidden space-y-2 text-sm md:text-md lg:text-base xl:text-base">
+                                      <div className="flex">
+                                        {Array.from(
+                                          { length: review.placeRating },
+                                          (_, index) => (
+                                            <Image
+                                              key={index}
+                                              src={"/icons/starIcon.svg"}
+                                              alt="star-icon"
+                                              className="sm:w-[15px]"
+                                              width={12}
+                                              height={12}
+                                            />
+                                          )
+                                        )}
+                                        <div className="ml-2">
+                                          {formatDate(
+                                            review.createdAt.toISOString()
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="text-sm md:text-md lg:text-base xl:text-base w-max">
+                                    {review.comment}
                                   </div>
                                 </div>
                               </div>
-                              <div className="text-sm md:text-md lg:text-base xl:text-base w-max">
-                                {review.comment}
+                              <div className="hidden xl:block space-y-2">
+                                <div className="flex justify-end">
+                                  {Array.from(
+                                    { length: review.placeRating },
+                                    (_, index) => (
+                                      <Image
+                                        key={index}
+                                        src={"/icons/starIcon.svg"}
+                                        alt="star-icon"
+                                        width={12}
+                                        height={12}
+                                        className="sm:w-[15px]"
+                                      />
+                                    )
+                                  )}
+                                </div>
+                                <div>
+                                  {formatDate(review.createdAt.toISOString())}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="hidden xl:block space-y-2">
-                            <div className="flex justify-end">
-                              {Array.from(
-                                { length: review.placeRating },
-                                (_, index) => (
-                                  <Image
-                                    key={index}
-                                    src={"/icons/starIcon.svg"}
-                                    alt="star-icon"
-                                    width={12}
-                                    height={12}
-                                    className="sm:w-[15px]"
-                                  />
-                                )
-                              )}
-                            </div>
-                            <div>
-                              {formatDate(review.createdAt.toISOString())}
-                            </div>
-                          </div>
-                        </div>
-                        <hr className="my-3" />
-                      </React.Fragment>
-                    ))}
-                    {/* <div className="text-center flex justify-center my-5">
-                  <Button
-                    roundedfull
-                    className="border-gray-700"
-                    bordered
-                    type="white"
-                    text="Show More Reviews"
-                  />
-                </div> */}
+                            <hr className="my-3" />
+                          </React.Fragment>
+                        );
+                    })}
+                    <div className="text-center flex justify-center my-5">
+                      <Button
+                        roundedfull
+                        className="border-gray-700"
+                        bordered
+                        type="white"
+                        text={moreReviews ? "Show Less" : "Show More Reviews"}
+                        onClick={() => setMoreReviews(!moreReviews)}
+                      />
+                    </div>
                   </div>
                 </>
               )}
