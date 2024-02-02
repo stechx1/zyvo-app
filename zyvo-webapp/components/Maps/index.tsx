@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import {
   GoogleMap,
   InfoWindow,
@@ -8,19 +8,17 @@ import {
 import { CoordinatesType } from "@/types/place";
 import { useAuthContext } from "@/context/AuthContext";
 
-export default function Map({
-  multipleCoords,
+export function Map({
   coords,
   getCoordinates,
   height,
 }: {
-  multipleCoords?: { coord: CoordinatesType; text: ReactNode }[];
   coords?: CoordinatesType;
   getCoordinates?: (coords: CoordinatesType) => void;
   height?: number;
+  zoom?: number;
 }) {
   const [position, setPosition] = useState(coords);
-  const [map, setMap] = React.useState<google.maps.Map | null>(null);
   const { currentCoordinates } = useAuthContext();
 
   const containerStyle = {
@@ -28,53 +26,14 @@ export default function Map({
     height: height ?? "400px",
   };
   useEffect(() => {
-    if (coords) setPosition(coords);
+    if (coords?.lat !== 0 || coords.lng !== 0) setPosition(coords);
     else if (currentCoordinates) setPosition(currentCoordinates);
   }, [coords, currentCoordinates]);
-
-  useEffect(() => {
-    if (map) onLoad(map);
-  }, [position, map]);
-
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        setPosition({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      });
-    } else {
-      console.log("Geolocation is not available in your browser.");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (coords) setPosition(coords);
-  }, [coords]);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API ?? "",
   });
-
-  const onLoad = (map: google.maps.Map) => {
-    setMap(map);
-    const bounds = new window.google.maps.LatLngBounds();
-    if (multipleCoords) {
-      multipleCoords?.forEach((c) => {
-        bounds.extend(c.coord);
-      });
-    } else if (coords) {
-      bounds.extend(coords);
-      // map.moveCamera({ center: position, zoom: 15 });
-    } else if (currentCoordinates) {
-      bounds.extend(currentCoordinates);
-    }
-    map.fitBounds(bounds);
-    // map.moveCamera({ center: position, zoom: 10 });
-    // map.setZoom(10);
-  };
 
   const onDragEnd = (e: google.maps.MapMouseEvent) => {
     const lat = e.latLng?.lat();
@@ -84,27 +43,77 @@ export default function Map({
       getCoordinates({ lat, lng });
     }
   };
-
   return isLoaded ? (
     <div className="w-full h-full rounded-l-xl">
       <GoogleMap
         mapContainerStyle={containerStyle}
-        // center={position}
-        // zoom={10}
-        onLoad={onLoad}
         onClick={onDragEnd}
+        zoom={10}
+        center={position}
+        options={{
+          disableDefaultUI: true,
+        }}
       >
-        {!multipleCoords && position && (
+        {position && (
           <Marker
             position={position}
             draggable={!!getCoordinates}
             onDragEnd={onDragEnd}
           />
         )}
+      </GoogleMap>
+    </div>
+  ) : (
+    <></>
+  );
+}
+export function MultiMap({
+  multipleCoords,
+  height,
+}: {
+  multipleCoords?: { coord: CoordinatesType; text: ReactNode }[];
+  height?: number;
+}) {
+  const mapRef = useRef<google.maps.Map | null>(null);
+
+  const containerStyle = {
+    width: "100%",
+    height: height ?? "400px",
+  };
+
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API ?? "",
+  });
+
+  const handleMapLoad = (map: google.maps.Map) => {
+    mapRef.current = map;
+    const bounds = new window.google.maps.LatLngBounds();
+    if (multipleCoords) {
+      multipleCoords?.forEach((c) => {
+        bounds.extend(c.coord);
+      });
+    }
+    const initialZoom = 10;
+    if (mapRef.current) {
+      mapRef.current.setZoom(initialZoom);
+      mapRef.current.fitBounds(bounds);
+    }
+  };
+
+  return isLoaded && multipleCoords ? (
+    <div className="w-full h-full rounded-l-xl">
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        onLoad={handleMapLoad}
+        options={{
+          disableDefaultUI: true,
+        }}
+      >
         {multipleCoords?.map((c, i) => {
           return (
             <Marker key={i} position={c.coord} draggable={false}>
-              {c.text && <InfoWindow>{c.text}</InfoWindow>}
+              {<InfoWindow position={c.coord}>{c.text}</InfoWindow>}
             </Marker>
           );
         })}

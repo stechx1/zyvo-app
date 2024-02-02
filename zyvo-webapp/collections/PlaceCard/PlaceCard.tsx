@@ -18,6 +18,7 @@ export default function PlaceCard({
   useEffect(() => {
     if (!place) return;
     getDistance();
+
     async function getDistance() {
       if (currentCoordinates && place?.coordinates) {
         const routes = await getRouteDetails(
@@ -78,14 +79,18 @@ export default function PlaceCard({
             {place.rating?.toFixed(1)}
           </p>
           <span>({place.reviewsCount ?? 0})</span>
-          <Image
-            src={"/icons/path0.svg"}
-            alt="star-icon"
-            width={15}
-            height={15}
-            className="ml-2 mr-1"
-          />
-          <span>{placeDistance} miles away</span>
+          {placeDistance !== null && (
+            <>
+              <Image
+                src={"/icons/path0.svg"}
+                alt="star-icon"
+                width={15}
+                height={15}
+                className="ml-2 mr-1"
+              />
+              <span>{placeDistance} miles away</span>
+            </>
+          )}
         </div>
       </div>
     </div>

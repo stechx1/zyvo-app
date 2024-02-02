@@ -105,7 +105,10 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
             <li className="px-4 py-[8px] hover:bg-secondary-gray-100  place rounded-xl">
               <Link
                 href="/"
-                onClick={() => auth.signOut()}
+                onClick={() => {
+                  auth.signOut();
+                  router.push("/signin");
+                }}
                 className="text-black text-md font-normal"
               >
                 Logout

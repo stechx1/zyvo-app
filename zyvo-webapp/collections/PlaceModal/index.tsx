@@ -1,7 +1,7 @@
 import Button from "@/components/Button";
 import { CustomToggleBtn } from "@/components/CustomToggle";
 import Input from "@/components/Input";
-import Map from "@/components/Maps";
+import { Map } from "@/components/Maps";
 import { MultiTabs } from "@/components/MultiTabs";
 import CustomSelect from "@/components/SelectDropDown";
 import { Tabs } from "@/components/Tabs";
@@ -342,6 +342,14 @@ const HomeSetup = ({
   setPlace: React.Dispatch<React.SetStateAction<Place>>;
 }) => {
   const [showOtherPropertyTypes, setShowOtherPropertyTypes] = useState(false);
+
+  useEffect(() => {
+    if (place.activityType !== "STAYS" && place.bedrooms)
+      setPlace((prev) => {
+        return { ...prev, bedrooms: undefined };
+      });
+  }, [place.activityType]);
+
   const handleChangeAmeneties = (checked: boolean, value: amenety) => {
     {
       if (checked) {
@@ -422,27 +430,6 @@ const HomeSetup = ({
             });
           }}
         />
-        <div>Bedrooms</div>
-        <CustomSelectionType
-          options={[
-            { name: "1", value: 1 },
-            { name: "2", value: 2 },
-            { name: "3", value: 3 },
-            { name: "4", value: 4 },
-            { name: "5", value: 5 },
-            { name: "6", value: 6 },
-            { name: "7", value: 7 },
-          ]}
-          selected={place.bedrooms}
-          onSelect={(value) => {
-            setPlace((prev) => {
-              return {
-                ...prev,
-                bedrooms: typeof value === "number" ? value : 0,
-              };
-            });
-          }}
-        />
         <div>Bathrooms</div>
         <CustomSelectionType
           options={[
@@ -463,6 +450,28 @@ const HomeSetup = ({
               };
             });
           }}
+        />
+        <div>Bedrooms</div>
+        <CustomSelectionType
+          options={[
+            { name: "1", value: 1 },
+            { name: "2", value: 2 },
+            { name: "3", value: 3 },
+            { name: "4", value: 4 },
+            { name: "5", value: 5 },
+            { name: "6", value: 6 },
+            { name: "7", value: 7 },
+          ]}
+          selected={place.bedrooms}
+          onSelect={(value) => {
+            setPlace((prev) => {
+              return {
+                ...prev,
+                bedrooms: typeof value === "number" ? value : 0,
+              };
+            });
+          }}
+          disabled={place.activityType !== "STAYS"}
         />
       </div>
       <hr className="my-8" />
@@ -1127,10 +1136,12 @@ const CustomSelectionType = ({
   options,
   selected,
   onSelect,
+  disabled = false,
 }: {
   options: { name: string; value?: number | string }[];
   selected?: string | number;
   onSelect?: (value?: string | number) => void;
+  disabled?: boolean;
 }) => {
   const ref = useRef<HTMLInputElement>(null);
   const [typedValue, setTypedValue] = useState<string | number>("");
@@ -1143,18 +1154,24 @@ const CustomSelectionType = ({
   }, [selected]);
 
   return (
-    <div className="flex justify-between text-center bg-gray-200 xl:px-2 lg:px-2 md:px-2 sm:px-2 px-1 xl:py-2 lg:py-2 md:py-2 sm:py-2 py-1 rounded-full">
+    <div
+      className={`flex justify-between text-center ${
+        disabled ? "bg-gray-100" : "bg-gray-200"
+      } xl:px-2 lg:px-2 md:px-2 sm:px-2 px-1 xl:py-2 lg:py-2 md:py-2 sm:py-2 py-1 rounded-full`}
+    >
       {options.map((item, i) => {
         return (
           <div
             key={i}
             onClick={() => {
-              onSelect && onSelect(item.value);
+              !disabled && onSelect && onSelect(item.value);
             }}
             className={`w-[45%] py-2 xl:py-1 lg:py-1 md:py-1 sm:py-1 rounded-full text-sm md:text-base sm:text-base lg:text-[13.5px] xl:text-[13.5px] ${
+              disabled ? "text-gray-400" : ""
+            } ${
               item.value === selected
                 ? "bg-white pointer-events-none"
-                : "cursor-pointer"
+                : !disabled && "cursor-pointer"
             }`}
           >
             {item.name}
@@ -1165,13 +1182,18 @@ const CustomSelectionType = ({
         <input
           ref={ref}
           tabIndex={-1}
+          disabled={disabled}
           style={{
             width:
               (typedValue
                 ? (typedValue?.toString()?.length ?? 0) * 10 + 25
                 : 60) + "px",
           }}
-          className={`rounded-full outline-none px-3 border border-gray-400 bg-gray-200 focus:bg-white mx-2`}
+          className={`rounded-full outline-none px-3 border  ${
+            disabled
+              ? "bg-gray-100 border-gray-300"
+              : "bg-gray-200 border-gray-400"
+          } focus:bg-white mx-2`}
           value={typedValue}
           onKeyUp={(e) => {
             if ((e.key === "Enter" || e.keyCode === 13) && ref.current) {

@@ -17,17 +17,14 @@ import { Unsubscribe } from "firebase/auth";
 const db = getFirestore(firebase_app);
 type errorType = { message: string; code: string };
 
-export async function addPlace(
-  placeData: Place,
-  userId: string,
-  docId: string = ""
-) {
+export async function addPlace(placeData: Place, userId: string) {
   let result = null;
   let error = null;
 
   try {
     let placeRef;
-    if (docId) placeRef = doc(collection(db, "places"), docId);
+    if (placeData.placeId)
+      placeRef = doc(collection(db, "places"), placeData.placeId);
     else placeRef = doc(collection(db, "places"));
     const place: Place = {
       ...placeData,
