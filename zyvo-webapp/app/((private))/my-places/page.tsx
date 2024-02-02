@@ -14,12 +14,12 @@ import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 export default function MyPlaces() {
-  const { user } = useAuthContext();
+  const { user, mode } = useAuthContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const defaultPlace: Place = {
-    placeId: Math.random().toString(),
+    placeId: "",
     addOns: [],
     allowPets: false,
     ameneties: [],
@@ -28,8 +28,7 @@ export default function MyPlaces() {
     availableHoursFrom: "12:00",
     availableHoursTo: "23:30",
     bathrooms: 1,
-    bedrooms: 1,
-    peopleCount: 0,
+    peopleCount: 1,
     city: "",
     country: "",
     description: "",
@@ -50,6 +49,7 @@ export default function MyPlaces() {
     reviewsCount: 0,
     rating: 0,
     coordinates: { lat: 0, lng: 0 },
+    status: "ACTIVE",
   };
   const [place, setPlace] = useState<Place>(defaultPlace);
   const [places, setPlaces] = useState<Place[]>([]);
@@ -57,6 +57,10 @@ export default function MyPlaces() {
   useEffect(() => {
     if (user == null) {
       router.push("/signin");
+      return;
+    }
+    if (mode === "GUEST") {
+      router.push("/");
       return;
     }
     const unsubscribe = getMyPlacesSnapshot(
@@ -71,7 +75,7 @@ export default function MyPlaces() {
     return () => {
       unsubscribe();
     };
-  }, [user]);
+  }, [user, mode]);
 
   const onSubmitHandler = () => {
     if (!user) return;
@@ -124,6 +128,7 @@ export default function MyPlaces() {
   const getCoords = async (query: string) => {
     const result = await getGooglePlaces(query);
     let coords: CoordinatesType;
+
     if (result.length > 0) {
       coords = result[0].geometry.location;
     }
@@ -134,6 +139,7 @@ export default function MyPlaces() {
       };
     });
   };
+
   return (
     <div>
       <div className="flex justify-between font-medium">
@@ -165,7 +171,6 @@ export default function MyPlaces() {
               {
                 title: "Edit",
                 onClick: () => {
-                  // router.push("/property-details/" + place.placeId);
                   setIsModalOpen(true);
                   setPlace(place);
                 },

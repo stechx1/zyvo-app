@@ -27,7 +27,6 @@ import { getRouteDetails } from "@/lib/actions";
 
 export default function Bookings() {
   const { user, setUser, mode, currentCoordinates } = useAuthContext();
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -67,6 +66,7 @@ export default function Bookings() {
     setSelectedBookingPlace(null);
     setSelectedBookingPlaceUser(null);
     setReviews([]);
+    setPlaceDistance(null);
   }, [mode]);
 
   useEffect(() => {
@@ -119,9 +119,7 @@ export default function Bookings() {
         }
         setPlaces(newPlaces);
         const selectBooking = () => {
-          if (!selectedBooking) {
-            setSelectedBooking(bookings[0]);
-          } else {
+          if (selectedBooking) {
             setSelectedBooking(
               bookings.find((b) => b.bookingId === selectedBooking.bookingId) ??
                 null
@@ -141,6 +139,8 @@ export default function Bookings() {
       }
     };
     if (selectedBooking?.placeRef) {
+      console.log(selectedBooking);
+
       fetchSelectedBookingPlace(selectedBooking.placeRef);
       if (mode === "HOST") getUser(selectedBooking.userRef);
       else getUser(selectedBooking.hostRef);
@@ -791,6 +791,10 @@ export default function Bookings() {
                 </>
               )}
             </div>
+          ) : bookings.length > 0 ? (
+            <div className="flex justify-center items-center h-[100%]">
+              Select a booking to view details
+            </div>
           ) : (
             <div className="flex justify-center items-center h-[100%]">
               No Booking!
@@ -800,7 +804,7 @@ export default function Bookings() {
 
         {/****** Right side details ******/}
         <div className="hidden lg:block lg:w-[25%] space-y-4">
-          {selectedBookingPlaceUser && (
+          {selectedBookingPlaceUser && mode && selectedBooking && (
             <HostProperties
               mode={mode}
               bottomTextIcon="/icons/information-button.png"

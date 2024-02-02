@@ -5,7 +5,7 @@ import { DocumentReference } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Accordion from "@/components/Accordion/Accordion";
-import Map from "@/components/Maps";
+import { Map } from "@/components/Maps";
 import { AccordionItem } from "@/types";
 import { User } from "@/types/user";
 import { Review } from "@/types/review";
@@ -39,13 +39,17 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
     useState<string>();
   const [selectedavailableHoursFrom, setSelectedavailableHoursFrom] =
     useState<string>();
-  const [hours, setHours] = useState(1);
+  const [hours, setHours] = useState(2);
   const [width] = useScreenDimensions();
 
   const router = useRouter();
   useEffect(() => {
     if (user == null) {
       router.push("/signin");
+      return;
+    }
+    if (mode == "HOST") {
+      router.push("/my-places");
       return;
     }
     const unsubscribe = getPlaceSnapshot(
@@ -61,7 +65,8 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
     return () => {
       unsubscribe();
     };
-  }, [user]);
+  }, [user, mode]);
+
   useEffect(() => {
     if (!place) return;
     const unsubscribe = getReviewsSnapshot(
@@ -190,15 +195,17 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             />
             <div>{place?.minHours} hr min</div>
           </div>
-          <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-base">
-            <Image
-              src={"/icons/square-fit-icon.svg"}
-              alt="square-fit"
-              width={18}
-              height={18}
-            />
-            <div>323 sqft</div>
-          </div>
+          {place?.size && (
+            <div className="flex items-center justify-center space-x-2 text-[12px] sm:text-base">
+              <Image
+                src={"/icons/square-fit-icon.svg"}
+                alt="square-fit"
+                width={18}
+                height={18}
+              />
+              <div>{place?.size} sqft</div>
+            </div>
+          )}
         </div>
 
         {/* =================================== Right Description =============================  */}

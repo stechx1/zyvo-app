@@ -24,7 +24,7 @@ export type Place = {
   availableHoursFrom: string;
   availableHoursTo: string;
   bathrooms: number;
-  bedrooms: number;
+  bedrooms?: number;
   size?: number;
   peopleCount: number;
   coordinates: CoordinatesType;
@@ -49,4 +49,5 @@ export type Place = {
   userRef?: DocumentReference;
   reviewsCount: number;
   rating: number;
+  status: string;
 };

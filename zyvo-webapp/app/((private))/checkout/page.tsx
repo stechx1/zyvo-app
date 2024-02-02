@@ -63,6 +63,10 @@ const CheckoutPage = () => {
       router.push("/signin");
       return;
     }
+    if (mode === "HOST") {
+      router.push("/my-places");
+      return;
+    }
     if (!details) {
       router.back();
     }
@@ -79,7 +83,7 @@ const CheckoutPage = () => {
     return () => {
       unsubscribe();
     };
-  }, [user]);
+  }, [user, mode]);
 
   useEffect(() => {
     if (!place) return;

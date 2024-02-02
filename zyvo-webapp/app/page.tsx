@@ -3,16 +3,28 @@ import { FilterSearch } from "@/collections/FilterSearch/FilterSearch";
 import HomeFilters from "@/collections/HomeFilters";
 import { PropertyList } from "@/collections/PropertyListing/PropertyListing";
 import Button from "@/components/Button";
-import Map from "@/components/Maps";
+import { MultiMap } from "@/components/Maps";
+import { useAuthContext } from "@/context/AuthContext";
 import { getAllPlacesSnapshot } from "@/firebase/place";
 import { Place } from "@/types/place";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  const { user, mode } = useAuthContext();
+
   const [places, setPlaces] = useState<Place[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && mode == "HOST") {
+      router.push("/my-places");
+      return;
+    }
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -40,7 +52,11 @@ export default function Home() {
       <div className="z-10 sm:hidden border border-r-0 border-l-0 py-4 px-4 mt-[-2vh] mx-[-10px]">
         <FilterSearch />
       </div>
-      <HomeFilters handleShowMap={handleShowMap} mapVisible={showMap} />
+      <HomeFilters
+        showMapBtn={places.length > 0}
+        handleShowMap={handleShowMap}
+        mapVisible={showMap}
+      />
       <div className={`${showMap && "flex sm:space-x-5"}`}>
         <div className={`${showMap && "sm:w-[50%] hidden sm:block"}`}>
           <PropertyList
@@ -52,9 +68,9 @@ export default function Home() {
             }
           />
         </div>
-        {showMap && (
+        {showMap && places && (
           <div className="w-[100%] sm:w-[50%]">
-            <Map
+            <MultiMap
               multipleCoords={places.map((p) => {
                 return {
                   coord: p.coordinates,
@@ -76,19 +92,25 @@ export default function Home() {
           </div>
         )}
       </div>
-      <div className="sticky flex justify-center sm:hidden block bottom-24">
-        <Button
-          text={!showMap ? "Show Map" : "Show List"}
-          type="gray"
-          roundedfull
-          icon={
-            !showMap
-              ? "/icons/white-showmap-icon.svg"
-              : "/icons/white-filter-icon.svg"
-          }
-          onClick={handleShowMap}
-        />
-      </div>
+      {places.length > 0 && (
+        <div
+          className={`sticky flex justify-center sm:hidden ${
+            user ? "bottom-24" : "bottom-4"
+          }`}
+        >
+          <Button
+            text={!showMap ? "Show Map" : "Show List"}
+            type="gray"
+            roundedfull
+            icon={
+              !showMap
+                ? "/icons/white-showmap-icon.svg"
+                : "/icons/white-filter-icon.svg"
+            }
+            onClick={handleShowMap}
+          />
+        </div>
+      )}
       {places.length === 0 && (
         <div className="text-center m-auto h-[100%] flex items-center justify-center">
           {isLoading ? "Loading.." : "No Properties!"}

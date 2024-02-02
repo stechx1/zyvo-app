@@ -70,7 +70,8 @@ export const PropertyCard = ({
       className="rounded-xl relative overflow-hidden mb-6"
       role="button"
       onClick={() => {
-        router.push("/property-details/" + place.placeId);
+        if (user) router.push("/property-details/" + place.placeId);
+        else router.push("/signin");
       }}
       onMouseEnter={() => setShowCarouselItems(true)}
       onMouseLeave={() => setShowCarouselItems(false)}
@@ -229,7 +230,7 @@ export const PropertyCard = ({
             {place.rating?.toFixed(1)}
           </p>
           <p className=" sm:text-[16px] text-[11px] text-secondary-neutral-400 mr-0 sm:mr-2">{`(${place.reviewsCount})`}</p>
-          {currentCoordinates && place.coordinates && (
+          {placeDistance && (
             <p className="flex items-center  text-[10px] sm:text-[16px] text-secondary-neutral-400">
               <Image
                 src={"/icons/gray-location-icon.svg"}
