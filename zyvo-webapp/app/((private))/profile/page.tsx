@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import ProfileForm from "@/collections/Profile/ProfileForm";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { profileState } from "@/types";
 import Button from "@/components/Button";
@@ -22,7 +22,7 @@ const ProfilePage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setIsLoading] = useState(false);
-  const { user, setUser, mode } = useAuthContext();
+  const { user, setUser, mode } = useCommonContext();
   const [selectedFile, setSelectedFile] = useState<File>();
   const [imgPreview, setImgPreview] = useState<string>();
 

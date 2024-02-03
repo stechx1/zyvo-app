@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import Input from "@/components/Input";
 import Image from "next/image";
 import Button from "@/components/Button";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { googleSignin } from "@/firebase/auth/sociaiLogin";
 import toast from "react-hot-toast";
 
 function Page() {
-  const { user } = useAuthContext();
+  const { user } = useCommonContext();
   const [state, setState] = useState({
     email: "",
     emailError: "",

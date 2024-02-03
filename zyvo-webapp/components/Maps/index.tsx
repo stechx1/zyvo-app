@@ -6,7 +6,7 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 import { CoordinatesType } from "@/types/place";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 
 export function Map({
   coords,
@@ -19,7 +19,7 @@ export function Map({
   zoom?: number;
 }) {
   const [position, setPosition] = useState(coords);
-  const { currentCoordinates } = useAuthContext();
+  const { currentCoordinates } = useCommonContext();
 
   const containerStyle = {
     width: "100%",

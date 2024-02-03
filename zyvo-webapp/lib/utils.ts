@@ -139,3 +139,39 @@ export function haversine_distance(mk1: CoordinatesType, mk2: CoordinatesType) {
     );
   return d.toFixed(2); // in Miles
 }
+export type ActivitiesArrayType = {
+  Stays: string;
+  "Event Space": string;
+  "Photo Shoot": string;
+  Meeting: string;
+  Party: string;
+  "Film Shoot": string;
+  Performance: string;
+  Workshop: string;
+  "Corporate Event": string;
+  Wedding: string;
+  Dinner: string;
+  Retreat: string;
+  "Pop-up": string;
+  Networking: string;
+  "Fitness Class": string;
+  "Audio Recording": string;
+};
+export const ActivitiesArray: ActivitiesArrayType = {
+  Stays: "STAYS",
+  "Event Space": "EVENTSPACE",
+  "Photo Shoot": "PHOTOSHOOT",
+  Meeting: "MEETING",
+  Party: "PARTY",
+  "Film Shoot": "FILMSHOOT",
+  Performance: "PERFORMANCE",
+  Workshop: "WORKSHOP",
+  "Corporate Event": "CORPORATE EVENT",
+  Wedding: "WEDDING",
+  Dinner: "DINNER",
+  Retreat: "RETREAT",
+  "Pop-up": "POPUP",
+  Networking: "NETWORKING",
+  "Fitness Class": "FITNESSCLASS",
+  "Audio Recording": "AUDIORECORDING",
+};

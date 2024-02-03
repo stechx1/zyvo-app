@@ -2,9 +2,9 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { poppins } from "@/lib/utils";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 const Home = () => {
-  const { user } = useAuthContext();
+  const { user } = useCommonContext();
 
   useEffect(() => {
     // const sendEmail = async () => {

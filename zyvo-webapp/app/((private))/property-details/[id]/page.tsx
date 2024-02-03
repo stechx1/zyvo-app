@@ -10,7 +10,7 @@ import { AccordionItem } from "@/types";
 import { User } from "@/types/user";
 import { Review } from "@/types/review";
 import { Place } from "@/types/place";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { getPlaceSnapshot } from "@/firebase/place";
 import { getReviewsSnapshot } from "@/firebase/reviews";
 import { getUserByRef, updateFavourites } from "@/firebase/user";
@@ -28,7 +28,7 @@ export type BookingDetailsType = {
 };
 
 const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
-  const { user, setUser, mode } = useAuthContext();
+  const { user, setUser, mode } = useCommonContext();
   const [place, setPlace] = useState<Place | null>(null);
   const [readMore, setReadMore] = useState<boolean>(false);
   const [placeUser, setPlaceUser] = useState<null | User>();

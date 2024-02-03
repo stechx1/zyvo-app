@@ -3,7 +3,7 @@ import PlaceCard from "@/collections/PlaceCard/PlaceCard";
 import PlaceModal from "@/collections/PlaceModal";
 import Button from "@/components/Button";
 import { CustomDialog } from "@/components/Dialog";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { addPlace, deletePlace, getMyPlacesSnapshot } from "@/firebase/place";
 import { getGooglePlaces } from "@/lib/actions";
 import { debounce } from "@/lib/utils";
@@ -12,9 +12,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { geohashForLocation } from "geofire-common";
 
 export default function MyPlaces() {
-  const { user, mode } = useAuthContext();
+  const { user, mode } = useCommonContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -49,6 +50,7 @@ export default function MyPlaces() {
     reviewsCount: 0,
     rating: 0,
     coordinates: { lat: 0, lng: 0 },
+    geohash: geohashForLocation([0, 0]),
     status: "ACTIVE",
   };
   const [place, setPlace] = useState<Place>(defaultPlace);

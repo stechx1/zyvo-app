@@ -1,19 +1,29 @@
 import {
   DocumentReference,
+  Query,
   collection,
   deleteDoc,
   doc,
+  endAt,
   getDoc,
   getDocs,
   getFirestore,
   onSnapshot,
+  orderBy,
   query,
   setDoc,
+  startAt,
   where,
 } from "firebase/firestore";
 import firebase_app from "@/config";
-import { Place } from "@/types/place";
+import { CoordinatesType, Place } from "@/types/place";
 import { Unsubscribe } from "firebase/auth";
+import {
+  Geopoint,
+  distanceBetween,
+  geohashForLocation,
+  geohashQueryBounds,
+} from "geofire-common";
 const db = getFirestore(firebase_app);
 type errorType = { message: string; code: string };
 
@@ -31,6 +41,10 @@ export async function addPlace(placeData: Place, userId: string) {
       placeId: placeRef.id,
       userRef: doc(db, "users", userId),
       createdAt: new Date(),
+      geohash: geohashForLocation([
+        placeData.coordinates.lat,
+        placeData.coordinates.lng,
+      ]),
     };
     result = await setDoc(placeRef, place, {
       merge: true,
@@ -130,6 +144,31 @@ export function getAllPlacesSnapshot(
   }
   return unsubscribe;
 }
+export function getAllPlaces(
+  onSuccess: (data: Place[]) => void,
+  onError?: (error: string) => void
+) {
+  try {
+    getDocs(query(collection(db, "places"))).then((places) => {
+      let result: Place[] = [];
+      for (let index = 0; index < places.docs.length; index++) {
+        const place = places.docs[index].data() as Place;
+        const placeId = places.docs[index].id;
+        result = [
+          ...result,
+          {
+            ...place,
+            placeId,
+          },
+        ];
+      }
+      onSuccess(result);
+    });
+  } catch (e) {
+    console.log(e);
+    if (typeof e === "object" && onError) onError((e as errorType).code);
+  }
+}
 export function getPlaceSnapshot(
   placeId: string,
   onSuccess: (data: Place) => void,
@@ -159,5 +198,96 @@ export async function getPlaceByRef(placeRef: DocumentReference) {
     error = e;
   }
 
+  return { result, error };
+}
+export async function getPlacesByLocation_Time_Activity({
+  coordinates,
+  time,
+  activity,
+}: {
+  coordinates?: CoordinatesType;
+  time?: string;
+  activity?: string;
+}) {
+  let result: Place[] = [];
+  let error = null;
+  try {
+    let q: Query | null = null;
+    if (!coordinates && !time && activity) {
+      q = query(
+        collection(db, "places"),
+        where("activityType", "==", activity)
+      );
+      const data = await getDocs(q);
+      result = data.docs.map((doc) => doc.data() as Place);
+    } else if (coordinates && !time && !activity) {
+      const center: Geopoint = [coordinates.lat, coordinates.lng];
+      const radiusInM = 50 * 1000;
+      const bounds = geohashQueryBounds(center, radiusInM);
+      const promises = [];
+      for (const b of bounds) {
+        const q = query(
+          collection(db, "places"),
+          orderBy("geohash"),
+          startAt(b[0]),
+          endAt(b[1])
+        );
+        const snapshot = getDocs(q);
+        // snapshot.then((d) => console.log(d.docs[0].data()));
+        promises.push(snapshot);
+      }
+      const snapshots = await Promise.all(promises);
+      const matchingDocs: Place[] = [];
+      for (const snap of snapshots) {
+        for (const doc of snap.docs) {
+          const placeCoords: CoordinatesType = doc.get("coordinates");
+          const distanceInKm = distanceBetween(
+            [placeCoords.lat, placeCoords.lng],
+            center
+          );
+          const distanceInM = distanceInKm * 1000;
+          if (distanceInM <= radiusInM) {
+            matchingDocs.push(doc.data() as Place);
+          }
+        }
+      }
+      result = matchingDocs;
+    } else if (coordinates && !time && activity) {
+      const center: Geopoint = [coordinates.lat, coordinates.lng];
+      const radiusInM = 50 * 1000;
+      const bounds = geohashQueryBounds(center, radiusInM);
+      const promises = [];
+      for (const b of bounds) {
+        const q = query(
+          collection(db, "places"),
+          orderBy("geohash"),
+          startAt(b[0]),
+          endAt(b[1]),
+          where("activityType", "==", activity)
+        );
+        const snapshot = getDocs(q);
+        promises.push(snapshot);
+      }
+      const snapshots = await Promise.all(promises);
+      const matchingDocs: Place[] = [];
+      for (const snap of snapshots) {
+        for (const doc of snap.docs) {
+          const placeCoords: CoordinatesType = doc.get("coordinates");
+          const distanceInKm = distanceBetween(
+            [placeCoords.lat, placeCoords.lng],
+            center
+          );
+          const distanceInM = distanceInKm * 1000;
+          if (distanceInM <= radiusInM) {
+            matchingDocs.push(doc.data() as Place);
+          }
+        }
+      }
+      result = matchingDocs;
+    }
+  } catch (e) {
+    console.log(e);
+    error = e;
+  }
   return { result, error };
 }

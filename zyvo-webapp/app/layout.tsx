@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AuthContextProvider } from "@/context/AuthContext";
+import { CommonContextProvider } from "@/context/CommonContext";
 import { Toaster } from "react-hot-toast";
 import { AOSInit } from "@/AOSInit";
 import { poppins, roboto } from "@/lib/utils";
@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={`${roboto.className} ${poppins.className} `}>
         <AOSInit />
         <Toaster />
-        <AuthContextProvider>{children}</AuthContextProvider>
+        <CommonContextProvider>{children}</CommonContextProvider>
       </body>
     </html>
   );

@@ -6,7 +6,7 @@ import { User } from "@/types/user";
 import { DocumentReference } from "firebase/firestore";
 import { getUserByRef, updateFavourites } from "@/firebase/user";
 import { useRouter } from "next/navigation";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { getRouteDetails } from "@/lib/actions";
 export const PropertyCard = ({
   place,
@@ -16,7 +16,7 @@ export const PropertyCard = ({
   currentCoordinates: CoordinatesType | null;
 }) => {
   const router = useRouter();
-  const { user, setUser } = useAuthContext();
+  const { user, setUser } = useCommonContext();
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [placeImageIndex, setPlaceImageIndex] = useState<number>(0);
   const [imageOpacity, setImageOpacity] = useState<number>(1);

@@ -4,17 +4,14 @@ import HomeFilters from "@/collections/HomeFilters";
 import { PropertyList } from "@/collections/PropertyListing/PropertyListing";
 import Button from "@/components/Button";
 import { MultiMap } from "@/components/Maps";
-import { useAuthContext } from "@/context/AuthContext";
-import { getAllPlacesSnapshot } from "@/firebase/place";
-import { Place } from "@/types/place";
+import { useCommonContext } from "@/context/CommonContext";
+import { getAllPlaces } from "@/firebase/place";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { user, mode } = useAuthContext();
-
-  const [places, setPlaces] = useState<Place[]>([]);
+  const { user, mode, places, setPlaces } = useCommonContext();
   const [isLoading, setIsLoading] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const router = useRouter();
@@ -24,11 +21,11 @@ export default function Home() {
       router.push("/my-places");
       return;
     }
-  }, []);
+  }, [user, mode]);
 
   useEffect(() => {
     setIsLoading(true);
-    const unsubscribe = getAllPlacesSnapshot(
+    getAllPlaces(
       (places) => {
         setPlaces(places);
         setIsLoading(false);
@@ -38,9 +35,6 @@ export default function Home() {
         console.log(e);
       }
     );
-    return () => {
-      unsubscribe();
-    };
   }, []);
 
   const handleShowMap = () => {

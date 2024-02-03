@@ -1,9 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 
 export const ProfileContactSection = ({}) => {
-  const { user } = useAuthContext();
+  const { user } = useCommonContext();
   const profileInfo = [
     {
       title: "Email Address",

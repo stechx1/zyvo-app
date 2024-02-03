@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { googleSignin } from "@/firebase/auth/sociaiLogin";
 import { User } from "@/types/user";
 import toast from "react-hot-toast";
 import addData from "@/firebase/firestore/addData";
 
 function Page() {
-  const { user } = useAuthContext();
+  const { user } = useCommonContext();
   const [state, setState] = useState({
     firstName: "",
     firstNameError: "",

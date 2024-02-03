@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import Input from "../Input";
 import Image from "next/image";
 import { FilterSearch } from "@/collections/FilterSearch/FilterSearch";
-import { DynamicFilterDropdown } from "@/collections/FilterSearch/DynamicFilterDropdown/DynamicFilterDropdown";
+import { CustomDropdown } from "@/components/CustomDropdown/CustomDropdown";
 
 interface props {
   type: "Search" | "Content" | "header";
@@ -39,15 +39,15 @@ export default function MobileSearchAndFilter({ type, children }: props) {
             }}
           />
           <div className="border border-gray-200 rounded-full flex w-full py-1 pl-3 pr-1 justify-between items-center">
-            <div className="border-gray-200 cursor-pointer">
-              <DynamicFilterDropdown label="Where" />
+            {/* <div className="border-gray-200 cursor-pointer">
+              <CustomDropdown label="Where" />
             </div>
             <div className="border-l border-gray-200 pl-2 cursor-pointer">
-              <DynamicFilterDropdown label="Time" />
+              <CustomDropdown label="Time" />
             </div>
             <div className="md:pr-7 border-l pl-2 cursor-pointer">
-              <DynamicFilterDropdown label="Activity" />
-            </div>
+              <CustomDropdown label="Activity" />
+            </div> */}
             <Image
               src={"/icons/filter-search-icon.svg"}
               className="cursor-pointer"

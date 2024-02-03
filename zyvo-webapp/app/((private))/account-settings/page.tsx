@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { User } from "@/types/user";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
@@ -16,7 +16,7 @@ import firebase_app from "@/config";
 const storage = getStorage(firebase_app);
 
 const AccountSettingPage = () => {
-  const { user, setUser } = useAuthContext();
+  const { user, setUser } = useCommonContext();
   const auth = getAuth();
 
   const [isLoading, setIsLoading] = useState(false);

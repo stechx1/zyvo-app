@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { User } from "@/types/user";
 import Input from "@/components/Input";
 import { InputSectionProps } from "@/types";

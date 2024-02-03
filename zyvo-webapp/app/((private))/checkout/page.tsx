@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/components/Button";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import Image from "next/image";
 import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
@@ -45,7 +45,7 @@ const InputSection: React.FC<InputSectionProps> = ({
 
 const CheckoutPage = () => {
   const router = useRouter();
-  const { user, mode, currentCoordinates } = useAuthContext();
+  const { user, mode, currentCoordinates } = useCommonContext();
   const [place, setPlace] = useState<Place | null>(null);
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [isLoading, setIsLoading] = useState(false);

@@ -1,6 +1,6 @@
 "use client";
 import firebase_app from "@/config";
-import { AuthContext } from "@/context/AuthContext";
+import { CommonContext } from "@/context/CommonContext";
 import { getAuth } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 
 export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
   const auth = getAuth(firebase_app);
-  const { mode, setMode } = useContext(AuthContext);
+  const { mode, setMode } = useContext(CommonContext);
   const router = useRouter();
 
   const userProfileDropdownLinks = [

@@ -2,7 +2,7 @@
 import Button from "@/components/Button";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { useRouter } from "next/navigation";
 import { getMyBookingsSnapshot, updateStatusBooking } from "@/firebase/booking";
 import { Booking, BookingStatusType } from "@/types/booking";
@@ -26,7 +26,7 @@ import Map from "@/components/Maps";
 import { getRouteDetails } from "@/lib/actions";
 
 export default function Bookings() {
-  const { user, setUser, mode, currentCoordinates } = useAuthContext();
+  const { user, setUser, mode, currentCoordinates } = useCommonContext();
   const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);

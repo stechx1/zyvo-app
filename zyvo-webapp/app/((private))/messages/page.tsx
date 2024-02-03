@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import {
   getMessagessSnapshot,
   sendMessage,
@@ -25,7 +25,7 @@ export default function Messages() {
   const searchParams = useSearchParams();
   let userId = searchParams.get("userId");
 
-  const { user, conversations, mode } = useAuthContext();
+  const { user, conversations, mode } = useCommonContext();
   const router = useRouter();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);

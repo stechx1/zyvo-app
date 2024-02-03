@@ -11,7 +11,7 @@ import { User } from "@/types/user";
 import { conversation } from "@/types/messages";
 import { getConversationsSnapshot } from "@/firebase/messages";
 import BottomTabNav from "@/collections/Footer/bottomTabNav/bottomTabNav";
-import { CoordinatesType } from "@/types/place";
+import { CoordinatesType, Place } from "@/types/place";
 import { updateLastActive } from "@/firebase/user";
 
 const auth = getAuth(firebase_app);
@@ -23,6 +23,8 @@ const defaultValue: {
   setMode: (mode: "GUEST" | "HOST") => void;
   conversations: conversation[];
   setConversations: (conversations: conversation[]) => void;
+  places: Place[];
+  setPlaces: (places: Place[]) => void;
   currentCoordinates: CoordinatesType | null;
 } = {
   user: null,
@@ -31,13 +33,15 @@ const defaultValue: {
   setMode: () => {},
   conversations: [],
   setConversations: () => {},
+  places: [],
+  setPlaces: () => {},
   currentCoordinates: null,
 };
-export const AuthContext = createContext(defaultValue);
+export const CommonContext = createContext(defaultValue);
 
-export const useAuthContext = () => useContext(AuthContext);
+export const useCommonContext = () => useContext(CommonContext);
 
-export const AuthContextProvider = ({
+export const CommonContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
@@ -45,6 +49,7 @@ export const AuthContextProvider = ({
   const [user, setUser] = useState<User | null>(null);
   const [mode, setMode] = useState<"GUEST" | "HOST">("GUEST");
   const [conversations, setConversations] = useState<conversation[]>([]);
+  const [places, setPlaces] = useState<Place[]>([]);
   const [convosSubscribeFN, setConvosSubscribeFN] = useState<Unsubscribe>();
   const [loading, setLoading] = useState(true);
   const [currentCoordinates, setCurrentCoordinates] =
@@ -144,7 +149,7 @@ export const AuthContextProvider = ({
   if (loading) return <PreLoader />;
 
   return (
-    <AuthContext.Provider
+    <CommonContext.Provider
       value={{
         user,
         setUser: (user) => setUser(user),
@@ -152,6 +157,8 @@ export const AuthContextProvider = ({
         setMode: (mode: "GUEST" | "HOST") => setMode(mode),
         conversations,
         setConversations: (conversations) => setConversations(conversations),
+        places,
+        setPlaces: (places) => setPlaces(places),
         currentCoordinates: currentCoordinates,
       }}
     >
@@ -167,6 +174,6 @@ export const AuthContextProvider = ({
             <Footer />
           </div>
         )}
-    </AuthContext.Provider>
+    </CommonContext.Provider>
   );
 };

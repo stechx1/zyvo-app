@@ -6,11 +6,11 @@ import { FilterSearch } from "../FilterSearch/FilterSearch";
 import { BadgeIcon } from "@/components/BadgeIcon/BadgeIcon";
 import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 
 export const Navbar = () => {
   const router = useRouter();
-  const { user, conversations, mode } = useAuthContext();
+  const { user, conversations, mode } = useCommonContext();
 
   return (
     <nav className="hidden md:block lg:block xl:block sm:block px-8 sm:px-[6%] xl:px-30 bg-white py-4 text-secondary-gray-700 sticky top-0 z-[5] shadow border border-bottom">

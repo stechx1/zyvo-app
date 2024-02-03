@@ -3,11 +3,11 @@ import { AboutBox } from "@/components/AboutBox";
 import { AboutSection } from "@/collections/AboutSection";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 
 const AboutPage = () => {
   const router = useRouter();
-  const { user } = useAuthContext();
+  const { user } = useCommonContext();
 
   return (
     <>

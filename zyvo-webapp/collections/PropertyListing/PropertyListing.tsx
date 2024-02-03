@@ -2,11 +2,11 @@
 import React from "react";
 import { PropertyCard } from "@/collections/PropertyCard/PropertyCard";
 import { Place } from "@/types/place";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 // import { Pagination } from "@/components/Pagination/Pagination";
 
 export const PropertyList = ({ places, grids }: { places: Place[], grids:string }) => {
-  const { currentCoordinates } = useAuthContext();
+  const { currentCoordinates } = useCommonContext();
   return (
     <div>
       <div className={`grid ${grids} gap-3 md:gap-6`}>

@@ -1,5 +1,5 @@
 import Dropdown from "@/components/Dropdown";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { getRouteDetails } from "@/lib/actions";
 import { Place } from "@/types/place";
 import Image from "next/image";
@@ -13,7 +13,7 @@ export default function PlaceCard({
   menuOptions: { title: string; onClick?: () => void }[];
 }) {
   const [placeDistance, setPlaceDistance] = useState<number | null>(null);
-  const { currentCoordinates } = useAuthContext();
+  const { currentCoordinates } = useCommonContext();
 
   useEffect(() => {
     if (!place) return;

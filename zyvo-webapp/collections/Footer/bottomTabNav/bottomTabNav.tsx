@@ -1,7 +1,7 @@
 import { BadgeIcon } from "@/components/BadgeIcon/BadgeIcon";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import { usePathname } from "next/navigation";
 
 interface Props {}
@@ -10,7 +10,7 @@ function BottomTabNav(props: Props) {
   const {} = props;
   const router = useRouter();
   const pathname = usePathname();
-  const { user, conversations, mode } = useAuthContext();
+  const { user, conversations, mode } = useCommonContext();
 
   const Navigations = [
     {

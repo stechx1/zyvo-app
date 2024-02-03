@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button";
-import { useAuthContext } from "@/context/AuthContext";
+import { useCommonContext } from "@/context/CommonContext";
 import Image from "next/image";
 import { AccordionItem } from "@/types";
 import Accordion from "@/components/Accordion/Accordion";
@@ -25,7 +25,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [bookingPlace, setBookingPlace] = useState<null | Place>();
   const [placeDistance, setPlaceDistance] = useState<number | null>(null);
-  const { user, mode, currentCoordinates } = useAuthContext();
+  const { user, mode, currentCoordinates } = useCommonContext();
 
   const router = useRouter();
   const [width] = useScreenDimensions();

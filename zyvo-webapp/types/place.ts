@@ -1,5 +1,5 @@
 import { DocumentReference } from "firebase/firestore";
-
+import { Geohash } from "geofire-common";
 export type amenety =
   | "WIFI"
   | "WASHER"
@@ -50,4 +50,5 @@ export type Place = {
   reviewsCount: number;
   rating: number;
   status: string;
+  geohash: Geohash;
 };
