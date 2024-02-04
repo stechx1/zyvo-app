@@ -7,9 +7,11 @@ import { BadgeIcon } from "@/components/BadgeIcon/BadgeIcon";
 import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
 import { useCommonContext } from "@/context/CommonContext";
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, conversations, mode } = useCommonContext();
 
   return (
@@ -29,7 +31,7 @@ export const Navbar = () => {
 
         {user ? (
           <>
-            {mode === "GUEST" && <FilterSearch />}
+            {mode === "GUEST" && pathname === "/" && <FilterSearch />}
             <div className="border border-gray-200 rounded-full p-[10px] xxs:flex md:hidden">
               <Image
                 src={"/icons/filter-icon.svg"}

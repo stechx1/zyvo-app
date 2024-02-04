@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/components/Button";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useCommonContext } from "@/context/CommonContext";
 import { useRouter } from "next/navigation";
@@ -22,12 +22,13 @@ import { CustomDialog } from "@/components/Dialog";
 import ReviewModal from "@/collections/ReviewModal";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import toast from "react-hot-toast";
-import Map from "@/components/Maps";
+import {Map} from "@/components/Maps";
 import { getRouteDetails } from "@/lib/actions";
 
 export default function Bookings() {
   const { user, setUser, mode, currentCoordinates } = useCommonContext();
   const router = useRouter();
+  const bookingDetailRef = useRef<HTMLDivElement>(null);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
@@ -303,7 +304,7 @@ export default function Bookings() {
   return (
     <>
       <div
-        className={`xl:hidden lg:hidden md:hidden sm:hidden flex justify-between items-center border-t border-b py-3 ${
+        className={`xl:hidden lg:hidden md:hidden sm:hidden flex justify-between items-center mx-[-15px] border-t border-b py-3 ${
           !selectedBooking ? "space-x-0" : "space-x-2"
         }`}
       >
@@ -322,12 +323,16 @@ export default function Bookings() {
           <MobileSearchAndFilter type="Search" />
         </div>
       </div>
-
       <div className="sm:flex justify-between sm:space-x-2 md:space-x-3 xl:space-x-4">
         <div
           className={`${
             selectedBooking ? "hidden" : "block"
-          } w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-auto space-y-2`}
+          } w-[100%] sm:block sm:w-[40%] lg:w-[25%] space-y-2`}
+          style={{
+            height: bookingDetailRef?.current?.offsetHeight
+              ? bookingDetailRef?.current?.offsetHeight - 50
+              : "auto",
+          }}
         >
           <div className="sm:flex hidden justify-between items-center">
             <div className="flex items-center space-x-2">
@@ -349,9 +354,7 @@ export default function Bookings() {
             </div>
           </div>
           <div
-            className={`${
-              bookings.length > 5 && "pr-1.5 "
-            } sm:max-h-[100%] sm:overflow-auto`}
+            className={`${"pr-1.5 "} sm:max-h-[100%] sm:overflow-auto`}
           >
             {bookings.map((booking) => {
               return (
@@ -492,9 +495,10 @@ export default function Bookings() {
         )}
 
         <div
+          ref={bookingDetailRef}
           className={`${
             !selectedBooking ? "hidden" : "block"
-          }  sm:w-[60%] w-full lg:w-[50%] sm:flex h-max flex-col sm:border rounded-2xl`}
+          }  sm:w-[60%] w-full lg:w-[50%] sm:flex h-max min-h-screen flex-col sm:border rounded-2xl`}
         >
           {selectedBooking ? (
             <div>
@@ -792,11 +796,11 @@ export default function Bookings() {
               )}
             </div>
           ) : bookings.length > 0 ? (
-            <div className="flex justify-center items-center h-[100%]">
+            <div className="flex justify-center items-center h-screen">
               Select a booking to view details
             </div>
           ) : (
-            <div className="flex justify-center items-center h-[100%]">
+            <div className="flex justify-center h-screen items-center">
               No Booking!
             </div>
           )}
@@ -863,6 +867,7 @@ const BookingStatus = ({ status }: { status: BookingStatusType }) => {
         return "bg-stone-100";
     }
   }
+
   return (
     <span
       className={`inline-block mt-0.5 text-black px-2.5 py-2 text-sm leading-none ${getStatusColor(

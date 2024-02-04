@@ -60,7 +60,7 @@ function BottomTabNav(props: Props) {
   ];
 
   return (
-    <div className="sm:hidden w-full fixed bottom-0 bg-white border-t-2 flex justify-around p-3 text-xs text-[#B0B7B7]">
+    <div className="z-50 sm:hidden w-full fixed bottom-0 bg-white border-t-2 flex justify-around p-3 text-xs text-[#B0B7B7]">
       {Navigations.map((res, i) => {
         return (
           <div

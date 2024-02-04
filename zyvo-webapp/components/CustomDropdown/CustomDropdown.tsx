@@ -37,7 +37,7 @@ export function CustomDropdown({
       {parent}
       {isOpen && (
         <div
-          className="absolute bg-white rounded-xl shadow-lg mt-[8px]  left-[-42px] sm:left-0"
+          className="absolute bg-white rounded-xl shadow-lg mt-[8px] z-10  left-[-42px] sm:left-0"
           onClick={stopPropagation}
         >
           {children}

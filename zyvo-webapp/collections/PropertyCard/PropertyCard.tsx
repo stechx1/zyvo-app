@@ -8,6 +8,7 @@ import { getUserByRef, updateFavourites } from "@/firebase/user";
 import { useRouter } from "next/navigation";
 import { useCommonContext } from "@/context/CommonContext";
 import { getRouteDetails } from "@/lib/actions";
+import { useScreenDimensions } from "@/hooks/useScreenDimension";
 export const PropertyCard = ({
   place,
   currentCoordinates,
@@ -16,6 +17,7 @@ export const PropertyCard = ({
   currentCoordinates: CoordinatesType | null;
 }) => {
   const router = useRouter();
+  const [width] = useScreenDimensions()
   const { user, setUser } = useCommonContext();
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [placeImageIndex, setPlaceImageIndex] = useState<number>(0);
@@ -73,8 +75,8 @@ export const PropertyCard = ({
         if (user) router.push("/property-details/" + place.placeId);
         else router.push("/signin");
       }}
-      onMouseEnter={() => setShowCarouselItems(true)}
-      onMouseLeave={() => setShowCarouselItems(false)}
+      onMouseEnter={() => width>768 && setShowCarouselItems(true)}
+      onMouseLeave={() =>  setShowCarouselItems(false)}
     >
       <div
         className="bg-cover bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
