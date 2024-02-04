@@ -24,6 +24,8 @@ export const FilterSearch = () => {
   useEffect(() => {
     async function getAddresses() {
       const results = await getGooglePlaces(query);
+      console.log(results);
+      
       if (results.length > 0) {
         setSelectedCoords(results[0].geometry.location);
       } else {
