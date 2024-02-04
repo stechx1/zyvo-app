@@ -8,6 +8,8 @@ export const getGooglePlaces = async (query: string) => {
       `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=formatted_address%2Cname%2Crating%2Cgeometry&input=${query}&inputtype=textquery&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API}`
     );
     const data = await response.json();
+    console.log(data);
+    
     return data?.candidates?.length
       ? (data.candidates as {
           formatted_address: string;
