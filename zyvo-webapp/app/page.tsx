@@ -42,7 +42,7 @@ export default function Home() {
   };
 
   return (
-    <div className="px-3 relative sm:px-[6%] md:px-20 lg:px-20 xl:px-30 py-8 space-y-7">
+    <div className='px-3 relative sm:px-[6%] md:px-20 lg:px-20 xl:px-30 py-8 space-y-7 sm:bg-[url("/images/dotted-background.png")] bg-cover bg-center'>
       <div className="z-10 sm:hidden border border-r-0 border-l-0 py-4 px-4 mt-[-2vh] mx-[-10px]">
         <FilterSearch />
       </div>

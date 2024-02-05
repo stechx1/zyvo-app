@@ -30,8 +30,8 @@ export default function HostProperties({
   return (
     <>
       {cardStyle !== "mobile" ? (
-        <div className="border rounded-lg p-4 text-center space-y-2">
-          <div>{`${mode === "GUEST" ? "Hosted" : "Guest"} By`}</div>
+        <div className="border rounded-lg p-4 text-center">
+          <div className="text-[19px]">{`${mode === "GUEST" ? "Hosted" : "Guest"} By`}</div>
           <div
             className="flex items-center justify-center space-x-2"
             role={onProfileClick ? "button" : ""}
@@ -48,17 +48,18 @@ export default function HostProperties({
                 />
               </div>
             </div>
-            <div className="text-lg">{fullName}</div>
+            <div className="text-[22px]">{fullName}</div>
             <div>
               <Image
                 src={"/icons/green-tick.svg"}
                 alt="tick"
                 width={15}
                 height={15}
+                className="sm:w-[22px] sm:h-[22px]"
               />
             </div>
           </div>
-          <hr />
+          <hr className="my-4" />
           {showReviewButton && (
             <Button
               type="gray"
@@ -79,8 +80,8 @@ export default function HostProperties({
             className="border-gray-700"
             onClick={() => onMessageClick && onMessageClick()}
           />
-          <div className="flex items-center justify-center space-x-2">
-            <Image src={bottomTextIcon} alt="time" width={15} height={15} />
+          <div className="flex items-center justify-center space-x-2 mt-3">
+            <Image src={bottomTextIcon} alt="time" width={15} height={15} className="sm:w-[22px] sm:h-[22px]" />
             <div>{bottomText}</div>
           </div>
         </div>

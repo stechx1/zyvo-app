@@ -79,7 +79,7 @@ export const PropertyCard = ({
       onMouseLeave={() =>  setShowCarouselItems(false)}
     >
       <div
-        className="bg-cover bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
+        className="bg-cover bg-white bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
         style={{
           backgroundImage: `url(${
             place.images.length > 0
@@ -112,8 +112,8 @@ export const PropertyCard = ({
                 <Image
                   src={"/icons/heart-icon-gray.svg"}
                   alt="heart-icon"
-                  width={22}
-                  height={22}
+                  width={27}
+                  height={27}
                   className="opacity-50 cursor-pointer"
                   onClick={handleFavoriteChange}
                 />
@@ -121,8 +121,8 @@ export const PropertyCard = ({
                 <Image
                   src={"/icons/heart-icon-red.svg"}
                   alt="heart-icon"
-                  width={22}
-                  height={22}
+                  width={27}
+                  height={27}
                   className="opacity-80 cursor-pointer"
                   onClick={handleFavoriteChange}
                 />
@@ -131,7 +131,7 @@ export const PropertyCard = ({
           )}
         </div>
         <div
-          className={`flex mt-[7rem] ${
+          className={`flex mt-[6.8rem] ${
             !placeImageIndex ? "justify-end" : "justify-between"
           } w-full`}
         >

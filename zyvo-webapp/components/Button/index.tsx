@@ -40,13 +40,13 @@ export default function Button({
           : type === "gray"
           ? "bg-secondary-gray-700 text-white"
           : ""
-      } text-gray-950 xl:py-2 lg:py-2 md:py-2 sm:py-2 py-1.5 xl:px-4 lg:px-4 md:px-4 sm:px-4 px-3 
+      } text-gray-950 xl:py-3 lg:py-2 md:py-2 sm:py-2 py-2 xl:px-4 lg:px-4 md:px-4 sm:px-4 px-3 
       ${roundedfull ? "rounded-full" : ""}
       ${rounded ? "rounded-md" : ""}
       ${full ? "w-full" : ""}
       ${bordered ? "border" : ""}
+      text-[15px] xl:text-[18px] font-Poppins lg:text-base md:text-base sm:text-base
       ${className}
-      text-sm xl:text-base lg:text-base md:text-base sm:text-base
       `}
       disabled={disabled || isLoading}
       onClick={onClick}
@@ -54,10 +54,10 @@ export default function Button({
       {icon && (
         <Image
           src={icon}
-          alt="clock-icon"
+          alt="btn-icon"
           width={18}
           height={18}
-          className="mr-2"
+          className="mr-[5px] sm:w-[21px] sm:h-[21px]"
         />
       )}
       {isLoading ? (

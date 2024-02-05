@@ -39,15 +39,15 @@ export default function MobileSearchAndFilter({ type, children }: props) {
             }}
           />
           <div className="border border-gray-200 rounded-full flex w-full py-1 pl-3 pr-1 justify-between items-center">
-            {/* <div className="border-gray-200 cursor-pointer">
-              <CustomDropdown label="Where" />
+            <div className="border-gray-200 cursor-pointer text-[15px]">
+              Where
             </div>
-            <div className="border-l border-gray-200 pl-2 cursor-pointer">
-              <CustomDropdown label="Time" />
+            <div className="border-l border-gray-200 pl-2 cursor-pointer text-[15px]">
+              Time
             </div>
-            <div className="md:pr-7 border-l pl-2 cursor-pointer">
-              <CustomDropdown label="Activity" />
-            </div> */}
+            <div className="md:pr-7 border-l pl-2 cursor-pointer text-[15px]">
+              Activity
+            </div>
             <Image
               src={"/icons/filter-search-icon.svg"}
               className="cursor-pointer"

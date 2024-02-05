@@ -59,7 +59,7 @@ export default function AvailabilitySelection({
     (t) => t.value === availableHoursTo
   );
   return (
-    <div className="p-5 text-center">
+    <div className="py-6 px-8 text-center">
       <Tabs
         options={[
           { name: "Choose Hours", value: 1 },
@@ -73,7 +73,7 @@ export default function AvailabilitySelection({
       {/* ================================================== Tab1 ============================================== */}
       {selectedTab === 1 && (
         <>
-          <div className="mt-4">
+          <div className="my-9">
             <CircularSlider
               width={200}
               label="Hours"
@@ -97,10 +97,10 @@ export default function AvailabilitySelection({
               }}
             />
           </div>
-          <hr />
-          <div className="flex justify-center space-x-2 my-4">
+          <hr className="mx-[-10px]" />
+          <div className="flex justify-center space-x-2">
             <Button
-              className="pe-8"
+              className="pe-8 mt-6 text-[12px]"
               type="white"
               text={hours + " hour"}
               roundedfull
@@ -109,7 +109,7 @@ export default function AvailabilitySelection({
               full
             />
             <Button
-              className="pe-8"
+              className="pe-8 mt-6"
               type="white"
               text={"$" + price * hours}
               roundedfull
@@ -118,17 +118,18 @@ export default function AvailabilitySelection({
               full
             />
           </div>
-          <div className="fle justify-cente">
+          <div className="my-3">
             <Button
               type="green"
               text="Start Booking"
               roundedfull
               bordered
               full
+              className="text-[#3A4B4C]"
               onClick={() => setSelectedTab(2)}
             />
           </div>
-          <div className="mt-3 text-gray-600">
+          <div className="text-[#3A4B4C] text-[13px] md:text-[18px] mt-5">
             Cancel for free within 24 hours
           </div>
         </>
@@ -136,7 +137,7 @@ export default function AvailabilitySelection({
       {/* ================================================== Tab2 ============================================== */}
       {selectedTab === 2 && (
         <>
-          <div className="mb-4 align-middle">
+          <div className="my-4 align-middle">
             <Calendar
               mode="single"
               selected={selectedDate}
