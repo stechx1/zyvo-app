@@ -192,7 +192,7 @@ const CheckoutPage = () => {
           <div className="w-full md:w-[45%] lg:w-[30%] md:order-2">
             <div className="flex flex-col sm:space-y-8 space-y-4">
               {place && (
-                <div className="order-2 md:mt-0 mt-4 md:order-1">
+                <div className="order-2 md:mt-0 mt-4 md:order-1 bg-white">
                   <PropertySideDetails
                     rating={place.rating}
                     reviewsCount={place.reviewsCount}
@@ -205,7 +205,7 @@ const CheckoutPage = () => {
                 </div>
               )}
               {placeUser && (
-                <div className="order-1 md:order-2">
+                <div className="order-1 md:order-2 bg-white">
                   <HostProperties
                     cardStyle={width < 640 ? "mobile" : "desktop"}
                     bottomText={
@@ -232,7 +232,7 @@ const CheckoutPage = () => {
 
           <div className="w-full lg:w-[70%] md:w-[55%] md:order-1">
             <div className="flex flex-col sm:gap-3">
-              <div className="flex flex-row items-center">
+              <div className="flex flex-row">
                 <div
                   role="button"
                   onClick={() => {
@@ -248,19 +248,19 @@ const CheckoutPage = () => {
                     className="cursor-pointer mr-3"
                   />
                 </div>
-                <div className="hidden md:block text-black text-3xl lg:text-4xl font-normal font-Poppins">
+                <div className="hidden md:block mt-1 text-black text-3xl lg:text-[30px] font-normal font-Poppins">
                   Checkout and Pay
                 </div>
               </div>
-              <div className=" h-[0.5px] my-6 sm:mb-[50px] opacity-[0.20] bg-secondary-gray-700"></div>
+              <div className=" h-[0.5px] mt-4 mb-6 sm:mb-[50px] opacity-[0.20] bg-secondary-gray-700"></div>
               {/* =================================Booking Details=================================== */}
-              <div className="text-black text-lg sm:text-2xl font-normal font-Poppins">
+              <div className="text-black text-lg sm:text-2xl font-medium font-Poppins">
                 Booking Details
               </div>
-              <div className="flex flex-wrap gap-2 sm:gap-3 mt-1">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {bookingDetails.map((tag) => (
                   <div
-                    className={`border border-neutral-200 rounded-full py-2 px-3 gap-3 w-fit flex items-center`}
+                    className={`border bg-white border-neutral-200 rounded-full py-2.5 px-3 gap-3 w-fit flex items-center`}
                     key={tag.id}
                   >
                     <Image
@@ -268,9 +268,9 @@ const CheckoutPage = () => {
                       alt={tag.iconAlt}
                       width={20}
                       height={20}
-                      className="w-[15px] sm:w-[19px]"
+                      className="w-[15px] sm:w-[24px] sm:h-[24px]"
                     />
-                    <div className="text-black text-[13px] sm:text-[15px] font-normal whitespace-nowrap">
+                    <div className="text-black text-[13px] mt-[1px] sm:text-[19px] font-normal whitespace-nowrap">
                       {tag.label}
                     </div>
                     {tag.edit && (
@@ -391,7 +391,7 @@ const CheckoutPage = () => {
             <div className="h-[0.5px] my-[30px] sm:my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
 
             {/* ================================= Rules Accordion=================================== */}
-            <div className="flex-col flex gap-2 sm:gap-7">
+            <div className="flex-col flex gap-2 sm:gap-5">
               <p className="hidden sm:block font-Poppins text-2xl font-medium">
                 Rules
               </p>

@@ -387,7 +387,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             <div className="flex flex-wrap xl:gap-6 lg:gap-6 md:gap-6 sm:gap-6 gap-2">
               {place?.ameneties.map((amenety) => (
                 <div
-                  className={`border rounded-xl xl:py-2.5 lg:py-3 md:py-3 sm:py-3 py-1 px-2 xl:px-5 lg:px-5 md:px-5 sm:px-4 xl:gap-3 lg:gap-3 gap-3 w-fit md:min-w-[11rem] flex items-center`}
+                  className={`bg-white border rounded-xl xl:py-2.5 lg:py-3 md:py-3 sm:py-3 py-1 px-2 xl:px-5 lg:px-5 md:px-5 sm:px-4 xl:gap-3 lg:gap-3 gap-3 w-fit md:min-w-[11rem] flex items-center`}
                   key={amenety}
                 >
                   <Image
@@ -589,7 +589,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
         <div className="w-full sm:w-[50%] md:w-[40%] lg:w-[34.5%] hidden md:block lg:block xl:block">
           {place && (
-            <div className="border rounded-2xl py-4 px-5 text-center mb-8">
+            <div className="border rounded-2xl py-4 px-5 text-center mb-8 bg-white">
               <div className="sm:text-[34px]">${place?.pricePerHour}/hr</div>
               <div className="text-sm md:text-[20px] text-gray-800">
                 {place?.minHours} hr minimum
@@ -610,7 +610,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
 
           {user && placeUser && user?.userId !== placeUser?.userId && (
             <>
-              <div className="sm:block md:block lg:block xl:block hidden min-w-max border-2 border-gray-700 rounded-xl">
+              <div className="sm:block md:block lg:block xl:block hidden min-w-max border-2 border-gray-700 rounded-xl bg-white">
                 <AvailabilitySelection
                   hours={hours}
                   availableHoursFrom={place?.availableHoursFrom}
