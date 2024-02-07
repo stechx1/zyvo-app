@@ -271,6 +271,7 @@ const TimeDropdown = ({
       >
         <div className="w-80 p-2">
           <Tabs
+            size="sm"
             options={[
               { name: "Dates", value: 1 },
               { name: "Hourly", value: 2 },

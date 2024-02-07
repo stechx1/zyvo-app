@@ -217,7 +217,7 @@ export default function MyPlaces() {
             text="+"
             type="gray"
             roundedfull
-            className="xl:text-[39px] xl:py-[15px] xl:px-3.5"
+            className="xl:text-[39px] xl:py-[17px] xl:px-3.5"
             onClick={() => {
               setIsModalOpen(true);
               setPlace(defaultPlace);

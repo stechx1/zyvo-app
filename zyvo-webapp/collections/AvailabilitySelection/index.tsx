@@ -61,7 +61,7 @@ export default function AvailabilitySelection({
   return (
     <div className="py-6 px-8 text-center">
       <Tabs
-        size="sm"
+        size="lg"
         options={[
           { name: "Choose Hours", value: 1 },
           { name: "Choose Days", value: 2 },
