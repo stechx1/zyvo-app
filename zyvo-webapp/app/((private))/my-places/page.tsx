@@ -4,7 +4,7 @@ import PlaceModal from "@/collections/PlaceModal";
 import Button from "@/components/Button";
 import { CustomDialog } from "@/components/Dialog";
 import { useCommonContext } from "@/context/CommonContext";
-import { addPlace, deletePlace, getMyPlacesSnapshot } from "@/firebase/place";
+import { addUpdatePlace, deletePlace, getMyPlacesSnapshot } from "@/firebase/place";
 import { getGooglePlaces } from "@/lib/actions";
 import { debounce } from "@/lib/utils";
 import { CoordinatesType, Place } from "@/types/place";
@@ -52,6 +52,25 @@ export default function MyPlaces() {
     coordinates: { lat: 0, lng: 0 },
     geohash: geohashForLocation([0, 0]),
     status: "ACTIVE",
+    "X-SUN": true,
+    "X-MON": true,
+    "X-TUE": true,
+    "X-WED": true,
+    "X-THU": true,
+    "X-FRI": true,
+    "X-SAT": true,
+    "X-JAN": true,
+    "X-FEB": true,
+    "X-MAR": true,
+    "X-APR": true,
+    "X-MAY": true,
+    "X-JUN": true,
+    "X-JUL": true,
+    "X-AUG": true,
+    "X-SEP": true,
+    "X-OCT": true,
+    "X-NOV": true,
+    "X-DEC": true,
   };
   const [place, setPlace] = useState<Place>(defaultPlace);
   const [places, setPlaces] = useState<Place[]>([]);
@@ -83,7 +102,7 @@ export default function MyPlaces() {
     if (!user) return;
     if (!validatePlace()) return;
     setIsLoading(true);
-    addPlace(place, user?.userId).then(({ result, error }) => {
+    addUpdatePlace(place, user?.userId).then(({ result, error }) => {
       if (error) {
         toast.error("error sending message!");
       } else {

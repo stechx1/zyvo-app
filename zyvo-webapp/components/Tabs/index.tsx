@@ -10,7 +10,7 @@ export const Tabs = ({
   size:"sm" | "lg"
 }) => {
   return (
-    <div className="flex justify-between text-center bg-gray-200 xl:px-[0.35rem] lg:px-[0.35rem] md:px-[0.3rem] sm:px-2 px-1 xl:py-1 lg:py-1 md:py-2 sm:py-2 py-1 rounded-full">
+    <div className="flex justify-between text-center bg-gray-200 xl:px-[0.35rem] lg:px-[0.35rem] md:px-[0.3rem] sm:px-2 px-1 py-1 rounded-full">
       {options.map((item, i) => {
         return (
           <div
