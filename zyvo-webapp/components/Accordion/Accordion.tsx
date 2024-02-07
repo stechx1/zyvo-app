@@ -27,10 +27,10 @@ const Accordion: React.FC<AccordionProps> = ({ items }) => {
                   height={20}
                 />
               )}
-              <p className="xl:text-[22px] lg:text-[22px] md:text-lg sm:text-md text-sm no-underline">{item.title}</p>
+              <p className="xl:text-[21px] lg:text-[22px] md:text-lg sm:text-md text-sm no-underline">{item.title}</p>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="xl:text-[20px] lg:text-[20px] md:text-base sm:text-md text-[16px] py-5 px-6">
+          <AccordionContent className="xl:text-[19px] lg:text-[20px] md:text-base sm:text-md text-[16px] py-5 px-6">
             {item.content}
           </AccordionContent>
         </AccordionItem>

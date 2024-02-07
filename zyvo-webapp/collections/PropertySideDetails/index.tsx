@@ -20,42 +20,43 @@ export default function PropertySideDetails({
 }) {
   return (
     <div className=" sm:order-1 border rounded-[6%] sm:rounded-lg lg:rounded-2xl w-full">
-      <div className="flex m-3 gap-4">
+      <div className="flex p-3.5 gap-4 items-center">
         <Image
           src={imageURL}
           alt="detail-image"
-          className="rounded-[15px] w-[5rem] sm:w-[30%] md:w-[5rem] lg:w-[35%] xl:w-[27%] object-cover"
+          className="rounded-[15px] w-[5rem] sm:w-[30%] md:w-[5rem] lg:w-[35%] xl:w-[30%] xl:h-[100px] object-cover"
           width={50}
           height={50}
         />
         <div className="flex flex-col w-[70%]">
-          <div className="text-black text-lg font-normal font-Poppins whitespace-nowrap">
+          <div className="text-black text-[22.5px] font-normal font-Poppins whitespace-nowrap">
             {description ?? "-"}
           </div>
-          <div className="flex space-x-2">
-            <p className="flex items-center text-[10px] text-base sm:text-[14px] text-primary-amber-500 mr-0 font-Poppins">
+          <div className="flex">
+            <p className="flex items-center text-[10px] text-base sm:text-[16px] text-primary-amber-500 mr-0 font-Poppins">
               <Image
                 src={"/icons/orange-star-icon.svg"}
                 alt="star-icon"
                 width={14}
                 height={14}
-                className="mr-1"
+                className="mr-1 md:w-[15px] md:h-[15px]"
               />
               {rating?.toFixed(1) ?? 0}
             </p>
-            <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${
+            <p className="md:text-[15px] ml-1 text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${
               reviewsCount ?? 0
             })`}</p>
           </div>
           {distance && (
-            <div className="flex space-x-1">
+            <div className="flex space-x-1 mt-0.5 items-center">
               <Image
                 src={"/icons/gray-location-icon.svg"}
                 alt="location-icon"
                 width={14}
                 height={14}
+                className="md:w-[20px] md:h-[20px] mt-1"
               />
-              <p className=" sm:text-[14px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins whitespace-nowrap">{`${distance} miles away`}</p>
+              <p className="md:text-[16px] text-[10px] text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins whitespace-nowrap">{`${distance} miles away`}</p>
             </div>
           )}
         </div>
