@@ -93,7 +93,29 @@ export const timeArray = [
   { label: "11:00 PM", value: "23:00" },
   { label: "11:30 PM", value: "23:30" },
 ];
-
+export const monthsArray = [
+  { name: "Jan", value: 0 },
+  { name: "Feb", value: 1 },
+  { name: "Mar", value: 2 },
+  { name: "Apr", value: 3 },
+  { name: "May", value: 4 },
+  { name: "Jun", value: 5 },
+  { name: "Jul", value: 6 },
+  { name: "Aug", value: 7 },
+  { name: "Sep", value: 8 },
+  { name: "Oct", value: 9 },
+  { name: "Nov", value: 10 },
+  { name: "Dec", value: 11 },
+];
+export const daysArray = [
+  { name: "Sun", value: 0 },
+  { name: "Mon", value: 1 },
+  { name: "Tue", value: 2 },
+  { name: "Wed", value: 3 },
+  { name: "Thu", value: 4 },
+  { name: "Fri", value: 5 },
+  { name: "Sat", value: 6 },
+];
 export const formatDate = (date: string) => {
   const parsedDate = parseISO(date); // Parse the ISO string to a Date object
   return format(parsedDate, "MMMM d, yyyy");

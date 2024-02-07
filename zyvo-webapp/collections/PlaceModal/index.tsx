@@ -16,7 +16,7 @@ import {
   deleteFile,
   getFilePathFromURL,
 } from "@/firebase/firestore/manageFiles";
-import { timeArray } from "@/lib/utils";
+import { monthsArray, timeArray } from "@/lib/utils";
 import { Place, amenety } from "@/types/place";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -1006,20 +1006,7 @@ const Availability = ({
         <div>Availability - Days</div>
         <div>Months</div>
         <MultiTabs
-          options={[
-            { name: "Jan", value: 0 },
-            { name: "Feb", value: 1 },
-            { name: "Mar", value: 2 },
-            { name: "Apr", value: 3 },
-            { name: "May", value: 4 },
-            { name: "Jun", value: 5 },
-            { name: "Jul", value: 6 },
-            { name: "Aug", value: 7 },
-            { name: "Sep", value: 8 },
-            { name: "Oct", value: 9 },
-            { name: "Nov", value: 10 },
-            { name: "Dec", value: 11 },
-          ]}
+          options={monthsArray}
           selected={place.availableMonths}
           onSelect={(values) => {
             setPlace((prev) => {
@@ -1042,9 +1029,9 @@ const Availability = ({
             JSON.stringify([0, 1, 2, 3, 4, 5, 6])
               ? 0
               : JSON.stringify(place.availableDays) ===
-                JSON.stringify([0, 1, 2, 3, 4])
+                JSON.stringify([1, 2, 3, 4, 5])
               ? 1
-              : JSON.stringify(place.availableDays) === JSON.stringify([5, 6])
+              : JSON.stringify(place.availableDays) === JSON.stringify([6, 0])
               ? 2
               : 3
           }
@@ -1056,9 +1043,9 @@ const Availability = ({
                   option.value === 0
                     ? [0, 1, 2, 3, 4, 5, 6]
                     : option.value === 1
-                    ? [0, 1, 2, 3, 4]
+                    ? [1, 2, 3, 4, 5]
                     : option.value === 2
-                    ? [5, 6]
+                    ? [6, 0]
                     : [],
               };
             });
