@@ -34,18 +34,18 @@ export default function Button({
       className={`
       flex flex-nowrap items-center justify-center ${
         type === "green"
-          ? "bg-secondary-green"
+          ? "bg-secondary-green text-[#3A4B4C]"
           : type === "white"
-          ? "bg-white"
+          ? "bg-white text-gray-950"
           : type === "gray"
           ? "bg-secondary-gray-700 text-white"
           : ""
-      } text-gray-950 xl:py-3 lg:py-2 md:py-2 sm:py-2 py-2 xl:px-4 lg:px-4 md:px-4 sm:px-4 px-3 
+      }  xl:py-3 lg:py-2 md:py-2 sm:py-2 py-2 xl:px-4 lg:px-4 md:px-4 sm:px-4 px-3 
       ${roundedfull ? "rounded-full" : ""}
       ${rounded ? "rounded-md" : ""}
       ${full ? "w-full" : ""}
       ${bordered ? "border" : ""}
-      text-[15px] xl:text-[18px] font-Poppins lg:text-base md:text-base sm:text-base
+      text-[14px] xl:text-[18px] font-Poppins lg:text-base md:text-base sm:text-base
       ${className}
       `}
       disabled={disabled || isLoading}

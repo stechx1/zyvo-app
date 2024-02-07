@@ -185,11 +185,11 @@ const CheckoutPage = () => {
         </div>
         <hr className="sm:hidden block mx-[-20px] my-2.5" />
         <div className="md:flex md:gap-12">
-          <div className="text-black mt-8 text-xl sm:text-4xl md:hidden font-normal font-Poppins">
+          <div className="text-black mt-8 text-lg sm:text-4xl md:hidden font-normal font-Poppins">
             Checkout and Pay
           </div>
           <div className="md:hidden h-[0.5px] mt-[10px] mb-[10px] opacity-[0.20] bg-secondary-gray-700"></div>
-          <div className="w-full md:w-[45%] lg:w-[30%] md:order-2">
+          <div className="w-full md:w-[45%] lg:w-[35%] md:order-2">
             <div className="flex flex-col sm:space-y-8 space-y-4">
               {place && (
                 <div className="order-2 md:mt-0 mt-4 md:order-1 bg-white">
@@ -230,7 +230,7 @@ const CheckoutPage = () => {
           </div>
           {/* =================================Left Section=================================== */}
 
-          <div className="w-full lg:w-[70%] md:w-[55%] md:order-1">
+          <div className="w-full lg:w-[65%] md:w-[55%] md:order-1">
             <div className="flex flex-col sm:gap-3">
               <div className="flex flex-row">
                 <div
@@ -248,7 +248,7 @@ const CheckoutPage = () => {
                     className="cursor-pointer mr-3"
                   />
                 </div>
-                <div className="hidden md:block mt-1 text-black text-3xl lg:text-[30px] font-normal font-Poppins">
+                <div className="hidden md:block mt-1 text-black text-3xl font-normal font-Poppins">
                   Checkout and Pay
                 </div>
               </div>
@@ -301,28 +301,28 @@ const CheckoutPage = () => {
                       alt="visa-card-icon"
                       width={40}
                       height={40}
-                      className="w-[40px]"
+                      className="w-[41px]"
                     />
                     <Image
                       src="/icons/pay-icon.svg"
                       alt="visa-card-icon"
                       width={40}
                       height={40}
-                      className="w-[40px]"
+                      className="w-[41px]"
                     />
                     <Image
                       src="/icons/master-card-icon.svg"
                       alt="visa-card-icon"
                       width={40}
                       height={40}
-                      className="w-[40px]"
+                      className="w-[41px]"
                     />
                     <Image
                       src="/icons/visa-card-icon.svg"
                       alt="visa-card-icon"
                       width={40}
                       height={40}
-                      className="w-[40px]"
+                      className="w-[41px]"
                     />
                   </div>
                 </div>
@@ -380,7 +380,7 @@ const CheckoutPage = () => {
                 Refund Policies
               </div>
               <div className={` rounded-3xl `}>
-                <div className="text-black text-sm sm:text-lg font-normal">
+                <div className="text-black text-sm sm:text-h4 font-normal">
                   Description of refund policies...
                 </div>
               </div>
@@ -404,7 +404,7 @@ const CheckoutPage = () => {
             </div>
             <div className="h-[0.5px] my-[30px] sm:my-[50px] opacity-[0.20] bg-secondary-gray-700"></div>
             <Button
-              className="sm:mb-0 mb-16 h-[2.5rem] sm:h-auto w-[8rem] sm:w-[12rem] "
+              className="sm:mb-0 mb-16 h-[2.5rem] sm:h-auto w-[8rem] sm:w-[14rem]"
               text="Confirm & Pay"
               onClick={onSubmitHandler}
               type="green"

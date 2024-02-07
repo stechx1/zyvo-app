@@ -145,10 +145,10 @@ export default function MyPlaces() {
   return (
     <div>
       <div className="flex justify-between font-medium">
-        <div className="text-lg">My Places</div>
+        <div className="text-h1 mb-5">My Places</div>
         <div
           role="button"
-          className="flex space-x-2 border text-sm font-medium rounded-full py-2 px-4 text-center"
+          className="flex space-x-2 border text-sm font-medium rounded-full h-12 items-center py-2 px-4 text-center"
         >
           <Image
             src={"/icons/filter-icon-2.svg"}
@@ -193,18 +193,18 @@ export default function MyPlaces() {
             place={place}
           />
         ))}
-        <div className="w-[48%] flex-col justify-center flex items-center h-64 sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] relative rounded-xl border-2 border-dashed border-gray-200">
+        <div className="w-[48%] flex-col justify-center flex items-center h-80 sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[22%] relative rounded-2xl border-2 border-dashed border-gray-200">
           <Button
             text="+"
             type="gray"
             roundedfull
-            className="text-xl"
+            className="xl:text-[39px] xl:py-[15px] xl:px-3.5"
             onClick={() => {
               setIsModalOpen(true);
               setPlace(defaultPlace);
             }}
           />
-          <p className="text-sm mt-2">Add new Place</p>
+          <p className="text-lg text-[#3A4B4C] mt-3">Add new Place</p>
           <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
             <div className="border-t-4 border-l-4 border-r-4 border-transparent rounded-xl"></div>
           </div>

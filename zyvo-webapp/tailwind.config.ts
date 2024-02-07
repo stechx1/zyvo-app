@@ -89,6 +89,11 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      fontSize:{
+        "h1": "30px", //zyvo eq 36
+        "h3": "20px", //zyvo eq 24
+        "h4": "18.5px", //zyvo eq 22
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

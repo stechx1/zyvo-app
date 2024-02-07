@@ -17,6 +17,7 @@ type props = {
   placeholder?: string;
   invalidMessage?: string;
   prefixIcon?: string;
+  size?: "sm" | "lg"
 };
 export default function Input({
   name,
@@ -26,6 +27,7 @@ export default function Input({
   onChange,
   invalidMessage = "",
   prefixIcon,
+  size
 }: props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEdit, setIsEdit] = useState(false);
@@ -62,13 +64,15 @@ export default function Input({
           id="Input"
           ref={inputRef}
           name={name}
-          className={`px-4 py-2 xl:py-3 lg:py-3 border rounded-full focus:outline-none text-gray-600 w-full sm:text-sm ${
+          className={`px-5 py-2 lg:py-3 border rounded-full focus:outline-none text-gray-600 w-full text-sm ${
             invalidMessage ? " focus:border-red-500" : " focus:border-gray-500 "
           }${invalidMessage ? " border-red-300 " : " border-gray-300 "} ${
             type === "lock"
               ? "placeholder-gray-950"
               : type === "year" && "placeholder-gray-950"
-          } ${prefixIcon && "pl-11"} ${type === "edit" && "disabled:bg-[#fff]"} `}
+          } ${prefixIcon && "pl-11"} ${type === "edit" && "disabled:bg-[#fff]"} 
+          ${size==="sm" ? "xl:py-2 md:text-[16px]" : "xl:py-3 md:text-h3"}
+          `}
           type={type}
           onChange={onChange}
           value={value}
@@ -87,7 +91,7 @@ export default function Input({
         ) : type === "lock" ? (
           <Image
             src={"/icons/lock.svg"}
-            className="cursor-pointer absolute top-[9px] xl:top-[13.5px] lg:top-[13.5px] right-4"
+            className="cursor-pointer md:w-[20px] md:h-[20px] absolute my-1.5 right-4"
             alt="lock-icon"
             width={13}
             height={13}

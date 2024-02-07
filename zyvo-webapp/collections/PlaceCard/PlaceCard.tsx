@@ -32,14 +32,14 @@ export default function PlaceCard({
   }, [currentCoordinates, place]);
 
   return (
-    <div className="w-[48%] sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[24%] overflow-hidden">
+    <div className="w-[48%] sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[22%] overflow-hidden">
       <div className="relative">
         <img
           src={
             place.images?.length > 0 ? place.images[0] : "/images/no-image.jpg"
           }
           alt={"title"}
-          className="w-full h-64 object-cover rounded-xl"
+          className="w-full h-80 object-cover rounded-2xl"
         />
         <div className="absolute top-0 right-0 m-4 text-white">
           <Dropdown items={menuOptions}>
@@ -55,7 +55,7 @@ export default function PlaceCard({
         </div>
       </div>
       <div className="py-1 px-0.5">
-        <div className="flex justify-between font-normal">
+        <div className="flex justify-between md:text-h3 font-normal">
           <div className="truncate w-2/3">{place.description}</div>
           <div className="flex space-x-1">
             <Image
@@ -68,17 +68,17 @@ export default function PlaceCard({
           </div>
         </div>
         <div className="flex text-gray-700 text-base">
-          <p className="flex items-center text-[11px] sm:text-[16px] text-custom-amber-500 me-1">
+          <p className="flex items-center text-[14px] text-[#FCA800] sm:text-[17px] text-custom-amber-500 me-1">
             <Image
               src={"/icons/orange-star-icon.svg"}
               alt="star-icon"
               width={14}
               height={14}
-              className="mr-1"
+              className="mr-1 md:w-[17px] md:h-[17px]"
             />
             {place.rating?.toFixed(1)}
           </p>
-          <span>({place.reviewsCount ?? 0})</span>
+          <span className="text-[#A4A4A4] text-[13px] sm:text-[16px]">({place.reviewsCount ?? 0})</span>
           {placeDistance !== null && (
             <>
               <Image
@@ -88,7 +88,7 @@ export default function PlaceCard({
                 height={15}
                 className="ml-2 mr-1"
               />
-              <span>{placeDistance} miles away</span>
+              <span className="text-[#A4A4A4] text-[14px] sm:text-[16px]">{placeDistance} miles away</span>
             </>
           )}
         </div>

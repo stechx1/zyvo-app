@@ -150,7 +150,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         <MobileSearchAndFilter type="header" />
       </div>
       <div className="flex flex-row sm:mt-0 mt-8">
-        <div className="text-black text-[19px] md:leading-10 sm:text-[21px] md:text-[36px] font-normal">
+      <div className="text-black text-[19px] md:leading-10 sm:text-[21px] md:text-3xl font-normal">
           {place?.description}
         </div>
         <div className="sm:hidden flex space-x-1 ml-2 items-center">
@@ -181,11 +181,11 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                 alt="star-icon"
                 width={18}
                 height={18}
-                className="mr-1 md:w-[22px] md:h-[22px]"
+                className="mr-1 md:w-[22px] md:text-h3"
               />
               {place?.rating?.toFixed(1)}
             </p>
-            <p className=" md:text-[20px] text-[11px] mr-0 md:mr-2">{`(${
+            <p className=" md:text-h4 mt-0.5 text-[11px] mr-0 md:mr-2">{`(${
               place?.reviewsCount ?? 0
             } reviews)`}</p>
           </div>
@@ -197,7 +197,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               height={20}
               className="opacity-70 md:w-[25px] md:h-[25px]"
             />
-            <div className="md:text-[20px] text-xs">{place?.minHours} hr min</div>
+            <div className="md:text-h4 text-xs">{place?.minHours} hr min</div>
           </div>
           {place?.size && (
             <div className="flex items-center justify-center space-x-1 sm:text-base">
@@ -208,7 +208,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                 height={17}
                 className="sm:w-[21px] sm:h-[21px]"
               />
-              <div className="text-xs md:text-[20px]">{place?.size} sqft</div>
+              <div className="text-xs md:text-h4">{place?.size} sqft</div>
             </div>
           )}
         </div>
@@ -224,7 +224,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                 height={19}
                 className="sm:w-[27px] sm:h-[27px]"
               />
-              <div className="text-xs md:text-[20px]">Share</div>
+              <div className="text-xs md:text-h4">Share</div>
             </div>
             <div className="flex items-center justify-center space-x-2 sm:text-base">
               {!user.favoritePlaces?.includes(place.placeId) ? (
@@ -246,7 +246,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                   onClick={handleFavoriteChange}
                 />
               )}
-              <div className="text-xs md:text-[20px]">Favorite</div>
+              <div className="text-xs md:text-h4">Favorite</div>
             </div>
           </div>
         )}
@@ -358,11 +358,11 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
 
         <div className="w-full sm:w-[100%] md:w-[60%] lg:w-[66.5%]">
           <div className="flex flex-col gap-3">
-            <div className="text-black text-[18px] md:text-[28px] font-normal ">
+            <div className="text-black text-[18px] md:text-2xl font-medium ">
               About the Space
             </div>
             <div className={`${!readMore && "line-clamp-3"}`}>
-              <div className="text-black text-[14px] md:text-[22px] font-normal">
+              <div className="text-black text-[14px] md:text-h4 font-normal">
                 {place?.description ? place.description : "No Description!"}
               </div>
             </div>
@@ -381,7 +381,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           {/* ================================= Included in the booking=================================== */}
 
           <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-3">
-            <p className=" text-[18px] md:text-[28px] font-medium">
+            <p className=" text-[18px] md:text-2xl font-medium">
               Included in your booking
             </p>
             <div className="flex flex-wrap xl:gap-6 lg:gap-6 md:gap-6 sm:gap-6 gap-2">
@@ -398,7 +398,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                     className="xl:w-[50] lg:w-[50] md:w-[40] sm:w-[40] w-[2rem] xl:h-[45] "
                   />
 
-                  <div className="text-black text-[14px] md:text-[22px] font-normal capitalize">
+                  <div className="text-black text-[14px] md:text-h3 font-normal capitalize">
                     {amenety.toLowerCase()}
                   </div>
                 </div>
@@ -409,7 +409,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
           {/* ================================= Rules Accordion=================================== */}
           <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-2">
-            <p className=" text-[18px] md:text-[28px] font-medium">
+            <p className=" text-[18px] md:text-2xl font-medium">
               Rules
             </p>
             <div className="w-full">
@@ -422,10 +422,10 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
 
           <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-2">
             <div className="flex flex-col xl:gap-2 lg:gap-2 md:gap-2">
-              <p className=" text-[18px] md:text-[28px] font-medium">
+              <p className=" text-[18px] md:text-2xl font-medium">
                 Add-ons from the host
               </p>
-              <p className="text-[14px] md:text-[24px]">
+              <p className="text-[14px] md:text-h3">
                 Host provided services, items or options. Available at checkout.
               </p>
             </div>
@@ -445,24 +445,24 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                     />
                   </div>
                   <div className="text-sm sm:text-sm md:text-md lg:text-base xl:text-base">
-                    <p className="font-medium text-[13px] md:text-[20px]">{addOn.name}</p>
+                    <p className="font-medium text-[13px] md:text-h4">{addOn.name}</p>
                     <div className="flex gap-2">
                       <p>${addOn.price} / item</p>
                     </div>
                   </div>
                 </div>
               ))}
-              {place?.addOns.length === 0 && <div className="text-[20px]">No Add Ons Added!</div>}
+              {place?.addOns.length === 0 && <div className="text-[14px] md:text-h3">No Add Ons Added!</div>}
             </div>
           </div>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
           <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-2">
             <div className="flex flex-col xl:gap-2 lg:gap-2 md:gap-2">
-              <p className=" text-[18px] md:text-[28px] font-medium">
+              <p className=" text-[18px] md:text-2xl font-medium">
                 Address & Location
               </p>
               {place && (
-                <p className="text-[14px] md:text-[22px] underline underline-offset-4">
+                <p className="text-[14px] md:text-h3 underline underline-offset-4">
                   {`${place?.street ?? ""} ${place?.city ?? ""} ${
                     place?.state ?? ""
                   } ${place?.country ?? ""}`}
@@ -480,7 +480,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             {reviews.length > 0 && (
               <>
                 <div className="px-2 lg:px-5 md:px-5 sm:px-3">
-                  <label className="text-[18px] md:text-[28px]">Reviews</label>
+                  <label className="text-[18px] md:text-2xl">Reviews</label>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex">
                       <Image
@@ -591,17 +591,17 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           {place && (
             <div className="border rounded-2xl py-4 px-5 text-center mb-8 bg-white">
               <div className="sm:text-[34px]">${place?.pricePerHour}/hr</div>
-              <div className="text-sm md:text-[20px] text-gray-800">
+              <div className="text-sm md:text-h4 text-gray-800">
                 {place?.minHours} hr minimum
               </div>
 
               <hr className="my-5" />
 
               <div className="flex items-center justify-between space-x-2 px-4">
-                <div className="text-sm md:text-[20px] text-gray-800">
+                <div className="text-sm md:text-h4 text-gray-800">
                   {place?.discountedMinHours}+ hour discount
                 </div>
-                <div className="text-sm md:text-[20px] text-gray-800">
+                <div className="text-sm md:text-h4 text-gray-800">
                   {place?.discountPercentage}% off
                 </div>
               </div>

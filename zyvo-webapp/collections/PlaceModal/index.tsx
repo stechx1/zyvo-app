@@ -50,9 +50,10 @@ export default function PlaceModal({
         </div>
       )}
       <div className="xl:px-4 lg:px-4 md:px-4 sm:px-2 px-3 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Manage your place</div>
+        <div className="text-lg font-normal">Manage your place</div>
         <span>Setup places, availability, prices and more.</span>
         <Tabs
+          size="sm"
           options={[
             { name: "Home Setup", value: 1 },
             { name: "Gallery & Location", value: 2 },
@@ -128,7 +129,7 @@ const GallaryAndLocation = ({
   return (
     <div>
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
-        <div>Gallery</div>
+        <div className="text-lg">Gallery</div>
         <div className="flex flex-wrap gap-4">
           {place.images.map((img, i) => {
             return (
@@ -191,7 +192,7 @@ const GallaryAndLocation = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
-        <div>About the Space</div>
+        <div className="text-lg">About the Space</div>
         <div>
           <textarea
             className="px-2 focus:outline-none focus:border-gray-500 focus:border-1 rounded-lg py-1 text-black w-full border"
@@ -211,7 +212,7 @@ const GallaryAndLocation = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
-        <div>Parking Rules</div>
+        <div className="text-lg">Parking Rules</div>
         <div>
           <textarea
             className="px-2 focus:outline-none focus:border-gray-500 rounded-lg py-1 text-black w-full border"
@@ -231,7 +232,7 @@ const GallaryAndLocation = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
-        <div>Host Rules</div>
+        <div className="text-lg">Host Rules</div>
         <div>
           <textarea
             className="px-2 focus:outline-none focus:border-gray-500 rounded-lg py-1 text-black w-full border"
@@ -251,9 +252,10 @@ const GallaryAndLocation = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base">
-        <div>Address</div>
+        <div className="text-lg">Address</div>
         <Input
           type="text"
+          size="sm"
           placeholder="Street"
           value={place.street}
           onChange={(e) =>
@@ -267,6 +269,7 @@ const GallaryAndLocation = ({
         />
         <Input
           type="text"
+          size="sm"
           placeholder="City*"
           value={place.city}
           onChange={(e) =>
@@ -280,6 +283,7 @@ const GallaryAndLocation = ({
         />
         <div className="flex gap-3">
           <Input
+            size="sm"
             type="text"
             placeholder="Zipcode"
             value={place.zipCode}
@@ -295,6 +299,7 @@ const GallaryAndLocation = ({
           <Input
             type="text"
             placeholder="Country*"
+            size="sm"
             value={place.country}
             onChange={(e) =>
               setPlace((prev) => {
@@ -308,6 +313,7 @@ const GallaryAndLocation = ({
           <Input
             type="text"
             placeholder="State"
+            size="sm"
             value={place.state}
             onChange={(e) =>
               setPlace((prev) => {
@@ -372,8 +378,9 @@ const HomeSetup = ({
   return (
     <div>
       <div className="xl:px-4 lg:px-4 md:px-3 px-3 space-y-2 mt-4 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <label>Type of space</label>
+        <label className="text-lg">Type of space</label>
         <Tabs
+          size="sm"
           options={[
             { name: "Entire Home", value: "HOME" },
             { name: "Private Room", value: "ROOM" },
@@ -388,7 +395,7 @@ const HomeSetup = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Availability</div>
+        <div className="text-lg">Availability</div>
         <div>Property size (sq ft)</div>
         <CustomSelectionType
           options={[
@@ -476,7 +483,7 @@ const HomeSetup = ({
       </div>
       <hr className="my-8" />
       <div className="xl:px-4 lg:px-4 md:px-4 sm:px-4 px-3 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <label>Activities</label>
+        <label className="text-lg">Activities</label>
         <div className="flex gap-3 flex-wrap">
           <ActivityType
             imageUrl="/icons/stays-icon.svg"
@@ -674,7 +681,7 @@ const HomeSetup = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Amenities</div>
+        <div className="text-lg">Amenities</div>
         <div className="flex gap-2 flex-wrap">
           <div className="w-[47%] space-x-1.5">
             <input
@@ -739,7 +746,7 @@ const HomeSetup = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Booking</div>
+        <div className="text-lg">Booking</div>
         <div className="flex justify-between items-center">
           <div>
             <div>Instant Book</div>
@@ -1032,6 +1039,7 @@ const Availability = ({
         />
         <div>Days</div>
         <Tabs
+          size="sm"
           options={[
             { name: "All", value: 0 },
             { name: "Only Working Days", value: 1 },
