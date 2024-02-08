@@ -83,12 +83,14 @@ export default function PlaceModal({
           bordered
           roundedfull
           type="white"
+          className="xl:text-[16px] text-[14px]"
         />
         <Button
           text="Save & Continue"
           roundedfull
           type="green"
           onClick={onSubmit}
+          className="xl:text-[16px] text-[14px]"
         />
       </div>
     </div>
@@ -814,9 +816,10 @@ const Availability = ({
   return (
     <div>
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Minimum hour & Pricing</div>
+        <div className="text-lg">Minimum hour & Pricing</div>
         <div className="flex justify-between gap-4">
           <CustomSelect
+            size="sm"
             options={[
               { label: "1 hour minimum", value: "1" },
               { label: "2 hour minimum", value: "2" },
@@ -836,6 +839,7 @@ const Availability = ({
             roundedFull
           />
           <CustomSelect
+            size="sm"
             options={[
               { label: "10 $ / hour", value: "10" },
               { label: "20 $ / hour", value: "20" },
@@ -858,9 +862,10 @@ const Availability = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Bulk discount</div>
+        <div className="text-lg">Bulk discount</div>
         <div className="flex justify-between gap-4">
           <CustomSelect
+            size="sm"
             options={[
               { label: "4 hours", value: "4" },
               { label: "5 hours", value: "5" },
@@ -879,6 +884,7 @@ const Availability = ({
             roundedFull
           />
           <CustomSelect
+            size="sm"
             options={[
               { label: "5% Discount", value: "5" },
               { label: "10% Discount", value: "10" },
@@ -906,7 +912,7 @@ const Availability = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Add-ons from the host</div>
+        <div className="text-lg">Add-ons from the host</div>
         <div className="flex flex-wrap gap-2">
           {place.addOns.map((ao, i) => {
             return (
@@ -1010,7 +1016,7 @@ const Availability = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Availability - Days</div>
+        <div className="text-lg">Availability - Days</div>
         <div>Months</div>
         <MultiTabs
           options={monthsArray}
@@ -1062,11 +1068,12 @@ const Availability = ({
       </div>
       <hr className="my-8" />
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
-        <div>Availability - Hours</div>
+        <div className="text-lg">Availability - Hours</div>
         <div className="flex gap-3">
           <div className="w-full">
             <label>From</label>
             <CustomSelect
+              size="sm"
               options={timeArray}
               value={place.availableHoursFrom}
               onValueChange={(value) => {
@@ -1080,6 +1087,7 @@ const Availability = ({
           <div className="w-full">
             <label>To</label>
             <CustomSelect
+              size="sm"
               options={timeArray}
               value={place.availableHoursTo}
               onValueChange={(value) => {

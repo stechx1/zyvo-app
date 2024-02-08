@@ -150,6 +150,7 @@ export default function AvailabilitySelection({
           <hr />
           <div className="flex justify-center space-x-2 my-4">
             <CustomSelect
+              size="lg"
               icon={"/icons/clock-icon.svg"}
               options={timeArray.slice(
                 availableHoursFromIndex,
@@ -162,6 +163,7 @@ export default function AvailabilitySelection({
               roundedFull
             />
             <CustomSelect
+              size="lg"
               icon="/icons/clock-icon.svg"
               options={timeArray.slice(
                 availableHoursFromIndex,
