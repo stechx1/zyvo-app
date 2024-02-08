@@ -360,7 +360,7 @@ export default function Bookings() {
               return (
                 <div
                   key={booking.bookingId}
-                  className={`flex mt-4 border justify-between px-2 py-2 rounded-xl ${
+                  className={`flex mt-4 border justify-between px-2 py-2 rounded-xl bg-white ${
                     selectedBooking?.bookingId === booking.bookingId
                       ? "border-2 border-black"
                       : ""
@@ -498,7 +498,7 @@ export default function Bookings() {
           ref={bookingDetailRef}
           className={`${
             !selectedBooking ? "hidden" : "block"
-          }  sm:w-[60%] w-full lg:w-[50%] sm:flex h-max min-h-screen flex-col sm:border rounded-2xl`}
+          }  sm:w-[60%] w-full lg:w-[50%] sm:flex h-max min-h-screen flex-col sm:border rounded-2xl bg-white`}
         >
           {selectedBooking ? (
             <div>

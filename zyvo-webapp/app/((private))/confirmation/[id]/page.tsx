@@ -137,10 +137,10 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
             New Booking Confirmed
           </div>
           <div className="sm:hidden h-[0.5px] mt-[10px] mb-[25px] opacity-[0.20] bg-secondary-gray-700"></div>
-          <div className=" w-full md:w-[45%] lg:w-[30%] md:order-2">
+          <div className=" w-full md:w-[45%] lg:w-[35%] md:order-2">
             <div className="flex flex-col gap-5">
               {placeUser && (
-                <div className="order-1 md:mt-0 md:order-2">
+                <div className="order-1 md:mt-0 md:order-2 bg-white">
                   <HostProperties
                     mode={mode}
                     cardStyle={width < 640 ? "mobile" : "desktop"}
@@ -162,7 +162,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
                 </div>
               )}
               {bookingPlace && booking && (
-                <div className="order-2 md:order-1">
+                <div className="order-2 md:order-1 bg-white">
                   <PropertySideDetails
                     rating={bookingPlace.rating}
                     reviewsCount={bookingPlace.reviewsCount}
@@ -178,7 +178,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
           </div>
           {/* =================================Left Section=================================== */}
 
-          <div className="w-full lg:w-[70%] md:w-[55%] sm:order-1">
+          <div className="w-full lg:w-[65%] md:w-[55%] sm:order-1">
             <div className="flex flex-col sm:gap-3">
               <div className="flex flex-row items-center">
                 <div
@@ -196,7 +196,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
                     className="cursor-pointer mr-3"
                   />
                 </div>
-                <div className="hidden md:block text-black text-3xl lg:text-4xl font-normal font-Poppins">
+                <div className="hidden md:block text-black text-3xl lg:text-h1 font-normal font-Poppins">
                   New Booking Confirmed
                 </div>
               </div>
@@ -214,9 +214,9 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
                     <Image
                       src={tag.icon}
                       alt={tag.iconAlt}
-                      width={20}
-                      height={20}
-                      className="w-[15px]"
+                      width={15}
+                      height={15}
+                      className="md:w-[22px]"
                     />
                     <div className="text-black text-[13px] sm:text-lg font-normal whitespace-nowrap">
                       {tag.label}

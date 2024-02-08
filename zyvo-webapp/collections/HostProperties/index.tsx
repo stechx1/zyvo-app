@@ -30,7 +30,7 @@ export default function HostProperties({
   return (
     <>
       {cardStyle !== "mobile" ? (
-        <div className="border rounded-[6%] sm:rounded-lg lg:rounded-2xl p-4 text-center">
+        <div className="border rounded-[6%] sm:rounded-lg lg:rounded-2xl p-4 text-center bg-white">
           <div className="text-[19px]">{`${mode === "GUEST" ? "Hosted" : "Guest"} By`}</div>
           <div
             className="flex items-center justify-center space-x-2"
