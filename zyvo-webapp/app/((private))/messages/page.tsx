@@ -264,7 +264,7 @@ export default function Messages() {
                 );
               })}
           {!newChatConversation && conversations.length === 0 && (
-            <div className="text-center m-auto h-[100%] flex items-center justify-center">
+            <div className="text-center bg-white m-auto h-[100%] flex items-center justify-center">
               No Conversations
             </div>
           )}
@@ -274,7 +274,7 @@ export default function Messages() {
       <div
         className={`${
           !selectedConversation ? "hidden" : "flex"
-        } w-[100%] sm:w-[60%] lg:w-[50%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[92dvh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-lg pb-5`}
+        } w-[100%] bg-white sm:w-[60%] lg:w-[50%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[92dvh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-lg pb-5`}
       >
         {selectedConversation && user ? (
           <div className="flex flex-col h-[100%]">
@@ -350,7 +350,7 @@ export default function Messages() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-auto">
+            <div className="flex-1 overflow-auto bg-white">
               {messages?.length > 0 ? (
                 messages.map((message) => {
                   return (
@@ -429,7 +429,7 @@ export default function Messages() {
               )}
               <div ref={messagesEndRef}></div>
             </div>
-            <div className="flex items-center space-x-2 px-4 py-3">
+            <div className="flex items-center space-x-2 px-4 py-3 bg-white">
               <div className="w-[100%] relative">
                 <input
                   onKeyDown={(e) => {
@@ -476,7 +476,7 @@ export default function Messages() {
             </div>
           </div>
         ) : (
-          <div className="flex justify-center items-center h-[100%]">
+          <div className="flex justify-center items-center h-[100%] bg-white">
             No Conversation selected
           </div>
         )}
@@ -508,7 +508,7 @@ export default function Messages() {
                 )
               }
             />
-            <div className="border rounded-lg p-4 space-y-4">
+            <div className="border rounded-lg p-4 space-y-4 bg-white">
               <div className="flex justify-between items-center">
                 <div>From</div>
                 <div className="font-bold">
@@ -548,7 +548,7 @@ const ConversationBox = ({
 }) => {
   return user ? (
     <div
-      className={`h-[100px] flex justify-between items-center border p-3 rounded-xl me-1 hover:border-gray-600 ${
+      className={`h-[100px] flex justify-between items-center border p-3 rounded-xl me-1 hover:border-gray-600 bg-white ${
         selectedConversation?.conversationId === conversation.conversationId
           ? "border-gray-500"
           : ""
