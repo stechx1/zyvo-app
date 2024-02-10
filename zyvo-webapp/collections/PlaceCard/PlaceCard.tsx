@@ -32,14 +32,14 @@ export default function PlaceCard({
   }, [currentCoordinates, place]);
 
   return (
-    <div className="w-[48%] sm:w-[48%] md:w-[30%] lg:w-[23.85%] xl:w-[22%] overflow-hidden">
+    <div className="overflow-hidden">
       <div className="relative">
         <img
           src={
             place.images?.length > 0 ? place.images[0] : "/images/no-image.jpg"
           }
           alt={"title"}
-          className="w-full h-80 object-cover rounded-2xl"
+          className="w-full h-[165px] xs:h-[260px] md:h-[330px] lg:h-[360px] object-cover rounded-2xl"
         />
         <div className="absolute top-0 right-0 m-4 text-white">
           <Dropdown items={menuOptions}>
@@ -55,12 +55,13 @@ export default function PlaceCard({
         </div>
       </div>
       <div className="py-1 px-0.5">
-        <div className="flex justify-between md:text-h3 font-normal">
+        <div className="flex justify-between md:text-h3 items-center font-normal">
           <div className="truncate w-2/3">{place.description}</div>
-          <div className="flex space-x-1">
+          <div className="flex space-x-1 items-center">
             <Image
               width={15}
               height={15}
+              className="sm:h-[22px] sm:w-[22px] mr-1"
               alt="clock-icon"
               src={"/icons/dark-gray-clock-icon.svg"}
             />

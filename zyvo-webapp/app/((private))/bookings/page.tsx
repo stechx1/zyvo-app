@@ -444,7 +444,7 @@ export default function Bookings() {
             })}
           </div>
           {bookings.length === 0 && (
-            <div className="flex justify-center items-center h-[100%]">
+            <div className="flex justify-center items-center h-[100%] bg-white">
               No Bookings!
             </div>
           )}

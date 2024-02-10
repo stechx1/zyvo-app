@@ -17,7 +17,8 @@ type props = {
   placeholder?: string;
   invalidMessage?: string;
   prefixIcon?: string;
-  size?: "sm" | "lg"
+  size?: "sm" | "lg";
+  className?: string;
 };
 export default function Input({
   name,
@@ -27,7 +28,8 @@ export default function Input({
   onChange,
   invalidMessage = "",
   prefixIcon,
-  size
+  size,
+  className
 }: props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEdit, setIsEdit] = useState(false);
@@ -72,6 +74,7 @@ export default function Input({
               : type === "year" && "placeholder-gray-950"
           } ${prefixIcon && "pl-11"} ${type === "edit" && "disabled:bg-[#fff]"} 
           ${size==="sm" ? "xl:py-2 md:text-[16px]" : "xl:py-3 md:text-h3"}
+          ${className}
           `}
           type={type}
           onChange={onChange}
@@ -101,10 +104,10 @@ export default function Input({
           !isEdit && (
             <Image
               src={"/icons/pen-icon.svg"}
-              className="cursor-pointer absolute my-2 right-2"
+              className="cursor-pointer absolute my-2 right-2 sm:w-[35px] sm:h-[35px]"
               alt="lock-icon"
-              width={32}
-              height={32}
+              width={25}
+              height={25}
               onClick={() => handlePenIconClick()}
             />
           )

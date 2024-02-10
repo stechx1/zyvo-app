@@ -75,9 +75,10 @@ export default function PlaceModal({
           )
         )}
       </div>
-      <hr className="my-2" />
-      <div className="flex justify-between px-4">
+      <hr className="mt-2 mb-3" />
+      <div className="flex justify-between px-4 items-center">
         <Button
+          size="sm"
           text="Cancel"
           onClick={onClose}
           bordered
@@ -86,11 +87,12 @@ export default function PlaceModal({
           className="xl:text-[16px] text-[14px]"
         />
         <Button
+          size="sm"
           text="Save & Continue"
           roundedfull
           type="green"
           onClick={onSubmit}
-          className="xl:text-[16px] text-[14px]"
+          className="xl:text-[16px] text-[14px] text-[#000000]"
         />
       </div>
     </div>

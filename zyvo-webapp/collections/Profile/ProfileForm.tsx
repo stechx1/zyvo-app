@@ -20,7 +20,7 @@ export default function ProfileForm({
         <div className="flex gap-3 flex-wrap">
           {data.values.map((value, vi) => (
             <div
-              className={`border rounded-full py-2 px-3 sm:py-3 sm:px-5 gap-3  flex items-center`}
+              className={`border rounded-full py-2 px-3 sm:py-3 sm:px-5 gap-3  flex items-center bg-white`}
               key={vi}
             >
               {data.icon && (
@@ -73,7 +73,7 @@ export default function ProfileForm({
             </div>
           ))}
           {!disabled && (
-            <div className="border border-neutral-200 rounded-full py-2 px-3 sm:py-3 sm:px-5 gap-3 w-fit flex items-center">
+            <div className="bg-white border border-neutral-200 rounded-full py-2 px-3 sm:py-3 sm:px-5 gap-3 w-fit flex items-center">
               <div className="text-black text-base sm:text-lg font-normal">
                 Add New
               </div>
