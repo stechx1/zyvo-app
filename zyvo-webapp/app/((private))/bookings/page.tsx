@@ -22,7 +22,7 @@ import { CustomDialog } from "@/components/Dialog";
 import ReviewModal from "@/collections/ReviewModal";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import toast from "react-hot-toast";
-import {Map} from "@/components/Maps";
+import { Map } from "@/components/Maps";
 import { getRouteDetails } from "@/lib/actions";
 
 export default function Bookings() {
@@ -37,6 +37,7 @@ export default function Bookings() {
   const [selectedBookingPlaceUser, setSelectedBookingPlaceUser] =
     useState<User | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
+  const [guests, setGuests] = useState<User[]>([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [placeDistance, setPlaceDistance] = useState<number | null>(null);
   const [moreReviews, setMoreReviews] = useState(false);
@@ -133,6 +134,26 @@ export default function Bookings() {
   }, [bookings]);
 
   useEffect(() => {
+    getGuests();
+    async function getGuests() {
+      if (bookings.length > 0) {
+        let newGuests: User[] = [];
+        for (let index = 0; index < bookings.length; index++) {
+          if (bookings[index].userRef) {
+            const { result } = await getUserByRef(bookings[index].userRef);
+            if (result) {
+              if (!newGuests.find((g) => g.userId === result.userId)) {
+                newGuests = [...newGuests, result];
+              }
+            }
+          }
+        }
+        setGuests(newGuests);
+      }
+    }
+  }, [bookings]);
+
+  useEffect(() => {
     const getUser = async (sender: DocumentReference) => {
       const { result } = await getUserByRef(sender);
       if (result) {
@@ -140,8 +161,6 @@ export default function Bookings() {
       }
     };
     if (selectedBooking?.placeRef) {
-      console.log(selectedBooking);
-
       fetchSelectedBookingPlace(selectedBooking.placeRef);
       if (mode === "HOST") getUser(selectedBooking.userRef);
       else getUser(selectedBooking.hostRef);
@@ -215,6 +234,14 @@ export default function Bookings() {
     return places.find((p) => p.placeId === id);
   };
 
+  const getGuestImage = (guestRef?: DocumentReference) => {
+    if (guests) {
+      const foundGuest = guests.find((g) => g.userId == guestRef?.id);
+      if (foundGuest && foundGuest.photoURL) return foundGuest.photoURL;
+    }
+    return "/images/no-image.jpg";
+  };
+
   const getPlaceImage = (placeRef?: DocumentReference) => {
     const id = placeRef?.id ?? "";
     const place = getPlace(places, id);
@@ -222,6 +249,7 @@ export default function Bookings() {
       return place.images[0];
     } else return "/images/no-image.jpg";
   };
+
   const getImagesOnIndex = (index: number) => {
     if (selectedBookingPlace) {
       if (
@@ -286,13 +314,6 @@ export default function Bookings() {
       ? !selectedBooking.placeReviewRef
       : !selectedBooking.guestReviewRef);
 
-  function getAmenetiesIcon(val: string) {
-    return val === "wifi"
-      ? "/icons/gray-wifi-icon.svg"
-      : val === "kitchen"
-      ? "/icons/gray-kitchen-icon.svg"
-      : "";
-  }
   const handleFavoriteChange = async () => {
     if (!user || !selectedBookingPlace) return;
     const { result } = await updateFavourites(
@@ -353,9 +374,7 @@ export default function Bookings() {
               />
             </div>
           </div>
-          <div
-            className={`${"pr-1.5 "} sm:max-h-[100%] sm:overflow-auto`}
-          >
+          <div className={`${"pr-1.5 "} sm:max-h-[100%] sm:overflow-auto`}>
             {bookings.map((booking) => {
               return (
                 <div
@@ -373,7 +392,7 @@ export default function Bookings() {
                       <div className="rounded-full border-2 border-gray-200 p-1 min-w-[50px]">
                         <Image
                           className="rounded-full w-[60px] h-[60px]"
-                          src={getPlaceImage(booking.placeRef)}
+                          src={getGuestImage(booking.userRef)}
                           alt="profile-pic"
                           width={40}
                           height={40}
