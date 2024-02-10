@@ -6,7 +6,7 @@ import React from "react";
 
 export default function Help() {
   return (
-    <div className="px-4 sm:px-14 md:px-20 lg:px-20 xl:px-32 py-4">
+    <div className='px-4 sm:px-14 md:px-20 lg:px-20 xl:px-32 py-4 sm:bg-[url("/images/dotted-background.png")] bg-no-repeat'>
       <div className="space-y-5">
         <div className="flex justify-center">
           <p
@@ -99,77 +99,75 @@ export default function Help() {
           </div>
           <div className="mt-9 sm:mt-16">
             <div className="hidden sm:flex text-xl mb-8">Top Articles</div>
-            <div className="text-[16px] mb-4">Guides for Guests</div>
-            <div className="flex flex-wrap">
-              <div className="w-[100%] md:w-[29%] me-2 mb-4">
+            <div className="grid md:grid-cols-3 gap-x-5 bg-white">
+              <div className="w-[100%] mb-4 bg-white">
                 <div className="text-[15px] sm:text-lg">
                   Article Topic Title
                 </div>
-                <div className="text-sm text-gray-500 mb-2 ">
+                <div className="text-sm text-gray-500 mb-2 border-b pb-5">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has...
                 </div>
-                <hr />
               </div>
-              <div className="w-[100%] md:w-[29%] me-2 mb-4">
+              <div className="w-[100%] mb-4 bg-white">
                 <div className="text-[15px] sm:text-lg">
                   Article Topic Title
                 </div>
-                <div className="text-sm text-gray-500 mb-2 ">
+                <div className="text-sm text-gray-500 mb-2 border-b pb-5">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has...
                 </div>
-                <hr />
+            
               </div>
-              <div className="w-[100%] md:w-[29%] me-2 mb-4">
+              <div className="w-[100%] mb-4 bg-white">
                 <div className="text-[15px] sm:text-lg">
                   Article Topic Title
                 </div>
-                <div className="text-sm text-gray-500 mb-2 ">
+                <div className="text-sm text-gray-500 mb-2 border-b pb-5">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has...
                 </div>
-                <hr />
+            
               </div>
-              <div className="w-[100%] md:w-[29%] me-2 mb-4">
+              <div className="w-[100%] mb-4 bg-white">
                 <div className="text-[15px] sm:text-lg">
                   Article Topic Title
                 </div>
-                <div className="text-sm text-gray-500 mb-2 ">
+                <div className="text-sm text-gray-500 mb-2 border-b pb-5">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has...
                 </div>
-                <hr />
+            
               </div>
-              <div className="w-[100%] md:w-[29%] me-2 mb-4">
+              <div className="w-[100%] mb-4 bg-white">
                 <div className="text-[15px] sm:text-lg">
                   Article Topic Title
                 </div>
-                <div className="text-sm text-gray-500 mb-2 ">
+                <div className="text-sm text-gray-500 mb-2 border-b pb-5">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has...
                 </div>
-                <hr />
+            
               </div>
-              <div className="w-[100%] md:w-[29%] me-2 mb-4">
+              <div className="w-[100%] mb-4 bg-white">
                 <div className="text-[15px] sm:text-lg">
                   Article Topic Title
                 </div>
-                <div className="text-sm text-gray-500 mb-2 ">
+                <div className="text-sm text-gray-500 mb-2 border-b pb-5">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has...
                 </div>
-                <hr />
+            
               </div>
-              <div className="w-[100%] md:w-[29%] me-2 mb-4">
+              <div className="w-[100%] mb-4 bg-white">
                 <div className="text-[15px] sm:text-lg">
                   Article Topic Title
                 </div>
-                <div className="text-sm text-gray-500 mb-2 ">
+                <div className="text-sm text-gray-500 mb-2 border-b pb-5">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has...
                 </div>
-                <hr />
+            
               </div>
             </div>
           </div>

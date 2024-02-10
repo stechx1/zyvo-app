@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import firebase_app from "@/config";
+import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 
 const storage = getStorage(firebase_app);
 
@@ -78,19 +79,22 @@ const AccountSettingPage = () => {
     }
   };
   return (
-    <div className="flex flex-col sm:container sm:flex-row lg:gap-20 gap-10">
-      <div className="w-full sm:w-[30%] flex flex-col gap-10 sm:order-2">
-        <div className="sm:hidden flex flex-col gap-3">
-          <div className="text-black text-base md:text-[18px] sm:text-2xl font-normal font-Poppins">
+    <div className="flex flex-col sm:container sm:flex-row lg:gap-20 gap-6">
+      <div className="sm:hidden border-t border-b mx-[-20px] p-4">
+        <MobileSearchAndFilter type="header" />
+      </div>
+      <div className="w-full sm:w-[30%] flex flex-col gap-3 sm:gap-10 sm:order-2">
+        <div className="sm:hidden flex flex-col">
+          <div className="text-black text-lg md:text-[18px] sm:text-2xl font-medium font-Poppins">
             Account Settings
           </div>
           <div className={` rounded-3xl `}>
-            <div className="text-black text-sm sm:text-[15px] sm:text-lg font-normal">
-              Change your account settings here
+            <div className="text-black text-sm sm:text-[15px] sm:text-lg font-normal pb-2">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever
             </div>
           </div>
         </div>
-        <div className="h-full sm:h-[380px] w-full rounded-3xl border border-secondary-neutral-200 p-3 sm:p-6 items-center sm:justify-center flex-row sm:flex-col flex">
+        <div className="h-full sm:h-[380px] w-full rounded-3xl border border-secondary-neutral-200 p-3 sm:p-6 items-center sm:justify-center flex-row sm:flex-col flex bg-white">
           <div className="relative">
             <div className="w-[59px] h-[59px] sm:w-[188px] sm:h-[188px] border-8 border-secondary-neutral-200 bg-white rounded-full flex items-center justify-center">
               <Image
@@ -151,47 +155,51 @@ const AccountSettingPage = () => {
         </div>
       </div>
       <div className="w-full sm:w-[70%] flex flex-col gap-7 md:gap-10 sm:order-1">
-        <div className="hidden sm:flex flex-col gap-3">
-          <div className="text-black text-2xl font-normal font-Poppins">
+        <div className="hidden sm:flex flex-col">
+          <div className="text-black text-h1 font-normal font-Poppins">
             Account Settings
           </div>
           <div className={` rounded-3xl `}>
             <div className="text-black text-lg font-normal">
-              Change your account settings here
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-3 w-full sm:w-[40%]">
-          <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
+          <p className="font-Poppins text-lg md:text-2xl sm:text-lg font-normal">
             Email
           </p>
           <Input
             name={"email"}
             type={"email"}
+            type="edit"
             onChange={handleChange}
             value={accountSettings?.email ?? ""}
             placeholder="Email..."
+            className="xl:text-lg"
           />
         </div>
         <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
 
         <div className="flex flex-col gap-3 w-full sm:w-[40%]">
-          <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
+          <p className="font-Poppins text-lg md:text-2xl sm:text-lg font-normal">
             Phone Number
           </p>
           <Input
             name={"phone"}
             type={"text"}
+            type="edit"
             onChange={handleChange}
             value={accountSettings?.phone ?? ""}
             placeholder="Phone Number..."
+            className="xl:text-lg"
           />
         </div>
         <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
         {!accountSettings?.isSocialLogin && (
           <>
             <div className="flex flex-col gap-3 w-full sm:w-[40%]">
-              <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
+              <p className="font-Poppins text-lg md:text-2xl sm:text-lg font-normal">
                 Password
               </p>
               <Input
@@ -200,6 +208,8 @@ const AccountSettingPage = () => {
                 onChange={handleChange}
                 value={accountSettings?.password ?? ""}
                 placeholder="Password..."
+                className="xl:text-lg"
+                type="edit"
               />
             </div>
             <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
@@ -207,7 +217,7 @@ const AccountSettingPage = () => {
         )}
 
         <div className="flex flex-col gap-3 w-[100%]">
-          <p className="font-Poppins text-base md:text-lg font-normal">
+          <p className="font-Poppins text-lg md:text-2xl font-normal">
             Address
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
@@ -217,6 +227,7 @@ const AccountSettingPage = () => {
               onChange={handleChange}
               value={accountSettings?.country ?? ""}
               placeholder="Country..."
+              className="xl:text-lg"
             />
 
             <Input
@@ -225,6 +236,7 @@ const AccountSettingPage = () => {
               onChange={handleChange}
               value={accountSettings?.state ?? ""}
               placeholder="State..."
+              className="xl:text-lg"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
@@ -234,8 +246,10 @@ const AccountSettingPage = () => {
               onChange={handleChange}
               value={accountSettings?.city ?? ""}
               placeholder="City..."
+              className="xl:text-lg"
             />
             <Input
+              className="xl:text-lg"
               name="street"
               type="edit"
               onChange={handleChange}
@@ -247,12 +261,14 @@ const AccountSettingPage = () => {
         <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
 
         <div className="flex flex-col gap-3 w-full sm:w-[40%]">
-          <p className="font-Poppins text-base md:text-[18px] sm:text-lg font-normal">
+          <p className="font-Poppins text-lg md:text-2xl sm:text-lg font-normal">
             Payment Method
           </p>
           <Input
+            className="xl:text-lg"
             name={"paymentMethod"}
             type={"text"}
+            type="edit"
             onChange={handleChange}
             value={accountSettings?.paymentMethod ?? ""}
             placeholder="Payment Method..."

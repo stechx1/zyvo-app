@@ -24,11 +24,11 @@ export const ProfileContactSection = ({}) => {
   return profileInfo.map((item, index) => (
     <div key={index}>
       <div className="flex items-center w-full justify-center sm:justify-start sm:space-x-3 flex-wrap">
-        <div className="rounded-2xl bg-secondary-gray-600 text-center space-x-2 w-[90%] sm:w-16 h-16 flex items-center justify-center">
+        <div className="rounded-2xl bg-secondary-gray-600 text-center space-x-2 w-[90%] sm:w-[4.3rem] h-[4.3rem] flex items-center justify-center">
           <Image src={item.iconSrc} alt={"icon"} width={30} height={30} />
         </div>
-        <div>
-          <p className="text-white text-[12.5px] sm:text-lg font-medium">{item.title}</p>
+        <div className="space-y-0">
+          <div className="text-white text-[12.5px] sm:text-lg font-semibold">{item.title}</div>
           {item.isVerified ? (
             <div className="flex gap-2">
               <p className={`text-white text-xs sm:text-[18px] `}>Verified</p>
@@ -41,11 +41,11 @@ export const ProfileContactSection = ({}) => {
               />
             </div>
           ) : (
-            <p
-              className={`text-white text-xs sm:text-[18px]  opacity-[0.40] underline cursor-pointer`}
+            <div
+              className={`text-white sm:mt-0 text-xs sm:text-[18px] font-thin opacity-[0.40] underline underline-offset-4 cursor-pointer`}
             >
-              Confirm Now
-            </p>
+              Confirm now
+            </div>
           )}
         </div>
       </div>

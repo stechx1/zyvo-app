@@ -188,7 +188,7 @@ const ProfilePage = () => {
   }, [auth]);
 
   return (
-    <div className="flex flex-col sm:container sm:flex-row lg:gap-20 gap-10">
+    <div className="flex flex-col my-12 sm:flex-row lg:gap-20 gap-10">
       <div className="sm:w-[30%] flex flex-col gap-6 sm:gap-10 sm:order-2">
         {isMe && (
           <div className="flex flex-col gap-3 sm:hidden">
@@ -202,9 +202,9 @@ const ProfilePage = () => {
             </div>
           </div>
         )}
-        <div className="h-full sm:h-[380px] w-full rounded-3xl border border-secondary-neutral-200 p-6 items-center sm:justify-center flex-row sm:flex-col flex">
+        <div className="h-full sm:h-[350px] w-full rounded-3xl border border-secondary-neutral-200 p-6 items-center sm:justify-center flex-row sm:flex-col flex bg-white">
           <div className="relative">
-            <div className="w-[59px] h-[59px] sm:w-[188px] sm:h-[188px] border-8 border-secondary-neutral-200 bg-white rounded-full flex items-center justify-center">
+            <div className="w-[59px] h-[59px] sm:w-[150px] sm:h-[150px] border-8 border-secondary-neutral-200 bg-white rounded-full flex items-center justify-center">
               <Image
                 src={
                   imgPreview
@@ -216,7 +216,7 @@ const ProfilePage = () => {
                     : "/icons/profile-icon.png"
                 }
                 alt="Profile Image"
-                className={`sm:w-[156px] sm:h-[156px] rounded-full ${
+                className={`sm:w-[125px] sm:h-[125px] rounded-full ${
                   !user?.photoURL && "opacity-10"
                 }`}
                 width={156}
@@ -224,13 +224,13 @@ const ProfilePage = () => {
               />
             </div>
             {isMe && (
-              <div className="w-[24px] h-[24px] md:w-[30px] md:h-[30px] rounded-full bg-secondary-green flex items-center justify-center absolute left-10 bottom-1 sm:top-36 sm:left-36">
+              <div className="w-[24px] h-[24px] md:w-[36px] md:h-[36px] rounded-full bg-secondary-green flex items-center justify-center absolute left-10 bottom-1 sm:top-[7rem] sm:left-28">
                 <label htmlFor="files">
                   <Image
                     src="/icons/plus-icon.svg"
                     alt="plus-icon"
-                    width={13}
-                    height={13}
+                    width={20}
+                    height={20}
                     className="cursor-pointer"
                   />
                 </label>
@@ -264,12 +264,12 @@ const ProfilePage = () => {
       <div className="w-full sm:w-[70%] flex flex-col gap-6 sm:gap-12 sm:order-1">
         {isMe && (
           <div className="flex-col gap-3 hidden sm:block">
-            <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
+            <div className="text-black text-[18px] sm:text-h1 font-normal font-Poppins">
               Complete your profile
             </div>
             <div className={` rounded-3xl `}>
               <div className="text-black text-[14px] sm:text-lg font-normal">
-                Complete your profile here
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took
               </div>
             </div>
           </div>
@@ -278,7 +278,7 @@ const ProfilePage = () => {
           <div className="text-black text-[18px] sm:text-2xl font-normal font-Poppins">
             About Me
           </div>
-          <div className={`border border-neutral-200 p-6 rounded-3xl `}>
+          <div className={`border border-neutral-200 p-6 rounded-3xl bg-white`}>
             <div className="text-black text-[14px] sm:text-lg font-normal">
               <textarea
                 className="focus:outline-none w-full"
