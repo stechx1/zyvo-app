@@ -24,7 +24,7 @@ export default function PropertySideDetails({
         <Image
           src={imageURL}
           alt="detail-image"
-          className="rounded-[15px] w-[5.5rem] h-[5.5rem] sm:w-[30%] md:w-[5rem] lg:w-[35%] xl:w-[26%] xl:h-[100px] object-cover"
+          className="rounded-[15px] w-[5.5rem] h-[5.5rem] sm:w-[30%] md:w-[5rem] lg:w-[35%] xl:w-[26%] xl:min-w-[6rem] xl:h-[100px] object-cover"
           width={50}
           height={50}
         />
@@ -32,7 +32,7 @@ export default function PropertySideDetails({
           <div className="text-black text-[17px] md:text-[22.5px] font-normal font-Poppins whitespace-nowrap">
             {description ?? "-"}
           </div>
-          <div className="flex">
+          <div className="flex items-center">
             <p className="flex items-center text-[14px] sm:text-[16px] text-primary-amber-500 mr-0 font-Poppins">
               <Image
                 src={"/icons/orange-star-icon.svg"}
