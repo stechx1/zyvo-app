@@ -164,3 +164,37 @@ export function getMyBookingsSnapshot(
   }
   return unsubscribe;
 }
+export function getPlaceBookingsSnapshot(
+  placeId: string,
+  onSuccess: (data: Booking[]) => void,
+  onError?: (error: string) => void
+) {
+  let unsubscribe: Unsubscribe = () => {};
+
+  try {
+    unsubscribe = onSnapshot(
+      query(
+        collection(db, "bookings"),
+        where("placeRef", "==", doc(db, "places", placeId))
+      ),
+      async (bookings) => {
+        let result: Booking[] = [];
+        for (let index = 0; index < bookings.docs.length; index++) {
+          const booking = bookings.docs[index].data();
+          result = [
+            ...result,
+            {
+              ...booking,
+              date: booking.date.toDate(),
+            } as Booking,
+          ];
+        }
+        onSuccess(result);
+      }
+    );
+  } catch (e) {
+    console.log(e);
+    if (typeof e === "object" && onError) onError((e as errorType).code);
+  }
+  return unsubscribe;
+}

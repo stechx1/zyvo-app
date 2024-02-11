@@ -112,6 +112,25 @@ export async function deletePlace(placeId: string) {
   }
   return { result, error };
 }
+export async function updatePlaceStatus(placeId: string, status: String) {
+  let result = null;
+  let error = null;
+  try {
+    let placeRef = doc(collection(db, "places"), placeId);
+    await setDoc(
+      placeRef,
+      { status },
+      {
+        merge: true,
+      }
+    );
+    result = placeRef.id;
+  } catch (e) {
+    if (typeof e === "object") error = e as errorType;
+    console.log(e);
+  }
+  return { result, error };
+}
 export function getMyPlacesSnapshot(
   userId: string,
   onSuccess: (data: Place[]) => void,

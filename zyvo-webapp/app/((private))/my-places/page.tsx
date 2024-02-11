@@ -4,7 +4,11 @@ import PlaceModal from "@/collections/PlaceModal";
 import Button from "@/components/Button";
 import { CustomDialog } from "@/components/Dialog";
 import { useCommonContext } from "@/context/CommonContext";
-import { addUpdatePlace, deletePlace, getMyPlacesSnapshot } from "@/firebase/place";
+import {
+  addUpdatePlace,
+  deletePlace,
+  getMyPlacesSnapshot,
+} from "@/firebase/place";
 import { getGooglePlaces } from "@/lib/actions";
 import { debounce } from "@/lib/utils";
 import { CoordinatesType, Place } from "@/types/place";
@@ -190,6 +194,12 @@ export default function MyPlaces() {
                 },
               },
               {
+                title: "Calander View",
+                onClick: () => {
+                  router.push("/place-calendar/" + place.placeId);
+                },
+              },
+              {
                 title: "Edit",
                 onClick: () => {
                   setIsModalOpen(true);
@@ -223,7 +233,9 @@ export default function MyPlaces() {
               setPlace(defaultPlace);
             }}
           />
-          <p className="text-base md:text-lg text-[#3A4B4C] mt-3">Add new Place</p>
+          <p className="text-base md:text-lg text-[#3A4B4C] mt-3">
+            Add new Place
+          </p>
           <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
             <div className="border-t-4 border-l-4 border-r-4 border-transparent rounded-xl"></div>
           </div>
