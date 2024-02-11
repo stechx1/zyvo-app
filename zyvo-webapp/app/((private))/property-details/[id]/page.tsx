@@ -150,7 +150,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         <MobileSearchAndFilter type="header" />
       </div>
       <div className="flex flex-row sm:mt-0 mt-8">
-      <div className="text-black text-[19px] md:leading-10 sm:text-[21px] md:text-3xl font-normal">
+        <div className="text-black text-[19px] md:leading-10 sm:text-[21px] md:text-3xl font-normal">
           {place?.description}
         </div>
         <div className="sm:hidden flex space-x-1 ml-2 items-center">
@@ -316,7 +316,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
       )}
 
       <div className="md:hidden block border border-gray-700 rounded-xl">
-        {width <= 768 && (
+        {width <= 768 && place?.status === "ACTIVE" && (
           <AvailabilitySelection
             hours={hours}
             availableHoursFrom={place?.availableHoursFrom}
@@ -409,9 +409,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
           {/* ================================= Rules Accordion=================================== */}
           <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-2">
-            <p className=" text-[18px] md:text-2xl font-medium">
-              Rules
-            </p>
+            <p className=" text-[18px] md:text-2xl font-medium">Rules</p>
             <div className="w-full">
               <Accordion items={accordionItems} />
             </div>
@@ -445,14 +443,18 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                     />
                   </div>
                   <div className="text-sm sm:text-sm md:text-md lg:text-base xl:text-base">
-                    <p className="font-medium text-[13px] md:text-h4">{addOn.name}</p>
+                    <p className="font-medium text-[13px] md:text-h4">
+                      {addOn.name}
+                    </p>
                     <div className="flex gap-2">
                       <p>${addOn.price} / item</p>
                     </div>
                   </div>
                 </div>
               ))}
-              {place?.addOns.length === 0 && <div className="text-[14px] md:text-h3">No Add Ons Added!</div>}
+              {place?.addOns.length === 0 && (
+                <div className="text-[14px] md:text-h3">No Add Ons Added!</div>
+              )}
             </div>
           </div>
           <div className="h-[0.5px]  my-[50px]  opacity-[0.20] bg-secondary-gray-700"></div>
@@ -610,24 +612,28 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
 
           {user && placeUser && user?.userId !== placeUser?.userId && (
             <>
-              <div className="sm:block md:block lg:block xl:block hidden min-w-max border-2 border-gray-700 rounded-xl bg-white">
-                <AvailabilitySelection
-                  hours={hours}
-                  availableHoursFrom={place?.availableHoursFrom}
-                  availableHoursTo={place?.availableHoursTo}
-                  selectedAvailableHoursFrom={selectedavailableHoursFrom}
-                  selectedAvailableHoursTo={selectedavailableHoursTo}
-                  setSelectedAvailableHoursTo={setSelectedavailableHoursTo}
-                  setSelectedAvailableHoursFrom={setSelectedavailableHoursFrom}
-                  setHours={setHours}
-                  price={place?.pricePerHour ?? 0}
-                  selectedDate={selectedDate}
-                  setSelectedDate={setSelectedDate}
-                  availableMonths={place?.availableMonths ?? []}
-                  availableDays={place?.availableDays ?? []}
-                  onCheckOutClick={onCheckOutClick}
-                />
-              </div>
+              {place?.status === "ACTIVE" && (
+                <div className="sm:block md:block lg:block xl:block hidden min-w-max border-2 border-gray-700 rounded-xl bg-white">
+                  <AvailabilitySelection
+                    hours={hours}
+                    availableHoursFrom={place?.availableHoursFrom}
+                    availableHoursTo={place?.availableHoursTo}
+                    selectedAvailableHoursFrom={selectedavailableHoursFrom}
+                    selectedAvailableHoursTo={selectedavailableHoursTo}
+                    setSelectedAvailableHoursTo={setSelectedavailableHoursTo}
+                    setSelectedAvailableHoursFrom={
+                      setSelectedavailableHoursFrom
+                    }
+                    setHours={setHours}
+                    price={place?.pricePerHour ?? 0}
+                    selectedDate={selectedDate}
+                    setSelectedDate={setSelectedDate}
+                    availableMonths={place?.availableMonths ?? []}
+                    availableDays={place?.availableDays ?? []}
+                    onCheckOutClick={onCheckOutClick}
+                  />
+                </div>
+              )}
               <div className="my-8 hidden sm:block md:block lg:block xl:block">
                 <HostProperties
                   mode={mode}

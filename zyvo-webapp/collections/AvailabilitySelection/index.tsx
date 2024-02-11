@@ -61,7 +61,6 @@ export default function AvailabilitySelection({
   return (
     <div className="py-6 px-8 text-center">
       <Tabs
-        size="lg"
         options={[
           { name: "Choose Hours", value: 1 },
           { name: "Choose Days", value: 2 },
@@ -150,7 +149,6 @@ export default function AvailabilitySelection({
           <hr />
           <div className="flex justify-center space-x-2 my-4">
             <CustomSelect
-              size="lg"
               icon={"/icons/clock-icon.svg"}
               options={timeArray.slice(
                 availableHoursFromIndex,
@@ -163,7 +161,6 @@ export default function AvailabilitySelection({
               roundedFull
             />
             <CustomSelect
-              size="lg"
               icon="/icons/clock-icon.svg"
               options={timeArray.slice(
                 availableHoursFromIndex,

@@ -12,6 +12,7 @@ import { useCommonContext } from "@/context/CommonContext";
 import { Tabs } from "@/components/Tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { differenceInCalendarDays } from "date-fns";
+import CircularSlider from "@fseehawer/react-circular-slider";
 type Address = { name: string; coordinates: CoordinatesType };
 export const FilterSearch = () => {
   const { setPlaces } = useCommonContext();
@@ -21,6 +22,7 @@ export const FilterSearch = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>();
   const [selectedCoords, setSelectedCoords] = useState<CoordinatesType>();
   const [isSearched, setIsSearched] = useState(false);
+  const [hours, setHours] = useState(2);
 
   const timer = useRef<NodeJS.Timeout>();
   useEffect(() => {
@@ -72,6 +74,7 @@ export const FilterSearch = () => {
     setSelectedCoords(undefined);
     setQuery("");
     setSelectedDates([]);
+    setHours(2);
     getAllPlaces(
       (places) => {
         setPlaces(places);
@@ -98,6 +101,8 @@ export const FilterSearch = () => {
           <TimeDropdown
             selectedDates={selectedDates}
             setSelectedDates={setSelectedDates}
+            hours={hours}
+            setHours={setHours}
           />
         </div>
         <div className="border-l border-gray-200 w-40 px-2 cursor-pointer">
@@ -243,9 +248,13 @@ const ActivityDropdown = ({
 const TimeDropdown = ({
   selectedDates,
   setSelectedDates,
+  hours,
+  setHours,
 }: {
   selectedDates?: Date[];
+  hours: number;
   setSelectedDates: Dispatch<SetStateAction<Date[] | undefined>>;
+  setHours: Dispatch<SetStateAction<number>>;
 }) => {
   const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState(1);
@@ -290,6 +299,32 @@ const TimeDropdown = ({
                 onSelect={setSelectedDates}
                 fixedWeeks
                 disabled={disabledDays}
+              />
+            </div>
+          )}
+          {selectedTab === 2 && (
+            <div className="my-4 align-middle text-center">
+              <CircularSlider
+                width={200}
+                label="Hours"
+                labelFontSize="20px"
+                labelColor="#005a58"
+                knobColor="#fff"
+                knobSize={30}
+                progressColorFrom="#4AEAB1"
+                progressColorTo="#4AEAB1"
+                progressSize={30}
+                trackColor="#eeeeee"
+                trackSize={30}
+                data={[
+                  2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+                  19, 20, 21, 22, 23, 24,
+                ]}
+                min={2}
+                dataIndex={hours - 1}
+                onChange={(value: number) => {
+                  setHours(value);
+                }}
               />
             </div>
           )}
