@@ -14,7 +14,7 @@ const Accordion: React.FC<AccordionProps> = ({ items }) => {
         <AccordionItem
           key={item.value}
           value={item.value}
-          className="border rounded-xl mb-5"
+          className="border rounded-xl mb-5 bg-white"
         >
           <AccordionTrigger className="accordion-trigger font-normal justify-between xl:py-4 lg:py-4 md:py-4 sm:py-5 py-3 xl:px-6 lg:px-6 md:px-6 sm:px-6 px-4 hover:no-underline">
             <div className="accordion-title flex items-center">

@@ -208,7 +208,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
               <div className="flex flex-wrap gap-2 sm:gap-3 mt-1">
                 {bookingDetails.map((tag) => (
                   <div
-                    className={`border border-neutral-200 rounded-full py-2 px-3 gap-3 w-fit flex items-center`}
+                    className={`border bg-white border-neutral-200 rounded-full py-2 px-3 gap-3 w-fit flex items-center`}
                     key={tag.id}
                   >
                     <Image
