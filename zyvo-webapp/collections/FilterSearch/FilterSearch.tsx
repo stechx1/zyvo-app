@@ -22,7 +22,8 @@ export const FilterSearch = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>();
   const [selectedCoords, setSelectedCoords] = useState<CoordinatesType>();
   const [isSearched, setIsSearched] = useState(false);
-  const [hours, setHours] = useState(2);
+  const [hours, setHours] = useState<number>();
+  const [isFlexible, setIsFlexible] = useState(false);
 
   const timer = useRef<NodeJS.Timeout>();
   useEffect(() => {
@@ -63,6 +64,7 @@ export const FilterSearch = () => {
       activity: ActivitiesArray[selectedActivity as keyof ActivitiesArrayType],
       coordinates: selectedCoords,
       dates: selectedDates,
+      hours,
     }).then(({ result, error }) => {
       if (result) setPlaces(result);
       if (error) console.log(error);
@@ -103,6 +105,8 @@ export const FilterSearch = () => {
             setSelectedDates={setSelectedDates}
             hours={hours}
             setHours={setHours}
+            isFlexible={isFlexible}
+            setIsFlexible={setIsFlexible}
           />
         </div>
         <div className="border-l border-gray-200 w-40 px-2 cursor-pointer">
@@ -156,12 +160,12 @@ const PlacesDropdown = ({
       setIsOpen={setIsPlacesDropdownOpen}
       parent={
         <input
-          type="text"
+          type="text" 
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Place"
-          className={`outline-none w-full text-ellipsis placeholder:text-gray-500 ${
-            selectedCoords ? "text-inherit" : "text-gray-500"
+          className={`outline-none w-full text-ellipsis placeholder:text-black ${
+            selectedCoords ? "text-black" : "text-gray-500"
           } focus:text-gray-500`}
           onFocus={() => setIsPlacesDropdownOpen(true)}
         />
@@ -212,14 +216,10 @@ const ActivityDropdown = ({
   return (
     <>
       <span
-        className="whitespace-nowrap"
+        className="whitespace-nowrap text-black"
         onClick={() => setIsActivityDropdownOpen(true)}
       >
-        {selectedActivity ? (
-          selectedActivity
-        ) : (
-          <span className="text-gray-500">Activity</span>
-        )}
+        {selectedActivity ? selectedActivity : <span>Activity</span>}
       </span>
       <CustomDropdown
         isOpen={isActivityDropdownOpen}
@@ -250,11 +250,15 @@ const TimeDropdown = ({
   setSelectedDates,
   hours,
   setHours,
+  isFlexible,
+  setIsFlexible,
 }: {
   selectedDates?: Date[];
-  hours: number;
+  hours?: number;
   setSelectedDates: Dispatch<SetStateAction<Date[] | undefined>>;
-  setHours: Dispatch<SetStateAction<number>>;
+  setHours: Dispatch<SetStateAction<number | undefined>>;
+  isFlexible: boolean;
+  setIsFlexible: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [isTimeDropdownOpen, setIsTimeDropdownOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState(1);
@@ -264,14 +268,18 @@ const TimeDropdown = ({
   return (
     <>
       <span
-        className="whitespace-nowrap"
+        className="whitespace-nowrap text-black"
         onClick={() => setIsTimeDropdownOpen(true)}
       >
         {selectedDates && selectedDates.length > 0 ? (
           selectedDates.length +
           ` Date${selectedDates.length > 1 ? "s" : ""} Selected`
+        ) : hours ? (
+          hours + " Hours"
+        ) : isFlexible ? (
+          "Flexible"
         ) : (
-          <span className="text-gray-500">Time</span>
+          <span>Time</span>
         )}
       </span>
       <CustomDropdown
@@ -288,6 +296,19 @@ const TimeDropdown = ({
             ]}
             selected={selectedTab}
             onSelect={(option) => {
+              if (option.value == 1) {
+                setHours(0);
+                setIsFlexible(false);
+              }
+              if (option.value == 2) {
+                setSelectedDates([]);
+                setHours(2);
+                setIsFlexible(false);
+              }
+              if (option.value == 3) {
+                setHours(0);
+                setIsFlexible(true);
+              }
               setSelectedTab(+option.value);
             }}
           />
@@ -321,12 +342,15 @@ const TimeDropdown = ({
                   19, 20, 21, 22, 23, 24,
                 ]}
                 min={2}
-                dataIndex={hours - 1}
+                dataIndex={hours ? hours - 1 : 0}
                 onChange={(value: number) => {
                   setHours(value);
                 }}
               />
             </div>
+          )}
+          {selectedTab === 3 && (
+            <div className="my-4 align-middle text-center">Flexible Hours</div>
           )}
         </div>
       </CustomDropdown>

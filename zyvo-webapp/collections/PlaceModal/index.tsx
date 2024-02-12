@@ -823,7 +823,6 @@ const Availability = ({
           <CustomSelect
             size="sm"
             options={[
-              { label: "1 hour minimum", value: "1" },
               { label: "2 hour minimum", value: "2" },
               { label: "3 hour minimum", value: "3" },
               { label: "4 hour minimum", value: "4" },
