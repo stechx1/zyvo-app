@@ -48,7 +48,7 @@ export default function Button({
       ${full ? "w-full" : ""}
       ${bordered ? "border" : ""}
       text-[14px] xl:text-[18px] font-Poppins lg:text-base md:text-base sm:text-base
-      ${size === "sm" && "xl:text-[15px] xl:py-[8px]"}
+      ${size === "sm" && "text-[15px] xl:py-[8px]"}
       ${className}
       `}
       disabled={disabled || isLoading}

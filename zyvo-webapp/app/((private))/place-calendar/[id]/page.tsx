@@ -151,7 +151,7 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
   };
 
   return (
-    <div className="flex flex-col my-8 sm:flex-row gap-5 sm:gap-7">
+    <div className="flex flex-col my-8 sm:flex-row sm:justify-between gap-5 sm:gap-7">
       <div className="sm:hidden flex items-center justify-between">
         <div className="sm:hidden border border-neutral-200 rounded-full p-2">
           <Image
@@ -180,7 +180,7 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       <div className="sm:hidden h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
-      <div className="w-full xl:w-[22%] lg:w-[30%] md:w-[35%] flex flex-col gap-7 sm:gap-10 sm:order-2">
+      <div className="w-full xl:w-[23%] lg:w-[30%] md:w-[40%] flex flex-col gap-7 sm:gap-10 sm:order-2">
         {place && (
           <div className="w-full rounded-[18px] border bg-white border-secondary-neutral-200 p-2 sm:p-[1.15rem] flex flex-col gap-1 sm:gap-3 sm:order-1">
             <div className="flex flex-col gap-2">
@@ -247,6 +247,7 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
             <div className=" mt-2 h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
             <div className="flex flex-row justify-center sm:flex-col my-2 gap-2">
               <Button
+                size="sm"
                 onClick={() => {
                   place.status == "ACTIVE"
                     ? submitPlaceStatus("PAUSED")
@@ -257,22 +258,23 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
                 } Bookings`}
                 type="gray"
                 rounded
-                className="text-xl h-11"
+                className="h-11"
               />
               <Button
+                size="sm"
                 onClick={() => {
                   router.push("/my-places");
                 }}
                 text="Edit Place"
                 type="white"
                 rounded
-                className="text-xl h-11 border border-gray-600"
+                className="h-11 border border-gray-600 px-4"
               />
             </div>
           </div>
         )}
       </div>
-      <div className="mt-4 xl:w-[78%] overflow-auto pb-3 flex flex-col gap-7 sm:order-1">
+      <div className="mt-4 xl:w-[77%] md:w-[60%] overflow-auto pb-3 flex flex-col gap-7 sm:order-1">
         <div className="hidden sm:flex items-center justify-between">
           <DatePicker
             setSelectedDates={setSelectedDates}
@@ -358,7 +360,7 @@ const Card = ({
     <div
       className={`pl-2 border border-neutral-200 bg-white ${
         name ? "border-l-[3px] border-l-[#4AEAB1]" : "border-x"
-      } h-[60px] min-w-[6rem] rounded-xl flex justify-items-center justify-center flex-col overflow-hidden`}
+      } h-[60px] min-w-[7.5rem] rounded-xl flex justify-items-center justify-center flex-col overflow-hidden`}
     >
       <div className="text-[12px] font-bold ">{name}</div>
       <div className=" text-[11px] text-[#4AEAB1] capitalize">
@@ -371,7 +373,7 @@ const Card = ({
 
 const Time = ({ a, b }: { a?: string; b?: string }) => {
   return (
-    <div className="text-[13px] text-[#373B63] py-[11px] font-Poppins bg-[#EFF2F5] px-2 font-semibold min-h-[54px] min-w-[3rem] rounded-xl flex flex-col text-center items-center mb-1 sm:mb-0">
+    <div className="text-[13px] text-[#373B63] py-[11px] font-Poppins bg-[#EFF2F5] px-2 font-semibold min-h-[54px] min-w-[3.5rem] rounded-xl flex flex-col text-center items-center mb-1 sm:mb-0">
       <span>{a}</span>
       <span className="text-[11px]">{b}</span>
     </div>
@@ -380,7 +382,7 @@ const Time = ({ a, b }: { a?: string; b?: string }) => {
 
 const DateView = ({ date }: { date: Date }) => {
   return (
-    <div className=" text-[14px] font-semibold text-[#373B63] bg-[#EFF2F5] min-w-[6rem] h-[92%] min-h-[54px] rounded-xl flex items-center justify-center mb-1 sm:mb-0">
+    <div className=" text-[14px] font-semibold text-[#373B63] bg-[#EFF2F5] min-w-[7.5rem] h-[92%] min-h-[54px] rounded-xl flex items-center justify-center mb-1 sm:mb-0">
       {date.getDate()} - {date.toLocaleString("en-US", { weekday: "short" })}
     </div>
   );
