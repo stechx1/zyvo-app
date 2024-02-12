@@ -800,7 +800,8 @@ export default function Bookings() {
                           </React.Fragment>
                         );
                     })}
-                    <div className="text-center flex justify-center my-5">
+                    { reviews.length > 3 &&
+                      <div className="text-center flex justify-center my-5">
                       <Button
                         roundedfull
                         className="border-gray-700"
@@ -809,7 +810,7 @@ export default function Bookings() {
                         text={moreReviews ? "Show Less" : "Show More Reviews"}
                         onClick={() => setMoreReviews(!moreReviews)}
                       />
-                    </div>
+                    </div>}
                   </div>
                 </>
               )}
