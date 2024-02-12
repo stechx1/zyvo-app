@@ -106,9 +106,9 @@ export const PropertyCard = ({
             ))}
         </div>
         <div>
-          {place && user && (
-            <div className="flex justify-end items-start">
-              {!user.favoritePlaces?.includes(place.placeId) ? (
+          {place && (
+            <div className={`${!user && "invisible" } flex justify-end items-start`}>
+              {!user?.favoritePlaces?.includes(place.placeId) ? (
                 <Image
                   src={"/icons/heart-icon-gray.svg"}
                   alt="heart-icon"
