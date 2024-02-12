@@ -306,7 +306,7 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
             ),
           ].map((time, i) => {
             return (
-              <div className="flex gap-2">
+              <div key={time.value} className="flex gap-2">
                 {i == 0 ? (
                   <Time />
                 ) : (
@@ -317,9 +317,10 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
                 )}
                 {selectedDates?.map((date, j) => {
                   return i == 0 ? (
-                    <DateView date={date} />
+                    <DateView key={time.value + j} date={date} />
                   ) : getBookingByDate(date)?.from === time.value ? (
                     <Card
+                      key={time.value + j}
                       name={getGuestName(getBookingByDate(date)?.userRef)}
                       status={getBookingByDate(date)?.status}
                       time={

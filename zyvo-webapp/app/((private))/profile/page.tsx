@@ -269,7 +269,7 @@ const ProfilePage = () => {
             </div>
             <div className={` rounded-3xl `}>
               <div className="text-black text-[14px] sm:text-lg font-normal">
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took
+              {"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took"}
               </div>
             </div>
           </div>

@@ -90,7 +90,7 @@ const AccountSettingPage = () => {
           </div>
           <div className={` rounded-3xl `}>
             <div className="text-black text-sm sm:text-[15px] sm:text-lg font-normal pb-2">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever
+              {"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever"}
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ const AccountSettingPage = () => {
           </div>
           <div className={` rounded-3xl `}>
             <div className="text-black text-lg font-normal">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took
+              {"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took"}
             </div>
           </div>
         </div>
@@ -172,7 +172,6 @@ const AccountSettingPage = () => {
           <Input
             name={"email"}
             type={"email"}
-            type="edit"
             onChange={handleChange}
             value={accountSettings?.email ?? ""}
             placeholder="Email..."
@@ -188,7 +187,6 @@ const AccountSettingPage = () => {
           <Input
             name={"phone"}
             type={"text"}
-            type="edit"
             onChange={handleChange}
             value={accountSettings?.phone ?? ""}
             placeholder="Phone Number..."
@@ -209,7 +207,6 @@ const AccountSettingPage = () => {
                 value={accountSettings?.password ?? ""}
                 placeholder="Password..."
                 className="xl:text-lg"
-                type="edit"
               />
             </div>
             <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
@@ -268,7 +265,6 @@ const AccountSettingPage = () => {
             className="xl:text-lg"
             name={"paymentMethod"}
             type={"text"}
-            type="edit"
             onChange={handleChange}
             value={accountSettings?.paymentMethod ?? ""}
             placeholder="Payment Method..."
