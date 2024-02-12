@@ -1,6 +1,5 @@
 import Button from "@/components/Button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function HostProperties({
@@ -26,7 +25,6 @@ export default function HostProperties({
   bottomTextIcon: string;
   cardStyle?: "mobile" | "desktop";
 }) {
-  const router = useRouter();
   return (
     <>
       {cardStyle !== "mobile" ? (
@@ -67,7 +65,7 @@ export default function HostProperties({
               bordered
               rounded
               full
-              className="border-gray-700"
+              className="border-gray-700 my-2"
               onClick={() => onReviewClick && onReviewClick()}
             />
           )}

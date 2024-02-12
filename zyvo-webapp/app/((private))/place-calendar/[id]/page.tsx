@@ -212,7 +212,7 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
                           height={18}
                           className="mr-1"
                         />
-                        {place.rating}
+                        {place.rating?.toFixed(2)}
                       </p>
                       <p className="text-base text-secondary-neutral-400 mr-0 sm:mr-2 font-Poppins">{`(${place.reviewsCount})`}</p>
                     </div>
