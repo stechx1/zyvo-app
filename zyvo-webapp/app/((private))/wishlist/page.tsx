@@ -29,7 +29,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div className='relative py-8 space-y-7 sm:bg-[url("/images/dotted-background.png")] bg-no-repeat'>
+    <div>
+      <div className="flex justify-between font-medium mt-10">
+        <div className="text-h1 mb-8 ml-2">My Whishlist</div>
+      </div>
       <div>
         <div>
           {user && (

@@ -44,10 +44,10 @@ function BottomTabNav(props: Props) {
     {
       title: "Wishlists",
       icon: "/icons/gray-border-heart.svg",
-      selectedicon: "",
+      selectedicon: "/icons/black-border-heart.svg",
       count: 0,
       id: 3,
-      route: "",
+      route: "/wishlist",
     },
     {
       title: "Profile",
@@ -61,7 +61,9 @@ function BottomTabNav(props: Props) {
 
   return (
     <div className="z-50 sm:hidden w-full fixed bottom-0 bg-white border-t-2 flex justify-around p-3 text-xs text-[#B0B7B7]">
-      {Navigations.map((res, i) => {
+      {Navigations.filter((n) =>
+        n.id == 3 && mode == "HOST" ? false : true
+      ).map((res, i) => {
         return (
           <div
             key={i}
@@ -77,7 +79,6 @@ function BottomTabNav(props: Props) {
               title={res.title}
               badgeCount={res.count}
               onClick={() => {
-                console.log("route", res.route);
                 if (res.route) {
                   router.push(res.route);
                 }

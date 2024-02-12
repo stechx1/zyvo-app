@@ -17,6 +17,7 @@ export const ProfileDropdown = ({ photoURL }: { photoURL: string }) => {
     { name: 'Notifications', route: '/' },
     { name: 'Help Center', route: '/help' },
     { name: 'Settings', route: '/account-settings' },
+    { name: 'Whishlists', route: '/wishlist' },
   ];
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
