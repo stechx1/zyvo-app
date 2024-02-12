@@ -259,10 +259,12 @@ export async function getPlacesByLocation_Time_Activity({
   coordinates,
   dates,
   activity,
+  hours,
 }: {
   coordinates?: CoordinatesType;
   dates?: Date[];
   activity?: string;
+  hours?: number;
 }) {
   let result: Place[] = [];
   let error = null;
@@ -276,9 +278,11 @@ export async function getPlacesByLocation_Time_Activity({
       !days.includes(day.toUpperCase()) && days.push(day.toUpperCase());
     });
     let q: Query | null = null;
-    if (!coordinates && (!dates || dates.length === 0) && !activity) {
+    // if no filter selected
+    if (!coordinates && (!dates || dates.length === 0) && !activity && !hours) {
       result = [];
     } else if (!coordinates) {
+      // without coordinates
       q = query(
         collection(db, "places"),
         ...getQuery({ days, months, activity })
@@ -316,8 +320,9 @@ export async function getPlacesByLocation_Time_Activity({
           }
         }
       }
+      result = matchingDocs;
       if (dates && dates?.length > 0) {
-        result = matchingDocs.filter((doc) => {
+        result = result.filter((doc) => {
           let filter = false;
           days.forEach((day) => {
             let key = ("X-" + day) as keyof Place;
@@ -326,7 +331,10 @@ export async function getPlacesByLocation_Time_Activity({
           });
           return filter;
         });
-      } else result = matchingDocs;
+      }
+      if (hours) {
+        result = result.filter((p) => p.minHours == hours);
+      }
     }
   } catch (e) {
     console.log(e);
