@@ -262,7 +262,7 @@ const TimeDropdown = ({
         isOpen={isTimeDropdownOpen}
         setIsOpen={setIsTimeDropdownOpen}
       >
-        <div className="w-80 p-2">
+        <div className="sm:w-80 w-[20rem] p-2">
           <Tabs
             size="sm"
             options={[
