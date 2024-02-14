@@ -3,14 +3,10 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import { onAuthStateChanged, getAuth, Unsubscribe } from "firebase/auth";
 import firebase_app from "@/config";
 import { PreLoader } from "@/components/PreLoader";
-import { Navbar } from "@/collections/Navbar/Navbar";
-import { Footer } from "@/collections/Footer/Footer";
-import { usePathname } from "next/navigation";
 import getData from "@/firebase/firestore/getData";
 import { User } from "@/types/user";
 import { conversation } from "@/types/messages";
 import { getConversationsSnapshot } from "@/firebase/messages";
-import BottomTabNav from "@/collections/Footer/bottomTabNav/bottomTabNav";
 import { CoordinatesType, Place } from "@/types/place";
 import { updateLastActive } from "@/firebase/user";
 
@@ -55,8 +51,6 @@ export const CommonContextProvider = ({
   const [currentCoordinates, setCurrentCoordinates] =
     useState<CoordinatesType | null>(null);
   const [isActive, setIsActive] = useState(true);
-
-  const pathname = usePathname();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -162,18 +156,7 @@ export const CommonContextProvider = ({
         currentCoordinates: currentCoordinates,
       }}
     >
-      <Navbar />
       {children}
-      {pathname !== "/signup" && pathname !== "/signin" && user && (
-        <BottomTabNav />
-      )}
-      {pathname !== "/messages" &&
-        pathname !== "/signup" &&
-        pathname !== "/signin" && (
-          <div className="p-1">
-            <Footer />
-          </div>
-        )}
     </CommonContext.Provider>
   );
 };

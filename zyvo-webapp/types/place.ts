@@ -13,6 +13,7 @@ type addOn = {
   price: number;
 };
 export type CoordinatesType = { lat: number; lng: number };
+export type Address = { name: string; coordinates: CoordinatesType };
 
 export type Place = {
   placeId: string;

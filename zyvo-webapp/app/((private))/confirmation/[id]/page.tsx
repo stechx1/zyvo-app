@@ -152,6 +152,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
                     bottomTextIcon="/icons/time.svg"
                     photoURL={placeUser?.photoURL ?? ""}
                     fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
+                    isVerified={placeUser?.emailVerified}
                     onMessageClick={() => {
                       router.push("/messages?userId=" + placeUser?.userId);
                     }}

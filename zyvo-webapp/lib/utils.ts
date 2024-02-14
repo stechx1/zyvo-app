@@ -197,3 +197,25 @@ export const ActivitiesArray: ActivitiesArrayType = {
   "Fitness Class": "FITNESSCLASS",
   "Audio Recording": "AUDIORECORDING",
 };
+export const getDatesText = (dates?: Date[]) => {
+  if (dates && dates?.length > 0) {
+    const sortedDates = dates.sort((a, b) => a.getTime() - b.getTime());
+    let first = "";
+    let second = "";
+    let year = "";
+    first = sortedDates[0].toLocaleString("en-US", { month: "short" });
+    first += " " + sortedDates[0].getDate();
+    year =
+      sortedDates[0].toLocaleString("en-US", { year: "numeric" }) ;
+    if (sortedDates.length == 1) {
+      return first + " " + year;
+    } else {
+      second = sortedDates[sortedDates.length - 1].toLocaleString("en-US", {
+        month: "short",
+      });
+      second += " " + sortedDates[sortedDates.length - 1].getDate();
+      second += ", ";
+      return first + " - " + second + " " + year;
+    }
+  } else return "Select dates";
+};

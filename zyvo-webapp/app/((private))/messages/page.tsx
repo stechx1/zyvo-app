@@ -501,6 +501,9 @@ export default function Messages() {
                 getFullName(getOtherUser(selectedConversation.users, user)) ??
                 ""
               }
+              isVerified={
+                getOtherUser(selectedConversation.users, user)?.emailVerified
+              }
               onProfileClick={() =>
                 router.push(
                   "/profile?userId=" +

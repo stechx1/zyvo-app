@@ -839,6 +839,7 @@ export default function Bookings() {
                   ? getFullName(selectedBookingPlaceUser) ?? ""
                   : ""
               }
+              isVerified={selectedBookingPlaceUser?.emailVerified}
               showReviewButton={showReviewButton}
               onReviewClick={() => setIsReviewModalOpen(true)}
               onMessageClick={() => {

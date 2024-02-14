@@ -2,38 +2,36 @@ import Image from "next/image";
 import { CustomDropdown } from "../../components/CustomDropdown/CustomDropdown";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { getGooglePlaces } from "@/lib/actions";
-import { CoordinatesType } from "@/types/place";
-import { ActivitiesArray, ActivitiesArrayType, debounce } from "@/lib/utils";
-import {
-  getAllPlaces,
-  getPlacesByLocation_Time_Activity,
-} from "@/firebase/place";
-import { useCommonContext } from "@/context/CommonContext";
+import { Address, CoordinatesType } from "@/types/place";
+import { ActivitiesArray, debounce } from "@/lib/utils";
+import { useFilterContext } from "@/context/FilterContext";
 import { Tabs } from "@/components/Tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { differenceInCalendarDays } from "date-fns";
 import CircularSlider from "@fseehawer/react-circular-slider";
-type Address = { name: string; coordinates: CoordinatesType };
 export const FilterSearch = () => {
-  const { setPlaces } = useCommonContext();
+  const {
+    isFlexible,
+    selectedActivity,
+    hours,
+    selectedAddress,
+    selectedDates,
+    query,
+    setHours,
+    setIsFlexible,
+    setSelectedActivity,
+    setSelectedDates,
+    setSelectedAddress,
+    setQuery,
+    onSearch,
+  } = useFilterContext();
+
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [query, setQuery] = useState("");
-  const [selectedActivity, setSelectedActivity] = useState("");
-  const [selectedDates, setSelectedDates] = useState<Date[]>();
-  const [selectedCoords, setSelectedCoords] = useState<CoordinatesType>();
-  const [isSearched, setIsSearched] = useState(false);
-  const [hours, setHours] = useState<number>();
-  const [isFlexible, setIsFlexible] = useState(false);
 
   const timer = useRef<NodeJS.Timeout>();
   useEffect(() => {
     async function getAddresses() {
       const results = await getGooglePlaces(query);
-      if (results.length > 0) {
-        setSelectedCoords(results[0].geometry.location);
-      } else {
-        setSelectedCoords(undefined);
-      }
       setAddresses(
         results.map(
           (result: {
@@ -58,35 +56,6 @@ export const FilterSearch = () => {
     )();
   }, [query]);
 
-  const onSearch = () => {
-    setIsSearched(true);
-    getPlacesByLocation_Time_Activity({
-      activity: ActivitiesArray[selectedActivity as keyof ActivitiesArrayType],
-      coordinates: selectedCoords,
-      dates: selectedDates,
-      hours,
-    }).then(({ result, error }) => {
-      if (result) setPlaces(result);
-      if (error) console.log(error);
-    });
-  };
-  const onClearSearch = () => {
-    setIsSearched(false);
-    setSelectedActivity("");
-    setSelectedCoords(undefined);
-    setQuery("");
-    setSelectedDates([]);
-    setHours(2);
-    getAllPlaces(
-      (places) => {
-        setPlaces(places);
-      },
-      (e) => {
-        console.log(e);
-      }
-    );
-  };
-
   return (
     <div className="flex items-center">
       <div className="border border-gray-200 rounded-full flex justify-between items-center py-[4px] md:px-5 pl-5 pr-1 space-x-3 md:w-[450px] w-full">
@@ -94,9 +63,9 @@ export const FilterSearch = () => {
           <PlacesDropdown
             addresses={addresses}
             query={query}
-            selectedCoords={selectedCoords}
+            selectedAddress={selectedAddress}
             setQuery={setQuery}
-            setSelectedCoords={setSelectedCoords}
+            setSelectedAddress={setSelectedAddress}
           />
         </div>
         <div className="border-l border-gray-200 w-40 px-2 cursor-pointer">
@@ -116,7 +85,14 @@ export const FilterSearch = () => {
           />
         </div>
         <Image
-          onClick={onSearch}
+          onClick={() =>
+            onSearch({
+              selectedActivity,
+              hours,
+              selectedAddress,
+              selectedDates,
+            })
+          }
           src={"/icons/filter-search-icon.svg"}
           className="cursor-pointer"
           alt="search-icon"
@@ -124,7 +100,7 @@ export const FilterSearch = () => {
           height={35}
           title="Search"
         />
-        {isSearched && (
+        {/* {isSearched && (
           <Image
             onClick={onClearSearch}
             src={"/icons/close-icon-grey-background.svg"}
@@ -134,22 +110,22 @@ export const FilterSearch = () => {
             height={35}
             title="Clear Search"
           />
-        )}
+        )} */}
       </div>
     </div>
   );
 };
 const PlacesDropdown = ({
   query,
-  selectedCoords,
-  setSelectedCoords,
+  selectedAddress,
+  setSelectedAddress,
   setQuery,
   addresses,
 }: {
   query: string;
   setQuery: (query: string) => void;
-  selectedCoords?: CoordinatesType;
-  setSelectedCoords: (coords: CoordinatesType) => void;
+  selectedAddress?: Address;
+  setSelectedAddress: (address: Address) => void;
   addresses: Address[];
 }) => {
   const [isPlacesDropdownOpen, setIsPlacesDropdownOpen] = useState(false);
@@ -160,12 +136,12 @@ const PlacesDropdown = ({
       setIsOpen={setIsPlacesDropdownOpen}
       parent={
         <input
-          type="text" 
+          type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Place"
           className={`outline-none w-full text-ellipsis placeholder:text-black ${
-            selectedCoords ? "text-black" : "text-gray-500"
+            selectedAddress ? "text-black" : "text-gray-500"
           } focus:text-gray-500`}
           onFocus={() => setIsPlacesDropdownOpen(true)}
         />
@@ -180,7 +156,7 @@ const PlacesDropdown = ({
                 className="flex mb-4 hover:bg-secondary-gray-100 rounded-xl"
                 onClick={() => {
                   setQuery(address.name);
-                  setSelectedCoords(address.coordinates);
+                  setSelectedAddress(address);
                   setIsPlacesDropdownOpen(false);
                 }}
               >
@@ -297,16 +273,16 @@ const TimeDropdown = ({
             selected={selectedTab}
             onSelect={(option) => {
               if (option.value == 1) {
-                setHours(0);
+                setHours(undefined);
                 setIsFlexible(false);
               }
               if (option.value == 2) {
-                setSelectedDates([]);
+                setSelectedDates(undefined);
                 setHours(2);
                 setIsFlexible(false);
               }
               if (option.value == 3) {
-                setHours(0);
+                setHours(undefined);
                 setIsFlexible(true);
               }
               setSelectedTab(+option.value);

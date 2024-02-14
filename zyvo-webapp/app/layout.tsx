@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CommonContextProvider } from "@/context/CommonContext";
+import { FilterContextProvider } from "@/context/FilterContext";
 import { Toaster } from "react-hot-toast";
 import { AOSInit } from "@/AOSInit";
 import { poppins, roboto } from "@/lib/utils";
@@ -25,7 +26,11 @@ export default function RootLayout({
       <body className={`${roboto.className} ${poppins.className} `}>
         <AOSInit />
         <Toaster />
-        <CommonContextProvider>{children}</CommonContextProvider>
+        <CommonContextProvider>
+          <FilterContextProvider>
+            {children}
+            </FilterContextProvider>
+        </CommonContextProvider>
       </body>
     </html>
   );

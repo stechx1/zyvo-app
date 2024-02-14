@@ -13,6 +13,7 @@ export default function HostProperties({
   bottomText,
   bottomTextIcon,
   cardStyle,
+  isVerified = false,
 }: {
   photoURL: string;
   fullName: string;
@@ -24,12 +25,15 @@ export default function HostProperties({
   bottomText: string;
   bottomTextIcon: string;
   cardStyle?: "mobile" | "desktop";
+  isVerified?: boolean;
 }) {
   return (
     <>
       {cardStyle !== "mobile" ? (
         <div className="border rounded-[6%] sm:rounded-lg lg:rounded-2xl p-4 text-center bg-white">
-          <div className="text-[19px]">{`${mode === "GUEST" ? "Hosted" : "Guest"} By`}</div>
+          <div className="text-[19px]">{`${
+            mode === "GUEST" ? "Hosted" : "Guest"
+          } By`}</div>
           <div
             className="flex items-center justify-center space-x-2"
             role={onProfileClick ? "button" : ""}
@@ -48,13 +52,15 @@ export default function HostProperties({
             </div>
             <div className="text-[22px]">{fullName}</div>
             <div>
-              <Image
-                src={"/icons/green-tick.svg"}
-                alt="tick"
-                width={15}
-                height={15}
-                className="sm:w-[22px] sm:h-[22px]"
-              />
+              {isVerified && (
+                <Image
+                  src={"/icons/green-tick.svg"}
+                  alt="tick"
+                  width={15}
+                  height={15}
+                  className="sm:w-[22px] sm:h-[22px]"
+                />
+              )}
             </div>
           </div>
           <hr className="my-4" />
@@ -79,7 +85,13 @@ export default function HostProperties({
             onClick={() => onMessageClick && onMessageClick()}
           />
           <div className="flex items-center justify-center space-x-2 mt-3">
-            <Image src={bottomTextIcon} alt="time" width={15} height={15} className="sm:w-[22px] sm:h-[22px]" />
+            <Image
+              src={bottomTextIcon}
+              alt="time"
+              width={15}
+              height={15}
+              className="sm:w-[22px] sm:h-[22px]"
+            />
             <div>{bottomText}</div>
           </div>
         </div>
@@ -97,15 +109,15 @@ export default function HostProperties({
                   className="rounded-full min-w-[25px]"
                 />
               </div>
-              <div className="text-base font-medium mx-1">
-                {fullName}
-              </div>
-              <Image
-                src={"/icons/green-tick.svg"}
-                alt="tick"
-                width={15}
-                height={15}
-              />
+              <div className="text-base font-medium mx-1">{fullName}</div>
+              {isVerified && (
+                <Image
+                  src={"/icons/green-tick.svg"}
+                  alt="tick"
+                  width={15}
+                  height={15}
+                />
+              )}
             </div>
           </div>
           <div className="px-4 w-[55%] space-y-2 flex flex-col justify-center">

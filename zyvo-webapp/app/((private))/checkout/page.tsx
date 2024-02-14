@@ -217,6 +217,7 @@ const CheckoutPage = () => {
                     mode={mode}
                     photoURL={placeUser?.photoURL ?? ""}
                     fullName={placeUser ? getFullName(placeUser) ?? "" : ""}
+                    isVerified={placeUser?.emailVerified}
                     onMessageClick={() => {
                       router.push("/messages?userId=" + placeUser?.userId);
                     }}
