@@ -24,7 +24,19 @@ import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import toast from "react-hot-toast";
 import { Map } from "@/components/Maps";
 import { getRouteDetails } from "@/lib/actions";
-
+import Dropdown from "@/components/Dropdown";
+type BookingFilterType = {
+  name: string;
+  value: BookingStatusType | null;
+};
+const FilterItems: BookingFilterType[] = [
+  { name: "All Bookings", value: null },
+  { name: "Finished", value: "FINISHED" },
+  { name: "Booking Requests", value: "REQUESTED" },
+  { name: "Confirmed", value: "CONFIRMED" },
+  { name: "Waiting Payment", value: "WAITING PAYMENT" },
+  { name: "Canceled", value: "CANCELLED" },
+];
 export default function Bookings() {
   const { user, setUser, mode, currentCoordinates } = useCommonContext();
   const router = useRouter();
@@ -41,6 +53,10 @@ export default function Bookings() {
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [placeDistance, setPlaceDistance] = useState<number | null>(null);
   const [moreReviews, setMoreReviews] = useState(false);
+  const [bookingsFilter, setBookingsFilter] = useState<BookingFilterType>({
+    name: "All Bookings",
+    value: null,
+  });
 
   useEffect(() => {
     if (user == null) {
@@ -357,13 +373,25 @@ export default function Bookings() {
         >
           <div className="sm:flex hidden justify-between items-center">
             <div className="flex items-center space-x-2">
-              <div className="text-lg">All Bookings</div>
-              <Image
-                src={"/icons/down.svg"}
-                alt="down"
-                width={13}
-                height={13}
-              />
+              <div className="text-lg">{bookingsFilter.name}</div>
+              <Dropdown
+                items={FilterItems.map((i) => {
+                  return {
+                    title: i.name,
+                    onClick: () => {
+                      setBookingsFilter(i);
+                      setSelectedBooking(null);
+                    },
+                  };
+                })}
+              >
+                <Image
+                  src={"/icons/down.svg"}
+                  alt="down"
+                  width={13}
+                  height={13}
+                />
+              </Dropdown>
             </div>
             <div className="me-1">
               <Image
@@ -375,94 +403,104 @@ export default function Bookings() {
             </div>
           </div>
           <div className={`${"pr-1.5 "} sm:max-h-[100%] sm:overflow-auto`}>
-            {bookings.map((booking) => {
-              return (
-                <div
-                  key={booking.bookingId}
-                  className={`flex mt-4 border justify-between px-2 py-2 rounded-xl bg-white ${
-                    selectedBooking?.bookingId === booking.bookingId
-                      ? "border-2 border-black"
-                      : ""
-                  }`}
-                  role="button"
-                  onClick={() => setSelectedBooking(booking)}
-                >
-                  <div className="flex items-center">
-                    {mode === "HOST" ? (
-                      <div className="rounded-full border-2 border-gray-200 p-1 min-w-[50px]">
-                        <Image
-                          className="rounded-full w-[60px] h-[60px]"
-                          src={getGuestImage(booking.userRef)}
-                          alt="profile-pic"
-                          width={40}
-                          height={40}
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <Image
-                          src={getPlaceImage(booking.placeRef)}
-                          alt="image"
-                          width={95}
-                          height={95}
-                          className="rounded-xl object-cover w-[95px] h-[95px]"
-                        />
-                      </>
-                    )}
-                    <div
-                      className={`${
-                        mode === "HOST" ? "ml-2" : "xl:ml-4 sm:ml-2 ml-4"
-                      }`}
-                    >
-                      <div className="text-lg">
-                        {
-                          getPlace(places, booking.placeRef?.id ?? "")
-                            ?.description
-                        }
-                      </div>
-                      <div className="text-[#A4A4A4]">
-                        {formatDate(booking.date.toISOString())}
-                      </div>
-                      {mode === "HOST" && booking.status === "REQUESTED" ? (
-                        <div className="flex gap-1 flex-wrap">
-                          <span
-                            className={`inline-block mt-0.5 text-[#00BF7B] px-2 py-2 text-sm leading-none rounded-full capitalize border border-[#00BF7B]`}
-                            onClick={() => {
-                              submitBookingStatus("CONFIRMED");
-                            }}
-                          >
-                            Approve
-                          </span>
-                          <span
-                            className={`inline-block mt-0.5 text-[#FF1A00] px-2 py-2 text-sm leading-none  rounded-full capitalize border border-[#FF1A00]`}
-                            onClick={() => {
-                              submitBookingStatus("DECLINED");
-                            }}
-                          >
-                            Decline
-                          </span>
+            {bookings
+              .filter((booking) =>
+                !bookingsFilter.value
+                  ? true
+                  : booking.status == bookingsFilter.value
+              )
+              .map((booking) => {
+                return (
+                  <div
+                    key={booking.bookingId}
+                    className={`flex mt-4 border justify-between px-2 py-2 rounded-xl bg-white ${
+                      selectedBooking?.bookingId === booking.bookingId
+                        ? "border-2 border-black"
+                        : ""
+                    }`}
+                    role="button"
+                    onClick={() => setSelectedBooking(booking)}
+                  >
+                    <div className="flex items-center">
+                      {mode === "HOST" ? (
+                        <div className="rounded-full border-2 border-gray-200 p-1 min-w-[50px]">
+                          <Image
+                            className="rounded-full w-[60px] h-[60px]"
+                            src={getGuestImage(booking.userRef)}
+                            alt="profile-pic"
+                            width={40}
+                            height={40}
+                          />
                         </div>
                       ) : (
-                        <BookingStatus status={booking.status} />
+                        <>
+                          <Image
+                            src={getPlaceImage(booking.placeRef)}
+                            alt="image"
+                            width={95}
+                            height={95}
+                            className="rounded-xl object-cover w-[95px] h-[95px]"
+                          />
+                        </>
                       )}
+                      <div
+                        className={`${
+                          mode === "HOST" ? "ml-2" : "xl:ml-4 sm:ml-2 ml-4"
+                        }`}
+                      >
+                        <div className="text-lg">
+                          {
+                            getPlace(places, booking.placeRef?.id ?? "")
+                              ?.description
+                          }
+                        </div>
+                        <div className="text-[#A4A4A4]">
+                          {formatDate(booking.date.toISOString())}
+                        </div>
+                        {mode === "HOST" && booking.status === "REQUESTED" ? (
+                          <div className="flex gap-1 flex-wrap">
+                            <span
+                              className={`inline-block mt-0.5 text-[#00BF7B] px-2 py-2 text-sm leading-none rounded-full capitalize border border-[#00BF7B]`}
+                              onClick={() => {
+                                submitBookingStatus("CONFIRMED");
+                              }}
+                            >
+                              Approve
+                            </span>
+                            <span
+                              className={`inline-block mt-0.5 text-[#FF1A00] px-2 py-2 text-sm leading-none  rounded-full capitalize border border-[#FF1A00]`}
+                              onClick={() => {
+                                submitBookingStatus("DECLINED");
+                              }}
+                            >
+                              Decline
+                            </span>
+                          </div>
+                        ) : (
+                          <BookingStatus status={booking.status} />
+                        )}
+                      </div>
+                    </div>
+                    <div
+                      className="h-[30px] flex items-center justify-center mr-0.5"
+                      role="button"
+                    >
+                      <Image
+                        src={"/icons/dots.svg"}
+                        alt="dots"
+                        width={4}
+                        height={4}
+                      />
                     </div>
                   </div>
-                  <div
-                    className="h-[30px] flex items-center justify-center mr-0.5"
-                    role="button"
-                  >
-                    <Image
-                      src={"/icons/dots.svg"}
-                      alt="dots"
-                      width={4}
-                      height={4}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
-          {bookings.length === 0 && (
+          {bookings.filter((booking) =>
+            !bookingsFilter.value
+              ? true
+              : booking.status == bookingsFilter.value
+          ).length === 0 && (
             <div className="flex justify-center items-center h-[100%] bg-white">
               No Bookings!
             </div>
@@ -800,17 +838,18 @@ export default function Bookings() {
                           </React.Fragment>
                         );
                     })}
-                    { reviews.length > 3 &&
+                    {reviews.length > 3 && (
                       <div className="text-center flex justify-center my-5">
-                      <Button
-                        roundedfull
-                        className="border-gray-700"
-                        bordered
-                        type="white"
-                        text={moreReviews ? "Show Less" : "Show More Reviews"}
-                        onClick={() => setMoreReviews(!moreReviews)}
-                      />
-                    </div>}
+                        <Button
+                          roundedfull
+                          className="border-gray-700"
+                          bordered
+                          type="white"
+                          text={moreReviews ? "Show Less" : "Show More Reviews"}
+                          onClick={() => setMoreReviews(!moreReviews)}
+                        />
+                      </div>
+                    )}
                   </div>
                 </>
               )}
