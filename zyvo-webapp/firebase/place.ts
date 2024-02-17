@@ -175,7 +175,7 @@ export function getAllPlacesSnapshot(
 
   try {
     unsubscribe = onSnapshot(
-      query(collection(db, "places")),
+      query(collection(db, "places"), where("status", "==", "ACTIVE")),
       async (places) => {
         let result: Place[] = [];
         for (let index = 0; index < places.docs.length; index++) {
@@ -204,7 +204,9 @@ export function getAllPlaces(
   onError?: (error: string) => void
 ) {
   try {
-    getDocs(query(collection(db, "places"))).then((places) => {
+    getDocs(
+      query(collection(db, "places"), where("status", "==", "ACTIVE"))
+    ).then((places) => {
       let result: Place[] = [];
       for (let index = 0; index < places.docs.length; index++) {
         const place = places.docs[index].data() as Place;
