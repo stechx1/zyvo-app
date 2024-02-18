@@ -521,19 +521,42 @@ export default function Bookings() {
                 onClick={() => setIsReviewModalOpen(true)}
               />
             )}
-            <Button
-              type="white"
-              text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
-              bordered
-              rounded
-              full
-              className="border-gray-700"
-              onClick={() => {
-                router.push(
-                  "/messages?userId=" + selectedBookingPlaceUser?.userId
-                );
-              }}
-            />
+            {selectedBooking.status === "REQUESTED" && mode !== "GUEST" ? (
+              <div className="space-y-2 w-full">
+                <Button
+                  type="gray"
+                  text={`Approve Booking`}
+                  bordered
+                  rounded
+                  full
+                  className="border-gray-700"
+                  // onClick={() => onMessageClick && onMessageClick()}
+                />
+                <Button
+                  type="white"
+                  text={`Decline Booking`}
+                  bordered
+                  rounded
+                  full
+                  className="border-gray-700"
+                  // onClick={() => onMessageClick && onMessageClick()}
+                />
+              </div>
+            ) : (
+              <Button
+                type="white"
+                text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
+                bordered
+                rounded
+                full
+                className="border-gray-700"
+                onClick={() => {
+                  router.push(
+                    "/messages?userId=" + selectedBookingPlaceUser?.userId
+                  );
+                }}
+              />
+            )}
           </div>
         )}
 
@@ -870,6 +893,7 @@ export default function Bookings() {
           {selectedBookingPlaceUser && mode && selectedBooking && (
             <HostProperties
               mode={mode}
+              bookingStatus={selectedBooking.status}
               bottomTextIcon="/icons/information-button.png"
               bottomText="i need help"
               photoURL={selectedBookingPlaceUser?.photoURL ?? ""}

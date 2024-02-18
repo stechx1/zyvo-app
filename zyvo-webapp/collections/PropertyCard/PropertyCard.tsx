@@ -17,7 +17,7 @@ export const PropertyCard = ({
   currentCoordinates: CoordinatesType | null;
 }) => {
   const router = useRouter();
-  const [width] = useScreenDimensions()
+  const [width] = useScreenDimensions();
   const { user, setUser } = useCommonContext();
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [placeImageIndex, setPlaceImageIndex] = useState<number>(0);
@@ -75,8 +75,8 @@ export const PropertyCard = ({
         if (user) router.push("/property-details/" + place.placeId);
         else router.push("/signin");
       }}
-      onMouseEnter={() => width>768 && setShowCarouselItems(true)}
-      onMouseLeave={() =>  setShowCarouselItems(false)}
+      onMouseEnter={() => width > 768 && setShowCarouselItems(true)}
+      onMouseLeave={() => setShowCarouselItems(false)}
     >
       <div
         className="bg-cover bg-white bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
@@ -91,9 +91,23 @@ export const PropertyCard = ({
           opacity: imageOpacity,
         }}
       >
-        <div className="absolute text-center justify-center flex w-full space-x-2">
+        {place.instantBook && (
+          <div className="absolute text-center flex w-full space-x-2">
+            <div className="bg-white rounded-full pl-2 pr-4 py-1.5 flex items-center space-x-1">
+              <Image
+                src={"/icons/green-instant-icon.svg"}
+                alt="square-fit"
+                width={17}
+                height={17}
+                className="sm:w-[19px] sm:h-[19px]"
+              />
+              <span className="mb-0.5">Instant book</span>
+            </div>
+          </div>
+        )}
+        <div className="absolute text-center justify-center flex w-full space-x-2 mx-[-12px]">
           {place.images.length > 1 &&
-            showCarouselItems &&
+            showCarouselItems && !place.instantBook &&
             Array.from({ length: place.images.length }, (_, index) => (
               <div
                 key={index}
@@ -107,7 +121,9 @@ export const PropertyCard = ({
         </div>
         <div>
           {place && (
-            <div className={`${!user && "invisible" } flex justify-end items-start`}>
+            <div
+              className={`${!user && "invisible"} flex justify-end items-start`}
+            >
               {!user?.favoritePlaces?.includes(place.placeId) ? (
                 <Image
                   src={"/icons/heart-icon-gray.svg"}

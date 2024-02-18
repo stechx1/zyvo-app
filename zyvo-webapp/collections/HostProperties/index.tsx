@@ -14,6 +14,7 @@ export default function HostProperties({
   bottomTextIcon,
   cardStyle,
   isVerified = false,
+  bookingStatus,
 }: {
   photoURL: string;
   fullName: string;
@@ -26,6 +27,7 @@ export default function HostProperties({
   bottomTextIcon: string;
   cardStyle?: "mobile" | "desktop";
   isVerified?: boolean;
+  bookingStatus?: string;
 }) {
   return (
     <>
@@ -75,15 +77,38 @@ export default function HostProperties({
               onClick={() => onReviewClick && onReviewClick()}
             />
           )}
-          <Button
-            type="white"
-            text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
-            bordered
-            rounded
-            full
-            className="border-gray-700"
-            onClick={() => onMessageClick && onMessageClick()}
-          />
+          {bookingStatus === "REQUESTED" && mode !== "GUEST" ? (
+            <div className="space-y-2">
+              <Button
+                type="gray"
+                text={`Approve Booking`}
+                bordered
+                rounded
+                full
+                className="border-gray-700"
+                // onClick={() => onMessageClick && onMessageClick()}
+              />
+              <Button
+                type="white"
+                text={`Decline Booking`}
+                bordered
+                rounded
+                full
+                className="border-gray-700"
+                // onClick={() => onMessageClick && onMessageClick()}
+              />
+            </div>
+          ) : (
+            <Button
+              type="white"
+              text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
+              bordered
+              rounded
+              full
+              className="border-gray-700"
+              onClick={() => onMessageClick && onMessageClick()}
+            />
+          )}
           <div className="flex items-center justify-center space-x-2 mt-3">
             <Image
               src={bottomTextIcon}

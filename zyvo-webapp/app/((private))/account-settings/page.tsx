@@ -171,7 +171,7 @@ const AccountSettingPage = () => {
           </p>
           <Input
             name={"email"}
-            type={"email"}
+            type={"edit"}
             onChange={handleChange}
             value={accountSettings?.email ?? ""}
             placeholder="Email..."
@@ -186,7 +186,7 @@ const AccountSettingPage = () => {
           </p>
           <Input
             name={"phone"}
-            type={"text"}
+            type={"edit"}
             onChange={handleChange}
             value={accountSettings?.phone ?? ""}
             placeholder="Phone Number..."
@@ -264,7 +264,7 @@ const AccountSettingPage = () => {
           <Input
             className="xl:text-lg"
             name={"paymentMethod"}
-            type={"text"}
+            type={"edit"}
             onChange={handleChange}
             value={accountSettings?.paymentMethod ?? ""}
             placeholder="Payment Method..."

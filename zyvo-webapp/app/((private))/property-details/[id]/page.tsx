@@ -174,7 +174,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
       {/* Icon's Details */}
       <div className="flex justify-between mb-3">
         {/* =================================== Left Description =============================  */}
-        <div className="items-center flex gap-[1rem] sm:gap-4">
+        <div className="items-center flex flex-wrap gap-[1rem] sm:gap-4">
           <div className="space-x-4 md:space-x-1 hidden sm:flex">
             <p className="flex items-center text-[13px] md:text-[22px] text-primary-amber-500 mr-0">
               <Image
@@ -212,11 +212,23 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
               <div className="text-xs md:text-h4">{place?.size} sqft</div>
             </div>
           )}
+          {place?.instantBook && (
+            <div className="sm:flex hidden items-center justify-center space-x-1 sm:text-base">
+              <Image
+                src={"/icons/green-instant-icon.svg"}
+                alt="square-fit"
+                width={17}
+                height={17}
+                className="sm:w-[21px] sm:h-[21px]"
+              />
+              <div className="text-xs md:text-h4">Instant book</div>
+            </div>
+          )}
         </div>
 
         {/* =================================== Right Description =============================  */}
         {place && user && (
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 sm:space-x-6">
             <div className="flex items-center justify-center space-x-2  sm:text-base">
               <Image
                 src={"/icons/gray-share-icon.svg"}
@@ -289,7 +301,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           <Image
             src={getImagesOnIndex(4)}
             alt="detail-image"
-            className="object-cover w-full lg:h-1/2 xl:h-[11.6rem] lg:h-[9.6rem] md:h-[9.6rem] sm:h-[7.2rem] h-[7rem] rounded-tr-[20px] rounded-br-[20px]"
+            className="object-cover w-full xl:h-[11.6rem] lg:h-[9.6rem] md:h-[9.6rem] sm:h-[7.2rem] h-[7rem] rounded-tr-[20px] rounded-br-[20px]"
             width={200}
             height={470}
           />
@@ -484,40 +496,44 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             {reviews.length > 0 && (
               <>
                 <div className="lg:px-5 md:px-5 sm:px-3">
-                  <div
-                    className={`flex sm:inline-block text-[18px] md:text-2xl`}
-                  >
-                    Reviews
-                    <span className="text-black ms-2 sm:hidden">
-                      {place?.reviewsCount ? "("+place?.reviewsCount+")" : 0}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex">
-                      <Image
-                        src={"/icons/starIcon.svg"}
-                        alt="star-icon"
-                        width={15}
-                        height={15}
-                      />
-                      <div className="ml-1">
-                        <span className="text-[#FCA800]">
-                          {place?.rating?.toFixed(2) ?? 0}
-                          <span className="sm:inline hidden text-black ms-2">
-                            {place?.reviewsCount ?? 0} reviews
-                          </span>
-                          <span className="mx-1 text-black">
-                            Rating
-                          </span>
+                  <div className={`lg:flex items-center flex-wrap justify-between`}>
+                    <div className="lg:flex items-center">
+                      <div className="text-[18px] md:text-2xl font-medium">
+                        Reviews
+                        <span className="text-black ms-2 me-3 text-[16px] md:text-xl font-medium">
+                          {place?.reviewsCount
+                            ? "(" + place?.reviewsCount + ")"
+                            : 0}
                         </span>
                       </div>
+                      <div className="flex items-center">
+                        <Image
+                          src={"/icons/starIcon.svg"}
+                          alt="star-icon"
+                          width={15}
+                          height={15}
+                          className="sm:w-[22px] sm:h-[22px] mb-0.5"
+                        />
+                        <div className="ml-1">
+                          <span className="text-[#FCA800] text-base mx-1">
+                            {place?.rating?.toFixed(2) ?? 0}
+                          </span>
+                        </div>
+                        <span className="mx-1 text-black sm:text-lg">
+                          Rating
+                        </span>
+                        <div className="lg:hidden flex justify-end w-full sm:text-lg">
+                          Sort by: Recent Reviews
+                        </div>
+                      </div>
                     </div>
-                    <div>Sort by: Recent Reviews</div>
+                    <div className="hidden lg:block sm:text-lg">
+                      Sort by: Recent Reviews
+                    </div>
                   </div>
-
                   {reviews.map((review) => (
                     <React.Fragment key={review.reviewId}>
-                      <div className="flex justify-between py-2">
+                      <div className="flex justify-between py-6">
                         <div className="flex sm:px-2 items-center space-x-2 xl:w-max w-full">
                           <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
                             <Image
@@ -529,7 +545,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                               alt="profile-pic"
                               width={50}
                               height={50}
-                              className="rounded-full sm:w-[40] sm:h-[40]"
+                              className="rounded-full sm:w-[65px]"
                             />
                           </div>
                           <div className="w-full">
