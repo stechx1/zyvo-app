@@ -148,7 +148,7 @@ const PlacesDropdown = ({
       }
     >
       {addresses.length > 0 && (
-        <div className="w-80 m-2">
+        <div className="sm:w-80 w-64 m-2">
           {addresses.map((address, i) => {
             return (
               <div

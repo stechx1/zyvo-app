@@ -19,6 +19,7 @@ import AvailabilitySelection from "@/collections/AvailabilitySelection";
 import { formatDate, getFullName, timeArray } from "@/lib/utils";
 import { useScreenDimensions } from "@/hooks/useScreenDimension";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
+import { format } from "date-fns";
 
 export type BookingDetailsType = {
   placeId: string;
@@ -482,8 +483,15 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
           <div className="flex-col flex xl:gap-7 lg:gap-7 md:gap-7 sm:gap-7 gap-2">
             {reviews.length > 0 && (
               <>
-                <div className="px-2 lg:px-5 md:px-5 sm:px-3">
-                  <label className="text-[18px] md:text-2xl">Reviews</label>
+                <div className="lg:px-5 md:px-5 sm:px-3">
+                  <div
+                    className={`flex sm:inline-block text-[18px] md:text-2xl`}
+                  >
+                    Reviews
+                    <span className="text-black ms-2 sm:hidden">
+                      {place?.reviewsCount ? "("+place?.reviewsCount+")" : 0}
+                    </span>
+                  </div>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex">
                       <Image
@@ -495,8 +503,11 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                       <div className="ml-1">
                         <span className="text-[#FCA800]">
                           {place?.rating?.toFixed(2) ?? 0}
-                          <span className="text-black ms-2">
+                          <span className="sm:inline hidden text-black ms-2">
                             {place?.reviewsCount ?? 0} reviews
+                          </span>
+                          <span className="mx-1 text-black">
+                            Rating
                           </span>
                         </span>
                       </div>
@@ -507,7 +518,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                   {reviews.map((review) => (
                     <React.Fragment key={review.reviewId}>
                       <div className="flex justify-between py-2">
-                        <div className="flex sm:px-2 space-x-2 sm:w-max w-full">
+                        <div className="flex sm:px-2 items-center space-x-2 xl:w-max w-full">
                           <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
                             <Image
                               src={
@@ -516,12 +527,12 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                                   : "/icons/profile-icon.png"
                               }
                               alt="profile-pic"
-                              width={40}
-                              height={40}
-                              className="rounded-full"
+                              width={50}
+                              height={50}
+                              className="rounded-full sm:w-[40] sm:h-[40]"
                             />
                           </div>
-                          <div className="sm:w-max w-full">
+                          <div className="w-full">
                             <div className="flex justify-between">
                               <div className="text-sm md:text-md lg:text-base font-semibold">
                                 {getFullName(review.user)}
@@ -542,7 +553,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                                     )
                                   )}
                                   <div className="ml-2">
-                                    {formatDate(review.createdAt.toISOString())}
+                                    {format(review.createdAt, "MMM d, yyyy")}
                                   </div>
                                 </div>
                               </div>
