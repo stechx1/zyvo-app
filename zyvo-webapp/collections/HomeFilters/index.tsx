@@ -32,7 +32,7 @@ function HomeFilters(props: Props) {
   } = useFilterContext();
   return (
     <div className="flex justify-between ">
-      <div className="flex gap-5">
+      <div className="flex flex-wrap gap-5">
         {isAddressSearched && selectedAddress && (
           <div
             className={`border rounded-full py-2 px-3 sm:py-3 sm:px-5 gap-3  flex items-center bg-white`}
