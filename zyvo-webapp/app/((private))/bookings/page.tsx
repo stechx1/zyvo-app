@@ -915,6 +915,7 @@ export default function Bookings() {
                   "/profile?userId=" + selectedBookingPlaceUser.userId
                 )
               }
+              onSubmitBookingStatus={(status) => submitBookingStatus(status)}
             />
           )}
           {selectedBookingPlace && selectedBooking && (
