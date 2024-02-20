@@ -19,6 +19,7 @@ type props = {
   prefixIcon?: string;
   size?: "sm" | "lg";
   className?: string;
+  roundedFull?:boolean
 };
 export default function Input({
   name,
@@ -29,7 +30,8 @@ export default function Input({
   invalidMessage = "",
   prefixIcon,
   size,
-  className
+  className,
+  roundedFull = true
 }: props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEdit, setIsEdit] = useState(false);
@@ -66,7 +68,7 @@ export default function Input({
           id="Input"
           ref={inputRef}
           name={name}
-          className={`px-5 py-2 lg:py-3 border rounded-full focus:outline-none text-gray-600 w-full text-sm ${
+          className={`px-5 py-2 lg:py-3 border ${roundedFull ? "rounded-full" : "rounded-lg" } focus:outline-none text-gray-600 w-full text-sm ${
             invalidMessage ? " focus:border-red-500" : " focus:border-gray-500 "
           }${invalidMessage ? " border-red-300 " : " border-gray-300 "} ${
             type === "lock"

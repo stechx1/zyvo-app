@@ -27,12 +27,14 @@ export default function PlaceModal({
   onClose,
   onSubmit,
   isLoading,
+  priceRange = false,
 }: {
   place: Place;
   setPlace: React.Dispatch<React.SetStateAction<Place>>;
   isLoading: boolean;
   onClose: () => void;
   onSubmit: () => void;
+  priceRange?: boolean;
 }) {
   const [selectedTab, setSelectedTab] = useState<number>(1);
 
@@ -66,7 +68,11 @@ export default function PlaceModal({
       <hr className="my-2" />
       <div className="h-[30rem] overflow-auto">
         {selectedTab === 1 ? (
-          <HomeSetup place={place} setPlace={setPlace} />
+          <HomeSetup
+            place={place}
+            setPlace={setPlace}
+            priceRange={priceRange}
+          />
         ) : selectedTab === 2 ? (
           <GallaryAndLocation place={place} setPlace={setPlace} />
         ) : (
@@ -347,9 +353,11 @@ const GallaryAndLocation = ({
 const HomeSetup = ({
   place,
   setPlace,
+  priceRange,
 }: {
   place: Place;
   setPlace: React.Dispatch<React.SetStateAction<Place>>;
+  priceRange: boolean;
 }) => {
   const [showOtherPropertyTypes, setShowOtherPropertyTypes] = useState(false);
 
@@ -398,6 +406,41 @@ const HomeSetup = ({
         />
       </div>
       <hr className="my-8" />
+
+      {priceRange && (
+        <>
+          <div className="px-4 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
+            <div className="text-lg leading-3">Price range</div>
+            <div>Hour prices before fees and taxes</div>
+
+            <div className="flex justify-around mt-3 items-center">
+              <div className="w-[13rem]">
+                <label className="px-0.5 text-gray-500">Minimum</label>
+                <Input
+                  type="text"
+                  size="sm"
+                  placeholder="$ 0.00"
+                  roundedFull={false}
+                  name="Minimum"
+                />
+              </div>
+              <div className="text-gray-300">___</div>
+              <div className="w-[13rem]">
+                <label className="px-0.5 text-gray-500">Maximum</label>
+                <Input
+                  type="text"
+                  size="sm"
+                  placeholder="$ 0.00"
+                  roundedFull={false}
+                  name="Maximum"
+                />
+              </div>
+            </div>
+          </div>
+
+          <hr className="my-8" />
+        </>
+      )}
       <div className="px-4 space-y-3 text-sm xl:text-base lg:text-base md:text-base sm:text-base">
         <div className="text-lg">Availability</div>
         <div>Property size (sq ft)</div>
