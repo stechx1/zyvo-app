@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import { BookingStatusType } from "@/types/booking";
 import Image from "next/image";
 import React from "react";
 
@@ -15,11 +16,13 @@ export default function HostProperties({
   cardStyle,
   isVerified = false,
   bookingStatus,
+  onSubmitBookingStatus,
 }: {
   photoURL: string;
   fullName: string;
   mode: "GUEST" | "HOST";
   onMessageClick?: () => void;
+  onSubmitBookingStatus?: (status: BookingStatusType) => void;
   showReviewButton?: boolean;
   onReviewClick?: () => void;
   onProfileClick?: () => void;
@@ -86,7 +89,9 @@ export default function HostProperties({
                 rounded
                 full
                 className="border-gray-700"
-                // onClick={() => onMessageClick && onMessageClick()}
+                onClick={() =>
+                  onSubmitBookingStatus && onSubmitBookingStatus("CONFIRMED")
+                }
               />
               <Button
                 type="white"
@@ -95,7 +100,9 @@ export default function HostProperties({
                 rounded
                 full
                 className="border-gray-700"
-                // onClick={() => onMessageClick && onMessageClick()}
+                onClick={() =>
+                  onSubmitBookingStatus && onSubmitBookingStatus("DECLINED")
+                }
               />
             </div>
           ) : (
