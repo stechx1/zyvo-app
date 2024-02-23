@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { useCommonContext } from "@/context/CommonContext";
+import { CustomDropdown } from "@/components/CustomDropdown/CustomDropdown";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
 
 export const ProfileContactSection = ({}) => {
   const { user } = useCommonContext();
+  const [isOpenArray, setIsOpenArray] = useState(Array(3).fill(false));
   const profileInfo = [
     {
       title: "Email Address",
@@ -21,6 +25,52 @@ export const ProfileContactSection = ({}) => {
       isVerified: false,
     },
   ];
+
+  const toggleDropdown = (index: number) => {
+    setIsOpenArray((prev) => {
+      const newArray = [...prev];
+      newArray[index] = !newArray[index];
+      return newArray;
+    });
+  };
+
+  const ConfirmPhoneNumber = () => {
+    return (
+      <div className="w-80 space-y-3 p-3">
+        <Input type="text" roundedFull={false} placeholder="Phone number" />
+        <Input type="text" roundedFull={false} placeholder="Enter code" />
+        <Button type="gray" text="Save Changes" className="w-full" rounded />
+        <u>Resend the code to Phone number</u>
+      </div>
+    );
+  };
+
+  const VerifyIdentity = () => {
+    return (
+      <div className="p-3 space-y-3">
+        <Input type="text" roundedFull={false} placeholder="ID" />
+        <input type="file" />
+        <Button type="gray" text="Submit Document" className="w-full" rounded />
+      </div>
+    );
+  };
+
+  const openPhoneNumberDropdown = () => {
+    setIsOpenArray((prev) => {
+      const newArray = [...prev];
+      newArray[1] = true;
+      return newArray;
+    });
+  };
+
+  const openIdentityVerificationDropdown = () => {
+    setIsOpenArray((prev) => {
+      const newArray = [...prev];
+      newArray[2] = true;
+      return newArray;
+    });
+  };
+
   return profileInfo.map((item, index) => (
     <div key={index}>
       <div className="flex items-center w-full justify-center sm:justify-start sm:space-x-3 flex-wrap">
@@ -28,7 +78,9 @@ export const ProfileContactSection = ({}) => {
           <Image src={item.iconSrc} alt={"icon"} width={30} height={30} />
         </div>
         <div className="space-y-0">
-          <div className="text-white text-[12.5px] sm:text-lg font-semibold">{item.title}</div>
+          <div className="text-white text-[12.5px] sm:text-lg font-semibold">
+            {item.title}
+          </div>
           {item.isVerified ? (
             <div className="flex gap-2">
               <p className={`text-white text-xs sm:text-[18px] `}>Verified</p>
@@ -41,10 +93,23 @@ export const ProfileContactSection = ({}) => {
               />
             </div>
           ) : (
-            <div
-              className={`text-white sm:mt-0 text-xs sm:text-[18px] font-thin opacity-[0.40] underline underline-offset-4 cursor-pointer`}
-            >
-              Confirm now
+            <div>
+              <div
+                onClick={
+                  index === 1
+                    ? openPhoneNumberDropdown
+                    : openIdentityVerificationDropdown
+                }
+                className={`text-white sm:mt-0 text-xs sm:text-[18px] font-thin opacity-[0.40] underline underline-offset-4 cursor-pointer`}
+              >
+                Confirm now
+              </div>
+              <CustomDropdown
+                isOpen={isOpenArray[index]}
+                setIsOpen={() => toggleDropdown(index)}
+              >
+                {index === 1 ? ConfirmPhoneNumber() : VerifyIdentity()}
+              </CustomDropdown>
             </div>
           )}
         </div>
