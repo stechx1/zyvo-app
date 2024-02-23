@@ -1,5 +1,4 @@
 "use server";
-
 import { CoordinatesType } from "@/types/place";
 
 export const getGooglePlaces = async (query: string) => {
@@ -9,7 +8,7 @@ export const getGooglePlaces = async (query: string) => {
     );
     const data = await response.json();
     console.log(data);
-    
+
     return data?.candidates?.length
       ? (data.candidates as {
           formatted_address: string;

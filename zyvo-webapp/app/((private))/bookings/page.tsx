@@ -291,7 +291,7 @@ export default function Bookings() {
         {
           icon: "/icons/calendar-icon.svg",
           iconAlt: "calendar-icon",
-          label: formatDate(selectedBooking?.date.toISOString()),
+          label: formatDate(selectedBooking?.from.toISOString()),
           edit: false,
           id: 2,
         },
@@ -455,7 +455,7 @@ export default function Bookings() {
                           }
                         </div>
                         <div className="text-[#A4A4A4]">
-                          {formatDate(booking.date.toISOString())}
+                          {formatDate(booking.from.toISOString())}
                         </div>
                         {mode === "HOST" && booking.status === "REQUESTED" ? (
                           <div className="flex gap-1 flex-wrap">

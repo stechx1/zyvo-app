@@ -19,6 +19,8 @@ import PropertySideDetails from "@/collections/PropertySideDetails";
 import { getRouteDetails } from "@/lib/actions";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import { useScreenDimensions } from "@/hooks/useScreenDimension";
+// import { useStripe } from "@stripe/react-stripe-js";
+// import toast from "react-hot-toast";
 
 const ConfirmationPage = ({ params }: { params: { id: string } }) => {
   const [booking, setBooking] = useState<Booking | null>(null);
@@ -28,6 +30,8 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
   const { user, mode, currentCoordinates } = useCommonContext();
 
   const router = useRouter();
+  // const stripe = useStripe();
+
   const [width] = useScreenDimensions();
   useEffect(() => {
     if (user == null) {
@@ -63,6 +67,37 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
     }
   }, [bookingPlace, currentCoordinates]);
 
+  // useEffect(() => {
+  //   if (!stripe) {
+  //     return;
+  //   }
+
+  //   const clientSecret = new URLSearchParams(window.location.search).get(
+  //     "payment_intent_client_secret"
+  //   );
+
+  //   if (!clientSecret) {
+  //     return;
+  //   }
+
+  //   stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+  //     switch (paymentIntent?.status) {
+  //       case "succeeded":
+  //         toast.success("Payment succeeded!");
+  //         break;
+  //       case "processing":
+  //         toast.success("Your payment is processing.");
+  //         break;
+  //       case "requires_payment_method":
+  //         toast.error("Your payment was not successful, please try again.");
+  //         break;
+  //       default:
+  //         toast.error("Something went wrong.");
+  //         break;
+  //     }
+  //   });
+  // }, [stripe]);
+
   const getUser = async (sender: DocumentReference) => {
     const { result } = await getUserByRef(sender);
     if (result) {
@@ -88,7 +123,7 @@ const ConfirmationPage = ({ params }: { params: { id: string } }) => {
         {
           icon: "/icons/calendar-icon.svg",
           iconAlt: "calendar-icon",
-          label: formatDate(booking.date.toISOString()),
+          label: formatDate(booking.from.toISOString()),
           edit: false,
           id: 2,
         },

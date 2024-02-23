@@ -17,9 +17,8 @@ type errorType = { message: string; code: string };
 
 export async function addUpdateBooking(
   bookingData: {
-    date: Date;
-    from: string;
-    to: string;
+    from: Date;
+    to: Date;
     hours: number;
     status: BookingStatusType;
   },
@@ -113,7 +112,8 @@ export function getBookingSnapshot(
       async (booking) => {
         let result: Booking = {
           ...booking.data(),
-          date: booking.data()?.date.toDate(),
+          to: booking.data()?.to.toDate(),
+          from: booking.data()?.from.toDate(),
         } as Booking;
         onSuccess(result);
       }
@@ -151,7 +151,8 @@ export function getMyBookingsSnapshot(
             ...result,
             {
               ...booking,
-              date: booking.date.toDate(),
+              to: booking.to.toDate(),
+              from: booking.from.toDate(),
             } as Booking,
           ];
         }
@@ -185,7 +186,8 @@ export function getPlaceBookingsSnapshot(
             ...result,
             {
               ...booking,
-              date: booking.date.toDate(),
+              to: booking.data()?.to.toDate(),
+              from: booking.data()?.from.toDate(),
             } as Booking,
           ];
         }
