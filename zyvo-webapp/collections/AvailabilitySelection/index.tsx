@@ -22,6 +22,7 @@ export default function AvailabilitySelection({
   setSelectedAvailableHoursTo,
   selectedAvailableHoursFrom,
   selectedAvailableHoursTo,
+  isLoading,
 }: {
   hours: number;
   price: number;
@@ -41,6 +42,7 @@ export default function AvailabilitySelection({
   setSelectedAvailableHoursFrom: React.Dispatch<
     React.SetStateAction<string | undefined>
   >;
+  isLoading: boolean;
 }) {
   const [selectedTab, setSelectedTab] = useState(1);
   function disabledDays(date: Date) {
@@ -180,6 +182,7 @@ export default function AvailabilitySelection({
               roundedfull
               bordered
               full
+              isLoading={isLoading}
               onClick={onCheckOutClick}
             />
           </div>

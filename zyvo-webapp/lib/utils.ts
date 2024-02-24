@@ -121,9 +121,8 @@ export const formatDate = (date: string) => {
   return format(parsedDate, "MMMM d, yyyy");
 };
 
-export const formatTime = (timeString: string) => {
-  const parsedTime = parse(timeString, "HH:mm", new Date()); // Parse the time string
-  const formattedTime = format(parsedTime, "h:mm a"); // Format the time to "h:mm a" (e.g., 4:00 PM)
+export const formatTime = (date: Date) => {
+  const formattedTime = format(date, "h:mm a"); // Format the time to "h:mm a" (e.g., 4:00 PM)
   return formattedTime;
 };
 export const debounce = (
@@ -205,8 +204,7 @@ export const getDatesText = (dates?: Date[]) => {
     let year = "";
     first = sortedDates[0].toLocaleString("en-US", { month: "short" });
     first += " " + sortedDates[0].getDate();
-    year =
-      sortedDates[0].toLocaleString("en-US", { year: "numeric" }) ;
+    year = sortedDates[0].toLocaleString("en-US", { year: "numeric" });
     if (sortedDates.length == 1) {
       return first + " " + year;
     } else {
@@ -219,3 +217,19 @@ export const getDatesText = (dates?: Date[]) => {
     }
   } else return "Select dates";
 };
+export const mergeDateAndTime = (date: Date, time: string) => {
+  const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+  if (timeRegex.test(time)) {
+    const currentTime = new Date(date);
+    const [hours, minutes] = time.split(":").map(Number);
+    currentTime.setHours(hours, minutes, 0, 0);
+    return currentTime;
+  } else {
+    return null;
+  }
+};
+export function extractTimeFromDate(date: Date) {
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+}

@@ -16,10 +16,17 @@ import { getReviewsSnapshot } from "@/firebase/reviews";
 import { getUserByRef, updateFavourites } from "@/firebase/user";
 import HostProperties from "@/collections/HostProperties";
 import AvailabilitySelection from "@/collections/AvailabilitySelection";
-import { formatDate, getFullName, timeArray } from "@/lib/utils";
+import {
+  formatDate,
+  getFullName,
+  mergeDateAndTime,
+  timeArray,
+} from "@/lib/utils";
 import { useScreenDimensions } from "@/hooks/useScreenDimension";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import { format } from "date-fns";
+import { addUpdateBooking } from "@/firebase/booking";
+import { BookingStatusType } from "@/types/booking";
 
 export type BookingDetailsType = {
   placeId: string;
@@ -36,6 +43,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
   const [placeUser, setPlaceUser] = useState<null | User>();
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [selectedavailableHoursTo, setSelectedavailableHoursTo] =
     useState<string>();
@@ -108,14 +116,31 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
     } else if (availableHoursFromIndex >= availableHoursToIndex) {
       toast.error("Select valid time of booking to checkout!");
     } else {
-      const data: BookingDetailsType = {
-        placeId: place?.placeId,
-        hours,
-        date: selectedDate.toISOString(),
-        from: selectedavailableHoursFrom,
-        to: selectedavailableHoursTo,
-      };
-      router.push("/checkout?data=" + JSON.stringify(data));
+      if (!user || !place?.userRef) return;
+      setIsLoading(true);
+      const to = mergeDateAndTime(selectedDate, selectedavailableHoursTo);
+      const from = mergeDateAndTime(selectedDate, selectedavailableHoursFrom);
+      if (to && from) {
+        const booking = {
+          from,
+          to,
+          hours,
+          status: "WAITING PAYMENT" as BookingStatusType,
+        };
+        addUpdateBooking(booking, {
+          userId: user?.userId,
+          placeId: place?.placeId,
+          hostId: place.userRef.id,
+        }).then(({ result, error }) => {
+          if (error) {
+            toast.error("error booking property!");
+          } else {
+            router.push("/checkout?bookingId=" + result);
+          }
+          setIsLoading(false);
+        });
+      }
+      // router.push("/checkout?data=" + JSON.stringify(data));
     }
   };
 
@@ -345,6 +370,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             availableMonths={place?.availableMonths ?? []}
             availableDays={place?.availableDays ?? []}
             onCheckOutClick={onCheckOutClick}
+            isLoading={isLoading}
           />
         )}
       </div>
@@ -496,7 +522,9 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
             {reviews.length > 0 && (
               <>
                 <div className="lg:px-5 md:px-5 sm:px-3">
-                  <div className={`lg:flex items-center flex-wrap justify-between`}>
+                  <div
+                    className={`lg:flex items-center flex-wrap justify-between`}
+                  >
                     <div className="lg:flex items-center">
                       <div className="text-[18px] md:text-2xl font-medium">
                         Reviews
@@ -659,6 +687,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
                     availableMonths={place?.availableMonths ?? []}
                     availableDays={place?.availableDays ?? []}
                     onCheckOutClick={onCheckOutClick}
+                    isLoading={isLoading}
                   />
                 </div>
               )}
