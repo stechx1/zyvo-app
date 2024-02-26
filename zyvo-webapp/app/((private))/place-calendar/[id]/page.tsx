@@ -20,7 +20,7 @@ import { useCommonContext } from "@/context/CommonContext";
 import { useRouter } from "next/navigation";
 import { Booking } from "@/types/booking";
 import DatePicker from "@/components/DatePicker";
-import { timeArray } from "@/lib/utils";
+import { formatTime, timeArray } from "@/lib/utils";
 import toast from "react-hot-toast";
 
 const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
@@ -118,7 +118,7 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
     });
   }
   const getBookingByDate = (date: Date) => {
-    return bookings.find((b) => b.date.getDate() === date.getDate());
+    return bookings.find((b) => b.from.getDate() === date.getDate());
   };
   const getGuestName = (guestRef?: DocumentReference) => {
     if (guests) {
@@ -300,8 +300,8 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
             ...timeArray.filter((t) =>
               bookings.find(
                 (b) =>
-                  b.from === t.value &&
-                  selectedDates?.find((d) => d.getDate() == b.date.getDate())
+                  formatTime(b.from) === t.value &&
+                  selectedDates?.find((d) => d.getDate() == b.from.getDate())
               )
             ),
           ].map((time, i) => {
@@ -318,7 +318,8 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
                 {selectedDates?.map((date, j) => {
                   return i == 0 ? (
                     <DateView key={time.value + j} date={date} />
-                  ) : getBookingByDate(date)?.from === time.value ? (
+                  ) : formatTime(getBookingByDate(date)?.from) ===
+                    time.value ? (
                     <Card
                       key={time.value + j}
                       name={getGuestName(getBookingByDate(date)?.userRef)}
@@ -340,7 +341,7 @@ const PlaceCalendarPage = ({ params }: { params: { id: string } }) => {
           })}
         </div>
         {!bookings.find((b) =>
-          selectedDates?.find((d) => d.getDate() == b.date.getDate())
+          selectedDates?.find((d) => d.getDate() == b.from.getDate())
         ) && <div className="text-center">No Bookings found</div>}
       </div>
     </div>

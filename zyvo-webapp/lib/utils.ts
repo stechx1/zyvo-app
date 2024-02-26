@@ -121,9 +121,12 @@ export const formatDate = (date: string) => {
   return format(parsedDate, "MMMM d, yyyy");
 };
 
-export const formatTime = (date: Date) => {
-  const formattedTime = format(date, "h:mm a"); // Format the time to "h:mm a" (e.g., 4:00 PM)
-  return formattedTime;
+export const formatTime = (date?: Date) => {
+  if (date) {
+    const formattedTime = format(date, "h:mm a"); // Format the time to "h:mm a" (e.g., 4:00 PM)
+    return formattedTime;
+  }
+  return "";
 };
 export const debounce = (
   mainFunction: () => void,

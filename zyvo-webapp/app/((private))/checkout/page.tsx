@@ -190,13 +190,13 @@ const CheckoutPage = () => {
             </div>
           </div>
           {/* =================================Left Section=================================== */}
-          {place && user && clientSecret && booking && (
-            <div className="w-full lg:w-[65%] md:w-[55%] md:order-1">
+          <div className="w-full lg:w-[65%] md:w-[55%] md:order-1">
+            {place && user && clientSecret && booking && (
               <Elements options={options as any} stripe={stripePromise}>
                 <CheckoutForm booking={booking} place={place} user={user} />
               </Elements>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </>
