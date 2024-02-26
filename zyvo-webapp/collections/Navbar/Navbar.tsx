@@ -29,9 +29,9 @@ export const Navbar = () => {
           </Link>
         </div>
 
+        {mode === "GUEST" && pathname === "/" && <FilterSearch />}
         {user ? (
           <>
-            {mode === "GUEST" && pathname === "/" && <FilterSearch />}
             <div className="border border-gray-200 rounded-full p-[10px] xxs:flex md:hidden">
               <Image
                 src={"/icons/filter-icon.svg"}

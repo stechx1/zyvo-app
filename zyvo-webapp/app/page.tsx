@@ -6,6 +6,7 @@ import Button from "@/components/Button";
 import { MultiMap } from "@/components/Maps";
 import { useCommonContext } from "@/context/CommonContext";
 import { useFilterContext } from "@/context/FilterContext";
+import { useScreenDimensions } from "@/hooks/useScreenDimension";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ export default function Home() {
   const { onClearSearch } = useFilterContext();
   const [showMap, setShowMap] = useState(false);
   const router = useRouter();
+  const [width] = useScreenDimensions()
 
   useEffect(() => {
     if (user && mode == "HOST") {
@@ -36,11 +38,12 @@ export default function Home() {
       <div className="z-10 sm:hidden border border-r-0 border-l-0 py-4 px-4 mt-[-2vh] mx-[-10px]">
         <FilterSearch />
       </div>
-      <HomeFilters
+      { width > 768 &&
+        <HomeFilters
         showMapBtn={places.length > 0}
         handleShowMap={handleShowMap}
         mapVisible={showMap}
-      />
+      />}
       <div className={`${showMap && "flex sm:space-x-5"}`}>
         <div className={`${showMap && "sm:w-[50%] hidden sm:block"}`}>
           <PropertyList
