@@ -27,9 +27,10 @@ exports.webhook = functions.https.onRequest(async (request, response) => {
   }
   const paymentIntent = event.data.object;
   console.log("Payment Intent: ", paymentIntent.id);
-  const bookingId = paymentIntent?.metadata?.bookingId;
-  console.log(event.type);
-
+  const bookingId =
+    paymentIntent?.metadata?.bookingId ?? "fplpUIYerZcHGPPgZ7Q2";
+  console.log("Event Type: ", event.type);
+  console.log("Booking Id: ", bookingId);
   switch (event.type) {
     case "payment_intent.succeeded":
       if (bookingId) {
@@ -45,6 +46,7 @@ exports.webhook = functions.https.onRequest(async (request, response) => {
           },
           { merge: true }
         );
+        createPayment(booking, bookingRef);
       }
       break;
     case "payment_intent.created":
@@ -92,3 +94,22 @@ exports.scheduledFunction = functions.pubsub
       }
     }
   });
+const createPayment = async (booking, bookingRef) => {
+  if (booking) {
+    const bookingPlace = (await booking.placeRef.get()).data();
+    admin
+      .firestore()
+      .collection("payments")
+      .add({
+        price: bookingPlace.pricePerHour * booking.hours,
+        status: "PENDING",
+        guestRef: booking.userRef,
+        hostRef: booking.hostRef,
+        bookingRef,
+        date: new Date(),
+      })
+      .then(() => {
+        console.log("PAYMENT CREATED");
+      });
+  }
+};

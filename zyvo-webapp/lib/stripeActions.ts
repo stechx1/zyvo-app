@@ -39,7 +39,7 @@ export const getAccountInfo = async (accountId: string) => {
 export const createPaymentIntent = async (price: number, bookingId: string) => {
   const paymentIntent = await stripe.paymentIntents.create({
     amount: (price + 2) * 100,
-    currency: "usd",
+    currency: "usd", 
     automatic_payment_methods: {
       enabled: true,
     },

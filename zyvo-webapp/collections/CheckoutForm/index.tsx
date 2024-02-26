@@ -174,7 +174,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
             <PaymentElement
               id="payment-element"
               options={{
-                layout: "auto",
+                
+                wallets: { applePay: "auto" },
               }}
             />
           </div>

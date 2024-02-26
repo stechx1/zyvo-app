@@ -11,6 +11,13 @@ import {
 } from "@/lib/stripeActions";
 import addData from "@/firebase/firestore/addData";
 import toast from "react-hot-toast";
+import { getMyPaymentsSnapshot } from "@/firebase/payments";
+import { Payment } from "@/types/payment";
+import { formatDate } from "@/lib/utils";
+import { User } from "@/types/user";
+import { getUserByRef } from "@/firebase/user";
+import { DocumentReference } from "firebase/firestore";
+import DatePicker from "@/components/DatePicker";
 
 const data = [
   {
@@ -74,7 +81,12 @@ const data = [
 const PaymentsPage = () => {
   const { user, setUser, mode } = useCommonContext();
   const router = useRouter();
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [guests, setGuests] = useState<User[]>([]);
+  const [selectedDates, setSelectedDates] = useState<Date[] | undefined>(
+    getCurrentWeekDates()
+  );
 
   useEffect(() => {
     if (user == null) {
@@ -88,28 +100,59 @@ const PaymentsPage = () => {
     if (user.connectedAccountId) {
       handleGetAccountDetails(user.connectedAccountId);
     }
-    // const unsubscribe = getMyPlacesSnapshot(
-    //   user.userId,
-    //   (places) => {
-    //     setPlaces(places);
-    //   },
-    //   (e) => {
-    //     console.log(e);
-    //   }
-    // );
-    // return () => {
-    //   unsubscribe();
-    // };
+    const unsubscribe = getMyPaymentsSnapshot(
+      user.userId,
+      (payments) => {
+        setPayments(payments);
+      },
+      (e) => {
+        console.log(e);
+      }
+    );
+    return () => {
+      unsubscribe();
+    };
   }, [user, mode]);
-
+  useEffect(() => {
+    getGuests();
+    async function getGuests() {
+      if (payments.length > 0) {
+        let newGuests: User[] = [];
+        for (let index = 0; index < payments.length; index++) {
+          if (payments[index].guestRef) {
+            const { result } = await getUserByRef(payments[index].guestRef);
+            if (result) {
+              if (!newGuests.find((g) => g.userId === result.userId)) {
+                newGuests = [...newGuests, result];
+              }
+            }
+          }
+        }
+        setGuests(newGuests);
+      }
+    }
+  }, [payments]);
+  const getGuestImage = (guestRef?: DocumentReference) => {
+    if (guests) {
+      const foundGuest = guests.find((g) => g.userId == guestRef?.id);
+      if (foundGuest && foundGuest.photoURL) return foundGuest.photoURL;
+    }
+    return "/images/no-image.jpg";
+  };
+  const getGuestName = (guestRef?: DocumentReference) => {
+    if (guests) {
+      const foundGuest = guests.find((g) => g.userId == guestRef?.id);
+      if (foundGuest && foundGuest.photoURL)
+        return foundGuest.firstName + " " + foundGuest.lastName;
+    }
+    return "";
+  };
   const handleCreateAccount = async () => {
     try {
       setIsLoading(true);
 
       if (user) {
         const connectedAccount = await createConnectedAccount(user.email);
-        console.log(connectedAccount);
-
         if (connectedAccount) {
           addData("users", user.userId, {
             connectedAccountId: connectedAccount.id,
@@ -159,6 +202,16 @@ const PaymentsPage = () => {
       console.log(error);
     }
   };
+  function getCurrentWeekDates() {
+    return Array.from(Array(7).keys()).map((idx) => {
+      const d = new Date();
+      d.setDate(d.getDate() - d.getDay() + idx);
+      return d;
+    });
+  }
+  const filteredPayments = payments.filter((p) =>
+    selectedDates?.find((d) => d.getDate() == p.date.getDate())
+  );
   return (
     <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
       <div className="w-full sm:w-[60%] lg:w-[78%] flex flex-col gap-7 sm:order-1">
@@ -171,28 +224,10 @@ const PaymentsPage = () => {
               height={15}
             />
           </div>
-          <div className="border border-neutral-200 rounded-full py-2 px-3.5 w-[200px] sm:w-[300px] flex items-center justify-between">
-            <div className="flex flex-row gap-1 sm:gap-3">
-              <Image
-                src="/icons/gray-calendar-icon.svg"
-                alt="gray-calendar-icon"
-                width={30}
-                height={30}
-                className="sm:w-[30px] w-[20px]"
-              />
-              <div className="text-black text-[15px] sm:text-lg font-normal font-Poppins">
-                Mar 11 - 17 2023
-              </div>
-            </div>
-            <div className="mr-0">
-              <Image
-                src={"/icons/down.svg"}
-                alt="down"
-                width={13}
-                height={13}
-              />
-            </div>
-          </div>
+          <DatePicker
+            setSelectedDates={setSelectedDates}
+            selectedDates={selectedDates}
+          />
           <div className="border border-neutral-200 rounded-full py-2 px-3.5 gap-1 sm:gap-3 w-fit flex items-center justify-between">
             <Image
               src={"/icons/filter-icon.svg"}
@@ -226,30 +261,30 @@ const PaymentsPage = () => {
                 Payment
               </div>
             </div>
-            {data.map((val, key) => {
+            {filteredPayments.map((payment, key) => {
               return (
                 <div
                   key={key}
                   className="grid grid-cols-5 border border-neutral-200 text-black items-center rounded-lg px-4 py-3 my-3"
                 >
                   <div className="text-black text-sm sm:text-[16.5px] font-normal font-Poppins">
-                    {val.amount}
+                    ${payment.price}
                   </div>
                   <div
                     className={`text-black text-sm sm:text-base font-normal font-Poppins ${
-                      val.status === "Pending"
+                      payment.status === "PENDING"
                         ? "bg-[#FFF178]"
-                        : val.status === "Completed"
+                        : payment.status === "COMPLETED"
                         ? "bg-[#4AEAB1]"
                         : "bg-[#EFF2F5]"
-                    }  w-fit rounded-full px-2 py-0.5 text-[#252849]`}
+                    }  w-fit rounded-full px-2 py-0.5 text-[#252849] capitalize`}
                   >
-                    {val.status}
+                    {payment.status.toLowerCase()}
                   </div>
                   <div className="flex flex-row items-center">
                     <div className="mr-1.5">
                       <Image
-                        src={"/icons/profile-icon.png"}
+                        src={getGuestImage(payment.guestRef)}
                         alt="profile-pic"
                         width={25}
                         height={25}
@@ -258,13 +293,13 @@ const PaymentsPage = () => {
                     </div>
 
                     <div className="text-black text-sm sm:text-[16.5px] font-normal font-Poppins">
-                      {val.user}
+                      {getGuestName(payment.guestRef)}
                     </div>
                   </div>
                   <div className="text-black text-sm sm:text-[16.5px] font-normal font-Poppins">
-                    {val.date}
+                    {formatDate(payment.date.toISOString())}
                   </div>
-                  <div className="text-black text-sm sm:text-[16.5px] font-normal font-Poppins flex flex-row items-center gap-1 justify-between object-contain">
+                  {/* <div className="text-black text-sm sm:text-[16.5px] font-normal font-Poppins flex flex-row items-center gap-1 justify-between object-contain">
                     <div className="flex gap-1">
                       {val.payment}
                       <div className="bg-[#EFF2F5] w-fit px-2 rounded-full">
@@ -278,10 +313,13 @@ const PaymentsPage = () => {
                       height={25}
                       className=""
                     />
-                  </div>
+                  </div> */}
                 </div>
               );
             })}
+            {filteredPayments.length == 0 && !isLoading && (
+              <div className="m-5 text-center">No Payments!</div>
+            )}
           </div>
         </div>
       </div>
