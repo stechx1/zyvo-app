@@ -85,6 +85,27 @@ const CheckoutPage = () => {
 
   const appearance = {
     theme: "stripe",
+    variables: {
+      borderRadius: "30px",
+      fontSizeSm: width > 768 ? "20px" : "16px",
+      spacingGridRow: "1rem",
+      colorText: "#000",
+    },
+    rules: {
+      ".Input": {
+        paddingTop: width > 768 ? "1rem" : "0.7rem",
+        paddingBottom: width > 768 ? "1rem" : "0.7rem",
+        outline: "none",
+        boxShadow: "none",
+      },
+      ".Label": {
+        marginBottom: "0.5rem",
+      },
+      ".Input:focus": {
+        borderColor: "#E8E8E8",
+        boxShadow: "none",
+      },
+    },
   };
   const options = {
     clientSecret,
