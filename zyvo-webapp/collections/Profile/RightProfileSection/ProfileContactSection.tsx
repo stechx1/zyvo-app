@@ -4,6 +4,8 @@ import { useCommonContext } from "@/context/CommonContext";
 import { CustomDropdown } from "@/components/CustomDropdown/CustomDropdown";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import verifyEmail from "@/firebase/auth/verifyEmail";
+import toast from "react-hot-toast";
 
 export const ProfileContactSection = ({}) => {
   const { user } = useCommonContext();
@@ -71,6 +73,17 @@ export const ProfileContactSection = ({}) => {
     });
   };
 
+  const ConfirmEmail = () => {
+    if (user && !user.emailVerified) {
+      verifyEmail(user.email).then(({ error }) => {
+        if (error) {
+          toast.error(error.message);
+        }else{
+          toast.success("Verification Link sent to your email. Kindly Check your email.")
+        }
+      });
+    }
+  };
   return profileInfo.map((item, index) => (
     <div key={index}>
       <div className="flex items-center w-full justify-center sm:justify-start sm:space-x-3 flex-wrap">
@@ -96,7 +109,9 @@ export const ProfileContactSection = ({}) => {
             <div>
               <div
                 onClick={
-                  index === 1
+                  index == 0
+                    ? ConfirmEmail
+                    : index === 1
                     ? openPhoneNumberDropdown
                     : openIdentityVerificationDropdown
                 }

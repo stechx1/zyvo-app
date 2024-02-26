@@ -43,7 +43,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:4000/confirmation/" + booking.bookingId,
+        return_url:
+          process.env.NEXT_PUBLIC_HOST + "/confirmation/" + booking.bookingId,
       },
     });
 
@@ -104,18 +105,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
     : [];
   return (
     <>
-      {/* <PaymentElement
-        id="payment-element"
-        options={{
-          layout: "auto",
-        }}
-      />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-        </span>
-      </button>
-      {message && <div id="payment-message">{message}</div>} */}
       <div className="flex flex-col sm:gap-3">
         <div className="flex flex-row">
           <div

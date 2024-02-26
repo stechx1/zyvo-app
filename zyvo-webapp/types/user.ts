@@ -1,9 +1,10 @@
 export type User = {
   userId: string;
+  connectedAccountId?: string;
   firstName?: string;
   lastName?: string;
-  email?: string;
-  emailVerified?: boolean;
+  email: string;
+  emailVerified: boolean;
   phone?: string;
   photoURL?: string;
   phoneNumber?: string;

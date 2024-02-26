@@ -1,11 +1,13 @@
 "use server";
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY!);
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-export const createConnectedAccount = async () => {
+export const createConnectedAccount = async (email: string) => {
   // Set your secret key. Remember to switch to your live secret key in production.
   // See your keys here: https://dashboard.stripe.com/apikeys
   try {
     const account = await stripe.accounts.create({
+      email,
       type: "express",
     });
     return account;
@@ -13,12 +15,12 @@ export const createConnectedAccount = async () => {
     console.log(error);
   }
 };
-export const getAccountLink = async () => {
+export const getAccountLink = async (accountId: string) => {
   try {
     return await stripe.accountLinks.create({
-      account: "acct_1OlAEsPVzx67oaZP",
-      refresh_url: "http://localhost:4000/checkout2",
-      return_url: "http://localhost:4000/checkout2",
+      account: accountId,
+      refresh_url: process.env.NEXT_PUBLIC_HOST + "/payments",
+      return_url: process.env.NEXT_PUBLIC_HOST + "/payments",
       type: "account_onboarding",
     });
   } catch (error) {
@@ -34,17 +36,31 @@ export const getAccountInfo = async (accountId: string) => {
     return null;
   }
 };
-export const createPaymentIntent = async (price: number) => {
-  // Create a PaymentIntent with the order amount and currency
+export const createPaymentIntent = async (price: number, bookingId: string) => {
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: price + 2,
+    amount: (price + 2) * 100,
     currency: "usd",
-    // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
     automatic_payment_methods: {
       enabled: true,
     },
+    metadata: { bookingId },
   });
   return {
     clientSecret: paymentIntent.client_secret,
+  };
+};
+export const updatePaymentIntent = async (intentId: string, price: number) => {
+  const paymentIntent = await stripe.paymentIntents.update(intentId, {
+    amount: (price + 2) * 100,
+    currency: "usd",
+  });
+  return {
+    clientSecret: paymentIntent.client_secret,
+  };
+};
+export const retreivePaymentIntent = async (intentId: string) => {
+  const paymentIntent = await stripe.paymentIntents.retrieve(intentId);
+  return {
+    paymentIntent,
   };
 };

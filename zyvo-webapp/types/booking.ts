@@ -12,6 +12,7 @@ export type Booking = {
   status: BookingStatusType;
   placeReviewRef?: DocumentReference;
   guestReviewRef?: DocumentReference;
+  paymentIntentId?: string;
 };
 
 export type BookingStatusType =

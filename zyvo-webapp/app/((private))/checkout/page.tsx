@@ -16,7 +16,7 @@ import { getRouteDetails } from "@/lib/actions";
 import { useScreenDimensions } from "@/hooks/useScreenDimension";
 import MobileSearchAndFilter from "@/components/MobileSearchInputandFilter";
 import { Elements } from "@stripe/react-stripe-js";
-import { createPaymentIntent } from "@/lib/stripeActions";
+import { createPaymentIntent, updatePaymentIntent } from "@/lib/stripeActions";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm from "@/collections/CheckoutForm";
 
@@ -93,14 +93,34 @@ const CheckoutPage = () => {
 
   const createIntent = useCallback(
     async (price: number) => {
-      const data = await createPaymentIntent(price);
-      setClientSecret(data.clientSecret);
+      if (bookingId) {
+        const data = await createPaymentIntent(price, bookingId);
+        if (data.clientSecret) setClientSecret(data.clientSecret);
+      }
     },
-    [createPaymentIntent]
+    [createPaymentIntent, bookingId]
+  );
+  const updateIntent = useCallback(
+    async (intentId: string, price: number) => {
+      if (bookingId) {
+        const data = await updatePaymentIntent(intentId, price);
+        if (data.clientSecret) setClientSecret(data.clientSecret);
+      }
+    },
+    [createPaymentIntent, bookingId]
   );
 
   useEffect(() => {
-    if (booking && place) createIntent(place.pricePerHour * booking.hours);
+    if (booking && place) {
+      if (booking.paymentIntentId) {
+        updateIntent(
+          booking.paymentIntentId,
+          place.pricePerHour * booking.hours
+        );
+      } else {
+        createIntent(place.pricePerHour * booking.hours);
+      }
+    }
   }, [createIntent, booking, place]);
 
   const getUser = async (sender: DocumentReference) => {

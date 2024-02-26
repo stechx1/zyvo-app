@@ -285,7 +285,7 @@ const ProfilePage = () => {
                 rows={Math.min(5, aboutMe.split("\n").length + 1)}
                 value={aboutMe}
                 onChange={(e) => setAboutMe(e.target.value)}
-                disabled={isMe}
+                disabled={!isMe}
               />
             </div>
           </div>

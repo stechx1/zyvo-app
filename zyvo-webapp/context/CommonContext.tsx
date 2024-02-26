@@ -9,6 +9,7 @@ import { conversation } from "@/types/messages";
 import { getConversationsSnapshot } from "@/firebase/messages";
 import { CoordinatesType, Place } from "@/types/place";
 import { updateLastActive } from "@/firebase/user";
+import addData from "@/firebase/firestore/addData";
 
 const auth = getAuth(firebase_app);
 
@@ -55,9 +56,16 @@ export const CommonContextProvider = ({
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        getData("users", user.uid)
-          .then(({ result, error }) => {
-            setUser(result as User);
+        // if email is verified update it
+        addData("users", user?.uid, { emailVerified: user.emailVerified })
+          .then((result) => {
+            getData("users", user.uid)
+              .then(({ result, error }) => {
+                setUser(result as User);
+              })
+              .catch((e) => {
+                console.log(e);
+              });
           })
           .catch((e) => {
             console.log(e);

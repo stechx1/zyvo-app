@@ -1,21 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useCommonContext } from "@/context/CommonContext";
-import { User } from "@/types/user";
-import Input from "@/components/Input";
-import { InputSectionProps } from "@/types";
-import Button from "@/components/Button";
-import { ProfileContactSection } from "@/collections/Profile/RightProfileSection/ProfileContactSection";
 import Image from "next/image";
-import { getAuth } from "firebase/auth";
+import { useCommonContext } from "@/context/CommonContext";
+import { useRouter } from "next/navigation";
+import Button from "@/components/Button";
+import {
+  createConnectedAccount,
+  getAccountInfo,
+  getAccountLink,
+} from "@/lib/stripeActions";
 import addData from "@/firebase/firestore/addData";
 import toast from "react-hot-toast";
-import Link from "next/link";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import firebase_app from "@/config";
-import { Rows } from "lucide-react";
-
-const storage = getStorage(firebase_app);
 
 const data = [
   {
@@ -77,6 +72,93 @@ const data = [
 ];
 
 const PaymentsPage = () => {
+  const { user, setUser, mode } = useCommonContext();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (user == null) {
+      router.push("/signin");
+      return;
+    }
+    if (mode === "GUEST") {
+      router.push("/");
+      return;
+    }
+    if (user.connectedAccountId) {
+      handleGetAccountDetails(user.connectedAccountId);
+    }
+    // const unsubscribe = getMyPlacesSnapshot(
+    //   user.userId,
+    //   (places) => {
+    //     setPlaces(places);
+    //   },
+    //   (e) => {
+    //     console.log(e);
+    //   }
+    // );
+    // return () => {
+    //   unsubscribe();
+    // };
+  }, [user, mode]);
+
+  const handleCreateAccount = async () => {
+    try {
+      setIsLoading(true);
+
+      if (user) {
+        const connectedAccount = await createConnectedAccount(user.email);
+        console.log(connectedAccount);
+
+        if (connectedAccount) {
+          addData("users", user.userId, {
+            connectedAccountId: connectedAccount.id,
+          })
+            .then(({ result, error }) => {
+              if (error) {
+                toast.error(error?.message);
+                return;
+              }
+              setUser({
+                ...user,
+                connectedAccountId: connectedAccount.id,
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+            .finally(() => {
+              setIsLoading(false);
+            });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
+  const handleGetAccountLink = async (accountId: string) => {
+    try {
+      setIsLoading(true);
+      const link = await getAccountLink(accountId);
+      if (link?.url) {
+        window.open(link.url, "_self");
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
+  const handleGetAccountDetails = async (accountId: string) => {
+    try {
+      const account = await getAccountInfo(accountId);
+      console.log(account);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
   return (
     <div className="flex flex-col sm:flex-row gap-6 sm:gap-10">
       <div className="w-full sm:w-[60%] lg:w-[78%] flex flex-col gap-7 sm:order-1">
@@ -237,7 +319,7 @@ const PaymentsPage = () => {
           </div>
         </div>
         <div className="flex flex-row sm:flex-col gap-2 sm:gap-10">
-          <div className="sm:order-2">
+          {/* <div className="sm:order-2">
             <Image
               src="/images/black-visa-card.svg"
               alt="visa-card"
@@ -245,7 +327,24 @@ const PaymentsPage = () => {
               height={100}
               className="w-full md:w-[90%] lg:w-full h-full"
             />
-          </div>
+          </div> */}
+          {user && (
+            <div className="sm:order-2">
+              <Button
+                text="Connect To Stripe"
+                type="green"
+                roundedfull
+                size="sm"
+                onClick={() =>
+                  user.connectedAccountId
+                    ? handleGetAccountLink(user.connectedAccountId)
+                    : handleCreateAccount()
+                }
+                isLoading={isLoading}
+              />
+            </div>
+          )}
+
           <div className="w-full md:w-[90%] lg:w-full rounded-xl border border-secondary-neutral-200 p-2 space-y-1.5 sm:space-y-0 sm:p-4 flex flex-col justify-center sm:gap-3 sm:order-1">
             <div className="flex-row flex gap-2 items-center">
               <Image
