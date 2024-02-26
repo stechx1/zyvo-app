@@ -79,11 +79,11 @@ const AccountSettingPage = () => {
     }
   };
   return (
-    <div className="flex flex-col sm:container sm:flex-row lg:gap-20 gap-6">
+    <div className="flex flex-col sm:mt-9 sm:flex-row lg:gap-20 gap-6">
       <div className="sm:hidden border-t border-b mx-[-20px] p-4">
         <MobileSearchAndFilter type="header" />
       </div>
-      <div className="w-full sm:w-[30%] flex flex-col gap-3 sm:gap-10 sm:order-2">
+      <div className="w-full sm:w-[47%] md:w-[40%] lg:w-[35%] xl:w-[30%] flex flex-col gap-3 sm:gap-10 sm:order-2">
         <div className="sm:hidden flex flex-col">
           <div className="text-black text-lg md:text-[18px] sm:text-2xl font-medium font-Poppins">
             Account Settings
@@ -137,7 +137,7 @@ const AccountSettingPage = () => {
               <div className="text-black text-[16px] sm:text-[28px] font-medium font-Poppins sm:mt-[20px]">
                 {user?.firstName + " " + user?.lastName}
               </div>
-              <div className="text-black text-[13px] sm:text-[20px] font-light font-Poppins">
+              <div className="text-black sm:hidden text-[13px] sm:text-[20px] font-light font-Poppins">
                 Guest
               </div>
             </div>
@@ -154,7 +154,7 @@ const AccountSettingPage = () => {
           <ProfileContactSection />
         </div>
       </div>
-      <div className="w-full sm:w-[70%] flex flex-col gap-7 md:gap-10 sm:order-1">
+      <div className="w-full sm:w-[53%] md:w-[60%] lg:w-[65%] xl:w-[70%] flex flex-col mb-24 sm:mb-5 gap-7 md:gap-10 sm:order-1">
         <div className="hidden sm:flex flex-col">
           <div className="text-black text-h1 font-normal font-Poppins">
             Account Settings
@@ -165,7 +165,7 @@ const AccountSettingPage = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-3 w-full sm:w-[40%]">
+        <div className="flex flex-col gap-3 w-full md:w-[60%] lg:w-[40%]">
           <p className="font-Poppins text-lg md:text-2xl sm:text-lg font-normal">
             Email
           </p>
@@ -180,7 +180,7 @@ const AccountSettingPage = () => {
         </div>
         <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
 
-        <div className="flex flex-col gap-3 w-full sm:w-[40%]">
+        <div className="flex flex-col gap-3 w-full md:w-[60%] lg:w-[40%]">
           <p className="font-Poppins text-lg md:text-2xl sm:text-lg font-normal">
             Phone Number
           </p>
@@ -217,7 +217,7 @@ const AccountSettingPage = () => {
           <p className="font-Poppins text-lg md:text-2xl font-normal">
             Address
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
+          <div className="grid grid-cols-2 md:gap-7 gap-4">
             <Input
               name="country"
               type="edit"
@@ -236,7 +236,7 @@ const AccountSettingPage = () => {
               className="xl:text-lg"
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-7 gap-4">
+          <div className="grid grid-cols-2 md:gap-7 gap-4">
             <Input
               name="city"
               type="edit"
@@ -257,7 +257,7 @@ const AccountSettingPage = () => {
         </div>
         <div className="h-[0.5px] opacity-[0.20] bg-secondary-gray-700"></div>
 
-        <div className="flex flex-col gap-3 w-full sm:w-[40%]">
+        <div className="flex flex-col gap-3 w-full md:w-[60%] lg:w-[40%]">
           <p className="font-Poppins text-lg md:text-2xl sm:text-lg font-normal">
             Payment Method
           </p>
