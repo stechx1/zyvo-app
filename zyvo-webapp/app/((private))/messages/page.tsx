@@ -212,12 +212,12 @@ export default function Messages() {
     document.body.removeChild(link);
   };
   return (
-    <div className="flex justify-between lg:space-x-4 md:space-x-4 xl:space-x-4">
+    <div className="flex  mt-4 justify-between lg:space-x-4 md:space-x-4 xl:space-x-4">
       {/*========================================= conversations ===================================== */}
       <div
         className={`${
           selectedConversation ? "hidden" : "block"
-        } w-[100%] sm:block sm:w-[40%] lg:w-[25%] h-[80vh] space-y-2`}
+        } w-[100%] sm:block sm:w-[40%] lg:w-[25%] xl:w-[23%] h-[80vh] space-y-2`}
       >
         <div className="hidden lg:flex md:flex sm:flex justify-between items-center">
           <div className="flex items-center space-x-2">
@@ -234,7 +234,7 @@ export default function Messages() {
           </div>
         </div>
         <div
-          className="sm:hidden md:hidden lg:hidden xl:hidden border-t border-b py-3"
+          className="sm:hidden md:hidden lg:hidden xl:hidden border-t border-b py-3 px-4 -mx-[14px] "
           style={{ marginBottom: "1.5rem" }}
         >
           <MobileSearchAndFilter type="Search" />
@@ -274,7 +274,7 @@ export default function Messages() {
       <div
         className={`${
           !selectedConversation ? "hidden" : "flex"
-        } w-[100%] bg-white sm:w-[60%] lg:w-[50%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[92dvh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-lg pb-5`}
+        } w-[100%] bg-white sm:w-[60%] lg:w-[50%] xl:w-[48%] sm:h-[80vh] md:h-[80vh] lg:h-[80vh] h-[92dvh] sm:flex flex-col md:border xl:border lg:border sm:border rounded-2xl pb-5`}
       >
         {selectedConversation && user ? (
           <div className="flex flex-col h-[100%]">
@@ -483,12 +483,12 @@ export default function Messages() {
       </div>
       {/* =========================================== side ============================================= */}
       <div
-        className={`hidden lg:block lg:w-[25%] space-y-4 ${
+        className={`hidden lg:block lg:w-[25%] xl:w-[24%] space-y-4 ${
           !selectedConversation && "invisible"
         }`}
       >
         {selectedConversation && user && (
-          <div className="space-y-2">
+          <div className="sm:space-y-6 space-y-2">
             <HostProperties
               bottomText="Typically responds within 1 hr"
               bottomTextIcon="/icons/time.svg"
@@ -511,7 +511,7 @@ export default function Messages() {
                 )
               }
             />
-            <div className="border rounded-lg p-4 space-y-4 bg-white">
+            <div className="border rounded-2xl p-4 space-y-5 bg-white">
               <div className="flex justify-between items-center">
                 <div>From</div>
                 <div className="font-bold">
@@ -551,7 +551,7 @@ const ConversationBox = ({
 }) => {
   return user ? (
     <div
-      className={`h-[100px] flex justify-between items-center border p-3 rounded-xl me-1 hover:border-gray-600 bg-white ${
+      className={`h-[100px] flex justify-between items-center border py-3 px-4 rounded-2xl sm:rounded-xl me-1 hover:border-gray-600 bg-white ${
         selectedConversation?.conversationId === conversation.conversationId
           ? "border-gray-500"
           : ""
@@ -561,15 +561,15 @@ const ConversationBox = ({
       <div className="flex items-center space-x-2">
         <div className="rounded-full border-2 border-gray-200 p-1 min-w-[50px]">
           <Image
-            className="rounded-full"
+            className="rounded-full sm:w-[40px] sm:h-[40px]"
             src={
               getOtherUser(conversation.users, user)?.photoURL
                 ? getOtherUser(conversation.users, user)?.photoURL ?? ""
                 : "/icons/profile-icon.png"
             }
             alt="profile-pic"
-            width={40}
-            height={40}
+            width={57}
+            height={57}
           />
         </div>
         <div className=" flex-col">
@@ -589,7 +589,7 @@ const ConversationBox = ({
         </div>
       </div>
       <div className="flex flex-col justify-between items-end  min-w-[25px] h-full">
-        <div>
+        <div className="mt-1">
           <Image src={"/icons/dots.svg"} alt="dots" width={4} height={4} />
         </div>
         {conversation.lastMessage.sender.userId !== user?.userId &&

@@ -19,8 +19,8 @@ export default function PropertySideDetails({
   distance: number | null;
 }) {
   return (
-    <div className=" sm:order-1 border rounded-[6%] sm:rounded-lg lg:rounded-2xl w-full bg-white">
-      <div className="flex p-3.5 gap-4 items-center">
+    <div className=" sm:order-1 overflow-hidden border rounded-[6%] sm:rounded-lg lg:rounded-2xl w-full bg-white">
+      <div className="flex p-3.5 gap-3 xl:gap-4 items-center">
         <Image
           src={imageURL}
           alt="detail-image"
@@ -29,7 +29,7 @@ export default function PropertySideDetails({
           height={50}
         />
         <div className="flex flex-col w-[70%] space-y-0.5 md:space-y-0">
-          <div className="text-black text-[17px] md:text-[22.5px] font-normal font-Poppins whitespace-nowrap">
+          <div className="text-black text-[17px] md:text-[21px] font-normal font-Poppins whitespace-nowrap">
             {description ?? "-"}
           </div>
           <div className="flex items-center">

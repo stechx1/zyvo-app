@@ -79,7 +79,7 @@ export const PropertyCard = ({
       onMouseLeave={() => setShowCarouselItems(false)}
     >
       <div
-        className="bg-cover bg-white bg-center relative h-[165px] xs:h-[260px] md:h-[360px] p-3 shadow-md mb-4 rounded-xl"
+        className="bg-cover bg-white bg-center relative h-[185px] xs:h-[260px] md:h-[360px] p-2 sm:p-3 shadow-md mb-2 rounded-xl"
         style={{
           backgroundImage: `url(${
             place.images.length > 0
@@ -93,15 +93,15 @@ export const PropertyCard = ({
       >
         {place.instantBook && (
           <div className="absolute text-center flex w-full space-x-2">
-            <div className="bg-white rounded-full pl-2 pr-4 py-1.5 flex items-center space-x-1">
+            <div className="bg-white rounded-full pl-1.5 pr-2 sm:pl-2 sm:pr-4 py-0.5 sm:py-1.5 flex items-center space-x-1">
               <Image
                 src={"/icons/green-instant-icon.svg"}
                 alt="square-fit"
-                width={17}
-                height={17}
+                width={12}
+                height={12}
                 className="sm:w-[19px] sm:h-[19px]"
               />
-              <span className="mb-0.5">Instant book</span>
+              <span className="mb-0.5 text-sm sm:text-base">Instant book</span>
             </div>
           </div>
         )}
@@ -147,14 +147,14 @@ export const PropertyCard = ({
           )}
         </div>
         <div
-          className={`flex mt-[6.8rem] ${
+          className={`flex mt-[6.5rem] ${
             !placeImageIndex ? "justify-end" : "justify-between"
           } w-full`}
         >
           <div
             className={`${
               place.images.length < 2 || !showCarouselItems || !placeImageIndex
-                ? "hidden"
+                ? "invisible"
                 : "block"
             } drop-shadow-lg`}
             onClick={(e) => {
@@ -196,9 +196,7 @@ export const PropertyCard = ({
         </div>
         <div
           className={`bg-opacity-80 bg-white text-black p-3 rounded-xl items-center gap-4 ${
-            place.images.length > 1 && showCarouselItems
-              ? "mt-[90px]"
-              : "mt-[120px]"
+               "mt-[97px]"
           } hidden md:flex`}
         >
           <Image
@@ -220,24 +218,24 @@ export const PropertyCard = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-1 px-0 md:px-3">
+      <div className="flex flex-col gap-0.5 px-0 md:px-3">
         <div className="justify-between flex">
-          <p className="sm:text-lg lg:text-md text-[14px] font-medium md:font-normal  line-clamp-1">
+          <p className="sm:text-lg lg:text-[20px] text-[14px] font-medium md:font-normal  line-clamp-1">
             {place.description}
           </p>
-          <p className="items-center hidden md:flex text-[16px] whitespace-nowrap">
+          <p className="items-center hidden md:flex text-[16px] sm:text-lg whitespace-nowrap">
             <Image
               src={"/icons/dark-gray-clock-icon.svg"}
               alt="clock-icon"
               width={18}
               height={18}
-              className="mr-2"
+              className="mr-2 sm:w-[21px] sm:h-[21px]"
             />
             ${place.pricePerHour} / h
           </p>
         </div>
         <div className="items-center flex gap-[0.3rem] sm:gap-1">
-          <p className="flex items-center text-[11px] sm:text-[16px] text-custom-amber-500 mr-0">
+          <p className="flex text-[#FCA800] items-center text-[11px] sm:text-[17px] text-custom-amber-500 mr-0">
             <Image
               src={"/icons/orange-star-icon.svg"}
               alt="star-icon"
@@ -255,7 +253,7 @@ export const PropertyCard = ({
                 alt="location-icon"
                 width={14}
                 height={14}
-                className="mr-1"
+                className="mr-1 sm:w-[20px] sm:h-[20px] sm:mt-0.5"
               />
               {placeDistance} miles away
             </p>

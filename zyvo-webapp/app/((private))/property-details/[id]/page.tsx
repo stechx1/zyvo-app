@@ -171,7 +171,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
     if (result) setUser({ ...user, favoritePlaces: result });
   };
   return (
-    <div className="flex sm:container sm:mx-auto my-2 md:my-[3.4rem] sm:px-14 md:px-0 lg:px-14 gap-2 flex-col">
+    <div className="flex sm:container sm:mx-auto my-2 md:my-[3.4rem] sm:px-14 md:px-0 lg:px-16 gap-2 flex-col">
       <div className="sm:hidden border-b mx-[-19px] px-2 pb-3">
         <MobileSearchAndFilter type="header" />
       </div>
@@ -353,7 +353,7 @@ const PropertyDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
       )}
 
-      <div className="md:hidden block border border-gray-700 rounded-xl">
+      <div className="md:hidden block border-[3px] sm:border border-gray-700 rounded-xl">
         {width <= 768 && place?.status === "ACTIVE" && (
           <AvailabilitySelection
             hours={hours}

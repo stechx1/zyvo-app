@@ -236,3 +236,12 @@ export function extractTimeFromDate(date: Date) {
   const minutes = date.getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 }
+
+export function formatFullName(fullName: string) {
+  const nameParts = fullName.split(' ');
+  if (nameParts.length === 1) {
+    return fullName;
+  }
+  const formattedName = nameParts[0].charAt(0).toUpperCase() + nameParts[0].slice(1) + ' ' + nameParts[1].charAt(0).toUpperCase() + '.';
+  return formattedName;
+}

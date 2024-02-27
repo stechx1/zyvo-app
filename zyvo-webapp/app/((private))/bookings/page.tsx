@@ -9,7 +9,12 @@ import { Booking, BookingStatusType } from "@/types/booking";
 import { getPlaceByRef } from "@/firebase/place";
 import { DocumentReference } from "firebase/firestore";
 import { Place } from "@/types/place";
-import { formatDate, formatTime, getFullName } from "@/lib/utils";
+import {
+  formatDate,
+  formatFullName,
+  formatTime,
+  getFullName,
+} from "@/lib/utils";
 import HostProperties from "@/collections/HostProperties";
 import PropertySideDetails from "@/collections/PropertySideDetails";
 import { User } from "@/types/user";
@@ -25,6 +30,7 @@ import toast from "react-hot-toast";
 import { Map } from "@/components/Maps";
 import { getRouteDetails } from "@/lib/actions";
 import Dropdown from "@/components/Dropdown";
+import { format } from "date-fns";
 type BookingFilterType = {
   name: string;
   value: BookingStatusType | null;
@@ -381,11 +387,11 @@ export default function Bookings() {
           <MobileSearchAndFilter type="Search" />
         </div>
       </div>
-      <div className="sm:flex justify-between sm:space-x-2 md:space-x-3 xl:space-x-4">
+      <div className="sm:flex mt-4 justify-between sm:space-x-2 md:space-x-3 xl:space-x-4">
         <div
           className={`${
             selectedBooking ? "hidden" : "block"
-          } w-[100%] sm:block sm:w-[40%] lg:w-[25%] space-y-2`}
+          } w-[100%] sm:block sm:w-[40%] lg:w-[25%] xl:w-[23%] space-y-2`}
           style={{
             height: bookingDetailRef?.current?.offsetHeight
               ? bookingDetailRef?.current?.offsetHeight - 50
@@ -529,55 +535,90 @@ export default function Bookings() {
 
         {/******Booking Details*******/}
         {selectedBooking && (
-          <div className="flex sm:hidden justify-between space-x-3 items-center my-2">
-            {showReviewButton && (
-              <Button
-                type="gray"
-                text="Review Booking"
-                bordered
-                rounded
-                full
-                className="border-gray-700 my-2"
-                onClick={() => setIsReviewModalOpen(true)}
-              />
-            )}
-            {selectedBooking.status === "REQUESTED" && mode !== "GUEST" ? (
-              <div className="space-y-2 w-full">
+          <>
+            <div className="pb-3.5 sm:hidden px-1 flex items-center border-b mb-4 -mx-4">
+              <div className="text-sm px-3 w-[50%] border-r-2">
+                <div className="flex items-center mt-2">
+                  <div className="rounded-full border-2 border-gray-200 p-1">
+                    <Image
+                      src={selectedBookingPlaceUser?.photoURL ? selectedBookingPlaceUser?.photoURL :"/icons/profile-icon.png"}
+                      alt="profile-pic"
+                      width={25}
+                      height={25}
+                      className="rounded-full min-w-[25px]"
+                    />
+                  </div>
+                  <div className="text-base font-medium mx-1">
+                    {formatFullName(
+                      selectedBookingPlaceUser
+                        ? getFullName(selectedBookingPlaceUser) ?? ""
+                        : ""
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="px-4 w-[50%] space-y-2 flex flex-col items-center justify-center">
+                <div className="flex items-center justify-center text-sm space-x-2">
+                  <Image
+                    src={"/icons/information-button.png"}
+                    alt="time"
+                    width={25}
+                    height={25}
+                  />
+                  <div>{"I need help"}</div>
+                </div>
+              </div>
+            </div>
+            <div className="flex sm:hidden justify-between space-x-3 items-center my-2">
+              {showReviewButton && (
                 <Button
                   type="gray"
-                  text={`Approve Booking`}
+                  text="Review Booking"
                   bordered
                   rounded
                   full
-                  className="border-gray-700"
-                  // onClick={() => onMessageClick && onMessageClick()}
+                  className="border-gray-700 my-2"
+                  onClick={() => setIsReviewModalOpen(true)}
                 />
+              )}
+              {selectedBooking.status === "REQUESTED" && mode !== "GUEST" ? (
+                <div className="space-y-2 w-full">
+                  <Button
+                    type="gray"
+                    text={`Approve Booking`}
+                    bordered
+                    rounded
+                    full
+                    className="border-gray-700"
+                    // onClick={() => onMessageClick && onMessageClick()}
+                  />
+                  <Button
+                    type="white"
+                    text={`Decline Booking`}
+                    bordered
+                    rounded
+                    full
+                    className="border-gray-700"
+                    // onClick={() => onMessageClick && onMessageClick()}
+                  />
+                </div>
+              ) : (
                 <Button
                   type="white"
-                  text={`Decline Booking`}
+                  text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
                   bordered
                   rounded
                   full
                   className="border-gray-700"
-                  // onClick={() => onMessageClick && onMessageClick()}
+                  onClick={() => {
+                    router.push(
+                      "/messages?userId=" + selectedBookingPlaceUser?.userId
+                    );
+                  }}
                 />
-              </div>
-            ) : (
-              <Button
-                type="white"
-                text={`Message the ${mode === "GUEST" ? "host" : "guest"}`}
-                bordered
-                rounded
-                full
-                className="border-gray-700"
-                onClick={() => {
-                  router.push(
-                    "/messages?userId=" + selectedBookingPlaceUser?.userId
-                  );
-                }}
-              />
-            )}
-          </div>
+              )}
+            </div>
+          </>
         )}
 
         {selectedBookingPlace && selectedBooking && (
@@ -604,7 +645,7 @@ export default function Bookings() {
             <div>
               <div className="sm:flex justify-between items-center py-3 px-2 md:py-4 md:px-6">
                 <div className="flex items-end space-x-3">
-                  <div className="sm:text-xl text-lg font-normal">
+                  <div className="sm:text-[22px] text-lg font-normal">
                     {getPlace(places, selectedBooking.placeRef?.id ?? "")
                       ?.description ?? "-"}
                   </div>
@@ -694,7 +735,7 @@ export default function Bookings() {
                 </div>
               </div>
               <hr className="my-9" />
-              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+              <div className="lg:px-5 md:px-5 sm:px-3">
                 <label className="sm:text-xl text-lg">Booking Details</label>
                 <div className="flex flex-wrap gap-2 sm:gap-3 mt-1">
                   {bookingDetails.map((tag) => (
@@ -728,7 +769,7 @@ export default function Bookings() {
                 </div>
               </div>
               <hr className="my-9" />
-              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+              <div className="lg:px-5 md:px-5 sm:px-3">
                 <label className="text-lg sm:text-xl">
                   Included in your booking
                 </label>
@@ -748,14 +789,14 @@ export default function Bookings() {
                 </div>
               </div>
               <hr className="my-9" />
-              <div className="px-2 lg:px-5 md:px-5 sm:px-3">
+              <div className="lg:px-5 md:px-5 sm:px-3">
                 <label className="text-lg sm:text-xl">Rules</label>
                 <div className="w-full mt-2">
                   <Accordion items={accordionItems} />
                 </div>
               </div>
               <hr className="my-9" />
-              <div className="px-2 lg:px-5 md:px-5 sm:px-3 my-2">
+              <div className="lg:px-5 md:px-5 sm:px-3 my-2">
                 <label className="text-lg sm:text-xl font-normal">
                   Address & Location
                 </label>
@@ -773,8 +814,17 @@ export default function Bookings() {
               {reviews.length > 0 && (
                 <>
                   <hr className="my-9" />
-                  <div className="px-2 lg:px-5 md:px-5 sm:px-3">
-                    <label className="text-lg sm:text-xl">Reviews</label>
+                  <div className="lg:px-5 md:px-5 sm:px-3">
+                    <div className="flex items-center">
+                      <div className="text-lg sm:text-xl">Reviews</div>
+                      <div className="text-black sm:invisible ms-1.5 me-3 text-[16px] md:text-xl font-medium">
+                        {mode === "GUEST"
+                          ? "(" + selectedBookingPlace?.reviewsCount + ")" ?? 0
+                          : "(" +
+                              selectedBookingPlaceUser?.reviewsCount +
+                              ")" ?? 0}
+                      </div>
+                    </div>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex">
                         <Image
@@ -789,12 +839,15 @@ export default function Bookings() {
                               ? selectedBookingPlace?.rating?.toFixed(2) ?? 0
                               : selectedBookingPlaceUser?.rating?.toFixed(2) ??
                                 0}
-                            <span className="text-black ms-2">
+                            <span className="text-black ms-2 hidden sm:inline">
                               {mode === "GUEST"
                                 ? selectedBookingPlace?.reviewsCount ?? 0
                                 : selectedBookingPlaceUser?.reviewsCount ??
                                   0}{" "}
                               reviews
+                            </span>
+                            <span className="sm:hidden ml-1.5 text-black">
+                              Rating
                             </span>
                           </span>
                         </div>
@@ -808,8 +861,8 @@ export default function Bookings() {
                       } else
                         return (
                           <React.Fragment key={review.reviewId}>
-                            <div className="flex justify-between py-2">
-                              <div className="flex sm:px-2 space-x-2 sm:w-max w-full">
+                            <div className="flex items-center justify-between py-2 w-full">
+                              <div className="flex items-center sm:px-2 space-x-2 xl:w-max w-full">
                                 <div className="rounded-full border-2 border-gray-200 p-1 mr-1">
                                   <Image
                                     src={
@@ -820,10 +873,10 @@ export default function Bookings() {
                                     alt="profile-pic"
                                     width={40}
                                     height={40}
-                                    className="rounded-full"
+                                    className="rounded-full md:w-[50px] md:h-[50px]"
                                   />
                                 </div>
-                                <div className="sm:w-max w-full">
+                                <div className="xl:w-max w-full">
                                   <div className="flex justify-between">
                                     <div className="text-sm md:text-md lg:text-base font-semibold me-2">
                                       {getFullName(review.user)}
@@ -844,8 +897,9 @@ export default function Bookings() {
                                           )
                                         )}
                                         <div className="ml-2">
-                                          {formatDate(
-                                            review.createdAt.toISOString()
+                                          {format(
+                                            review.createdAt.toISOString(),
+                                            "MMM d, yyyy"
                                           )}
                                         </div>
                                       </div>
@@ -909,7 +963,7 @@ export default function Bookings() {
         </div>
 
         {/****** Right side details ******/}
-        <div className="hidden lg:block lg:w-[25%] space-y-4">
+        <div className="hidden lg:block md:w-[25%] xl:w-[22%] space-y-4">
           {selectedBookingPlaceUser && mode && selectedBooking && (
             <HostProperties
               mode={mode}

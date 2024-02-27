@@ -1,4 +1,5 @@
 import Button from "@/components/Button";
+import { formatFullName } from "@/lib/utils";
 import { BookingStatusType } from "@/types/booking";
 import Image from "next/image";
 import React from "react";
@@ -129,8 +130,8 @@ export default function HostProperties({
         </div>
       ) : (
         <div className="py-3 flex border rounded-2xl">
-          <div className="text-sm px-3 w-[45%] border-r-2">
-            Hosted by
+          <div className="text-sm px-3 w-[42%] border-r-2">
+            <span className="ml-1">Hosted by</span>
             <div className="flex items-center mt-2">
               <div className="rounded-full border-2 border-gray-200 p-1">
                 <Image
@@ -141,7 +142,7 @@ export default function HostProperties({
                   className="rounded-full min-w-[25px]"
                 />
               </div>
-              <div className="text-base font-medium mx-1">{fullName}</div>
+              <div className="text-base font-medium mx-1">{formatFullName(fullName)}</div>
               {isVerified && (
                 <Image
                   src={"/icons/green-tick.svg"}
@@ -152,7 +153,7 @@ export default function HostProperties({
               )}
             </div>
           </div>
-          <div className="px-4 w-[55%] space-y-2 flex flex-col justify-center">
+          <div className="px-4 w-[58%] space-y-2 flex flex-col items-center justify-center">
             <div className="flex items-center justify-center text-sm space-x-2">
               <Image src={bottomTextIcon} alt="time" width={15} height={15} />
               <div>{bottomText}</div>
