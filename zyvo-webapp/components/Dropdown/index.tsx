@@ -18,18 +18,20 @@ export default function Dropdown({
       <DropdownMenuTrigger className="outline-none">
         {children}
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {items.map((item) => {
-          return (
-            <DropdownMenuItem
-              key={item.title}
-              onClick={() => item.onClick && item.onClick()}
-            >
-              {item.title}
-            </DropdownMenuItem>
-          );
-        })}
-      </DropdownMenuContent>
+      {items.length > 0 && (
+        <DropdownMenuContent>
+          {items.map((item) => {
+            return (
+              <DropdownMenuItem
+                key={item.title}
+                onClick={() => item.onClick && item.onClick()}
+              >
+                {item.title}
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      )}
     </DropdownMenu>
   );
 }

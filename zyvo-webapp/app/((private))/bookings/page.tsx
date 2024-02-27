@@ -338,6 +338,27 @@ export default function Bookings() {
     );
     if (result) setUser({ ...user, favoritePlaces: result });
   };
+  const bookingOptions = (booking: Booking) => {
+    return [
+      {
+        title: "Checkout",
+        onClick: () => router.push("/checkout?bookingId=" + booking.bookingId),
+      },
+      // { title: "Cancel" },
+    ].filter((o) =>
+      mode == "GUEST"
+        ? booking.status == "WAITING PAYMENT"
+          ? o.title == "Checkout"
+            ? true
+            : false
+          : booking.status == "REQUESTED"
+          ? o.title == "Cancel"
+            ? true
+            : false
+          : false
+        : false
+    );
+  };
   return (
     <>
       <div
@@ -481,16 +502,15 @@ export default function Bookings() {
                         )}
                       </div>
                     </div>
-                    <div
-                      className="h-[30px] flex items-center justify-center mr-0.5"
-                      role="button"
-                    >
-                      <Image
-                        src={"/icons/dots.svg"}
-                        alt="dots"
-                        width={4}
-                        height={4}
-                      />
+                    <div className="h-[30px] flex items-center justify-center mr-0.5">
+                      <Dropdown items={bookingOptions(booking)}>
+                        <Image
+                          src={"/icons/dots.svg"}
+                          alt="dots"
+                          width={4}
+                          height={4}
+                        />
+                      </Dropdown>
                     </div>
                   </div>
                 );

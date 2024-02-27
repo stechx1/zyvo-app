@@ -8,6 +8,7 @@ import {
   createConnectedAccount,
   getAccountInfo,
   getAccountLink,
+  transferFunds,
 } from "@/lib/stripeActions";
 import addData from "@/firebase/firestore/addData";
 import toast from "react-hot-toast";
@@ -18,6 +19,7 @@ import { User } from "@/types/user";
 import { getUserByRef } from "@/firebase/user";
 import { DocumentReference } from "firebase/firestore";
 import DatePicker from "@/components/DatePicker";
+import Stripe from "stripe";
 
 const data = [
   {
@@ -83,10 +85,12 @@ const PaymentsPage = () => {
   const router = useRouter();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
   const [guests, setGuests] = useState<User[]>([]);
   const [selectedDates, setSelectedDates] = useState<Date[] | undefined>(
     getCurrentWeekDates()
   );
+  const [account, setAccount] = useState<Stripe.Account | null>(null);
 
   useEffect(() => {
     if (user == null) {
@@ -166,6 +170,7 @@ const PaymentsPage = () => {
                 ...user,
                 connectedAccountId: connectedAccount.id,
               });
+              handleGetAccountLink(connectedAccount.id);
             })
             .catch((error) => {
               console.log(error);
@@ -196,9 +201,25 @@ const PaymentsPage = () => {
   const handleGetAccountDetails = async (accountId: string) => {
     try {
       const account = await getAccountInfo(accountId);
-      console.log(account);
+      setAccount(account);
     } catch (error) {
       setIsLoading(false);
+      console.log(error);
+    }
+  };
+  const withdrawFunds = async () => {
+    try {
+      setIsWithdrawLoading(true);
+      // if (account) {
+      //   const transfer = await transferFunds(account?.id);
+      //   console.log(transfer);
+      //   toast.success("Funds Withdrawn Successfully!");
+      // } else {
+      //   console.log("No Account");
+      // }
+      setIsWithdrawLoading(false);
+    } catch (error) {
+      setIsWithdrawLoading(false);
       console.log(error);
     }
   };
@@ -366,7 +387,7 @@ const PaymentsPage = () => {
               className="w-full md:w-[90%] lg:w-full h-full"
             />
           </div> */}
-          {user && (
+          {user && !account?.details_submitted && (
             <div className="sm:order-2">
               <Button
                 text="Connect To Stripe"
@@ -405,9 +426,16 @@ const PaymentsPage = () => {
               On May 15, 2023
             </div>
             <div className="text-black text-[12px] sm:text-[15px] font-normal font-Poppins">
-              <div className="border rounded-full px-1.5 sm:px-3 py-0.5 sm:py-1.5 w-max border-gray-600">
-                Withdraw Funds
-              </div>
+              <Button
+                onClick={withdrawFunds}
+                type="white"
+                className="border-gray-600"
+                bordered
+                roundedfull
+                size="sm"
+                isLoading={isWithdrawLoading}
+                text="Withdraw Funds"
+              />
             </div>
           </div>
         </div>

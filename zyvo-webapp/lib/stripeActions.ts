@@ -39,7 +39,7 @@ export const getAccountInfo = async (accountId: string) => {
 export const createPaymentIntent = async (price: number, bookingId: string) => {
   const paymentIntent = await stripe.paymentIntents.create({
     amount: (price + 2) * 100,
-    currency: "usd", 
+    currency: "usd",
     automatic_payment_methods: {
       enabled: true,
     },
@@ -58,9 +58,32 @@ export const updatePaymentIntent = async (intentId: string, price: number) => {
     clientSecret: paymentIntent.client_secret,
   };
 };
+export const refundPaymentIntent = async (intentId: string) => {
+  const refund = await stripe.refunds.create({ payment_intent: intentId });
+  return {
+    refund,
+  };
+};
 export const retreivePaymentIntent = async (intentId: string) => {
   const paymentIntent = await stripe.paymentIntents.retrieve(intentId);
   return {
     paymentIntent,
+  };
+};
+export const transferFunds = async (accountId: string) => {
+  const transfer = await stripe.transfers.create({
+    currency: "usd",
+    amount: 100,
+    destination: accountId,
+    transfer_group: "ORDER_95",
+  });
+  return {
+    transfer,
+  };
+};
+export const retreiveBalance = async () => {
+  const balance = await stripe.balance.retrieve();
+  return {
+    balance,
   };
 };
